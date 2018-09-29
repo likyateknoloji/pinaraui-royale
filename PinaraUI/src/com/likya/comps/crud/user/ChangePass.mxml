@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.apache.org/royale/spark"
+			   xmlns:mx="library://ns.apache.org/royale/mx"
+			   close="handleCloseEvent()"
+			   keyDown="titleWindow_keyDown(event);"
+			   width="320" height="200" xmlns:userops="com.likya.pinara.services.userops.*">
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import com.likya.pinara.event.ResourceEvent;
+			import com.likya.pinara.utils.BasicAuthenticationHandler;
+			import com.likya.pinara.utils.CloseAllPopUp;
+			
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.validators.Validator;
+
+			[Bindable]
+			public var baseY1:Number = 21;
+			[Bindable]
+			public var baseY2:Number = 15;
+			
+			[Bindable]
+			public var forceLogout:Boolean = true;
+			[Bindable]
+			public var currentUser:String;
+			[Bindable]
+			public var userNameLbl:String;
+			[Bindable]
+			public var oldPassLbl:String;
+			[Bindable]
+			public var newPassLbl:String;
+			[Bindable]
+			public var confNewPassLbl:String;
+			[Bindable]
+			public var okBtnLbl:String;
+			[Bindable]
+			public var cnclBtnLbl:String;
+			
+			private function handleCloseEvent():void {
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function titleWindow_keyDown(evt:KeyboardEvent):void {
+				if (evt.charCode == Keyboard.ESCAPE) {
+					this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+				}
+			}
+			
+			private function validateChangePassword():Boolean {
+				oldPasswordValidator.source = oldPassword;
+				newPasswordValidator.source = newPassword;
+				confirmNewPasswordValidator.source = confirmNewPassword;
+				
+				if (passwordValidationError() == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			
+			private function passwordValidationError():int {
+				var totalError:int = 0;
+				var oldPasswordValidationArray:Array = Validator.validateAll([oldPasswordValidator]);
+				var newPasswordValidationArray:Array = Validator.validateAll([newPasswordValidator]);
+				var confirmNewPasswordValidatorionArray:Array = Validator.validateAll([confirmNewPasswordValidator]);
+				
+				totalError = oldPasswordValidationArray.length + newPasswordValidationArray.length + confirmNewPasswordValidatorionArray.length;
+				
+				return totalError;
+			}
+			
+			protected function changePassword_clickHandler(event:MouseEvent):void {
+				var errorStr:String = resourceManager.getString("messages", "error");
+				Alert.okLabel = resourceManager.getString("messages", "okLabel");
+				
+				if (validateChangePassword()) {
+					if (newPassword.text == confirmNewPassword.text) {
+						Alert.show(resourceManager.getString("messages", "changePassConfirm"), resourceManager.getString("messages", "warnKey"), Alert.OK|Alert.CANCEL, this, processChangePass, null, Alert.CANCEL);
+					} else {
+						Alert.show(resourceManager.getString("messages", "changePasswordAuthenticationError"), errorStr, Alert.OK, this, null, null);
+					}
+				} else {
+					Alert.show(resourceManager.getString("messages", "validationMessages"), errorStr, Alert.OK, this, null, null);
+				}
+			}
+			
+			private function processChangePass(eventObj:CloseEvent):void {
+				
+				var serializationInfo:String = "false";
+				
+				if(eventObj.detail == Alert.OK) {
+					serializationInfo = "true";
+				}
+				
+				// var myraGenericJob:XML = ViewToJobXml.getXML(this);
+				// trace("myXML", myXML.toXMLString());
+				// Alert.show(myraGenericJob);
+				
+				// var packedResponse:XML = XML("<data><serialize>" + serializationInfo + "</serialize><datamess>" + myraGenericJob + "</datamess></data>");
+				var packedResponse:XML;
+				if(forceLogout) {
+					packedResponse = XML("<xmldata><username>" + currentUser + "</username><oldpass>" + oldPassword.text + "</oldpass><newpass>" + newPassword.text + "</newpass></xmldata>");
+					BasicAuthenticationHandler.authAndCall(userOpsService, "changepass", packedResponse);
+				} else {
+					packedResponse = XML("<xmldata><username>" + currentUser + "</username><newpass>" + newPassword.text + "</newpass></xmldata>");
+					BasicAuthenticationHandler.authAndCall(userOpsService, "changepassadm", packedResponse);
+				}
+				
+				// refreshAfter();
+			}
+			
+			public function disablePage():void {
+				currentView.enabled = false;
+				currentView.mouseEnabled = false;
+			}
+			
+			public function enablePage():void {
+				currentView.enabled = true;
+				currentView.mouseEnabled = true;
+			}
+			
+			protected function userOpsService_resultHandler(event:ResultEvent):void
+			{
+				BasicAuthenticationHandler.service_resultHandler(this, event);
+				handleCloseEvent();
+				if(forceLogout) {
+					FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.LOGOUT));
+					CloseAllPopUp.closeAllPopups(FlexGlobals.topLevelApplication);
+				}
+			}
+			
+			protected function userOpsService_faultHandler(event:FaultEvent):void
+			{
+				BasicAuthenticationHandler.service_faultHandler(event);
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<mx:StringValidator id="oldPasswordValidator" 
+							source="{oldPassword}" 
+							property="text"  
+							required="true"
+							maxLength="10" 
+							tooLongError="{resourceManager.getString('messages', 'passwordValidatorMessage')}"
+							requiredFieldError="{resourceManager.getString('messages', 'requiredMessage')}"/>
+		
+		<mx:StringValidator id="newPasswordValidator" 
+							source="{newPassword}" 
+							property="text"  
+							required="true"
+							maxLength="10" 
+							tooLongError="{resourceManager.getString('messages', 'passwordValidatorMessage')}"
+							requiredFieldError="{resourceManager.getString('messages', 'requiredMessage')}"/>
+		
+		<mx:StringValidator id="confirmNewPasswordValidator" 
+							source="{confirmNewPassword}" 
+							property="text"  
+							required="true"
+							maxLength="10" 
+							tooLongError="{resourceManager.getString('messages', 'passwordValidatorMessage')}"
+							requiredFieldError="{resourceManager.getString('messages', 'requiredMessage')}"/>
+		
+		
+		<userops:UserOps id="userOpsService" result="userOpsService_resultHandler(event)" fault="userOpsService_faultHandler(event)" />
+		
+	</fx:Declarations>
+	
+	<s:Group id="currentView" width="100%" height="100%">
+		
+		<s:Label id="oldPassLblId" x="27" y="{baseY1}" text="{oldPassLbl}"/>
+		<s:TextInput id="oldPassword" x="170" y="{baseY2}" displayAsPassword="true" />
+		
+		<s:Label x="27" y="{baseY1 + 30}" text="{newPassLbl}"/>			
+		<s:TextInput id="newPassword" x="170" y="{baseY2 + 30}" displayAsPassword="true" />
+		
+		<s:Label x="27" y="{baseY1 + 60}" text="{confNewPassLbl}"/>			
+		<s:TextInput id="confirmNewPassword" x="170" y="{baseY2 + 60}" displayAsPassword="true" />
+		
+	</s:Group>
+	
+	<s:BorderContainer y="135" width="100%" height="20%" borderWeight="2" cornerRadius="3" dropShadowVisible="true" backgroundColor="gray">
+		<s:HGroup paddingBottom="5" paddingTop="5" paddingLeft="90">
+			<s:Button label="{okBtnLbl}"
+					  click="changePassword_clickHandler(event);" /> 
+			<s:Button label="{cnclBtnLbl}"
+					  click="handleCloseEvent();"/> 
+		</s:HGroup>
+	</s:BorderContainer>
+	
+</s:TitleWindow>
+
+<!--<s:Label id="oldPassLblId" x="27" y="21" text="{oldPassLbl}"/>
+<s:TextInput id="oldPassword" x="170" y="15" displayAsPassword="true" />
+
+<s:Label x="27" y="51" text="{newPassLbl}"/>			
+<s:TextInput id="newPassword" x="170" y="45" displayAsPassword="true" />
+
+<s:Label x="27" y="81" text="{confNewPassLbl}"/>			
+<s:TextInput id="confirmNewPassword" x="170" y="75" displayAsPassword="true" />
+-->

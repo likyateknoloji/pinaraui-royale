@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:mx="library://ns.apache.org/royale/mx"
+		 xmlns:s="library://ns.apache.org/royale/spark"
+		 xmlns:containers="com.likya.pinara.containers.*"
+		 creationComplete="loadData()" updateComplete="onUpdateComplete()" >
+	
+	<fx:Script>
+		<![CDATA[
+			import com.likya.pinara.containers.ImageContainer;
+			import com.likya.pinara.event.ResourceEvent;
+			import com.likya.pinara.utils.BasicAuthenticationHandler;
+			import com.likya.pinara.utils.TreeUtils;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Tree;
+			import mx.core.FlexGlobals;
+			import mx.events.ListEvent;
+			import mx.events.TreeEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ObjectUtil;
+			
+			[Bindable]
+			[Embed(source="/images/tlosTree.jpg")]
+			private var tlosFolderImg:Class;
+			
+			[Bindable]
+			private var serviceUrl:String = "/flex/restsrvc/nettreexml/";
+
+			[Bindable] 
+			public static var liveTreeDP:XMLList; 
+			
+			private var selectedTreeNode:Object;
+			
+			/**
+			 * Stores the open/close states of the tree nodes
+			 */
+			
+			public function onUpdateComplete():void {
+				// trace("onUpdateComplete");
+				// changeStateOfNodes(true);
+			}
+			
+			private function changeStateOfNodes(action:Boolean):void {
+				for (var i:int = 0; i < liveTree.dataProvider.length;i++) {
+					callLater(liveTree.expandChildrenOf, [liveTree.dataProvider[i], action]);
+				}
+			}
+			
+			private function setWidth():void {
+				// Alert.show("width before : " + jobTree.width);
+				liveTree.percentWidth = 100;
+				// Alert.show("width after : " + jobTree.width);
+			}
+			
+			private function treeLabel(item:Object):String { 
+				
+				var node:XML = XML(item); 
+				//Alert.show(node.localName());
+				if (node.localName() == "list") {
+					return node.@title; 
+				} else if (node.localName() == "jobGroup") {
+					if(node.@id == "") {
+						Alert.show("node : " + node);
+					}
+					return node.@title + " [Id:" + node.@id + "]"; 
+				} else if(node.localName() == "jobProperty") {
+					//return node.@name; 
+					if(node.@id == "") {
+						Alert.show("node : " + node);
+					}
+					return node.@title + " [Id:" + node.@id + "]"; 
+				}
+				
+				return node;
+			} 
+			
+			private function treeIconFunc(item:Object):Class { 
+				
+				var node:XML = XML(item); 
+				if (node.@id == "0") {
+					return tlosFolderImg;
+				} else if (node.localName() == "jobProperty") {
+					return ImageContainer.getTreeStatuImage(node.@statu);
+				} else if (node.localName() == "node") {
+					var consData:ArrayCollection = null //tlosConnections;
+					return tlosFolderImg //tlosDisconnectedImage;
+				} else if (node.localName() == "jobGroup") {
+					// trace(node.@title);
+					if("Dep Group" == node.@title){
+						// trace(node.@title);
+						if("false" == node.@grpState) {
+							return ImageContainer.disableds;
+						} 
+					}
+					return tlosFolderImg;
+				} else {
+					return tlosFolderImg;
+				}
+			}
+			
+			private function tlosTree_itemClickHandler(e:ListEvent):void {
+				
+				trace("Click event received !");
+				
+				// var selectedTreeItem:Object = Tree(e.target).selectedItem;
+				selectedTreeNode = Tree(e.target).selectedItem;
+				var selectedNodeXml:XML = selectedTreeNode as XML;
+				
+				// Alert.show("Title : " + selectedNode.@title);
+				// Alert.show("localName : " + selectedNode.localName());
+				if (selectedNodeXml.localName() == "list") {
+					dispatchEvent(new ResourceEvent(ResourceEvent.ANASAYFA));
+				} if (selectedNodeXml.localName() == "jobGroup") {
+					dispatchEvent(new ResourceEvent(ResourceEvent.LISTNODE_SELECTED, selectedTreeNode));
+				} else if (selectedNodeXml.localName() == "jobProperty") {
+					dispatchEvent(new ResourceEvent(ResourceEvent.JOBNODE_SELECTED,  selectedTreeNode));
+				}
+				
+			}
+			
+			private function toggleTreeComp():void {
+				if(toggleTree.toolTip == "Collapse") {
+					toggleTree.toolTip = "Expand";
+					toggleTree.label = "Expand";
+					changeStateOfNodes(false);
+				} else {
+					toggleTree.toolTip = "Collapse";
+					toggleTree.label = "Collapse";
+					changeStateOfNodes(true);
+				}
+			}
+			
+			protected function treePanelService_faultHandler(event:FaultEvent):void {
+				BasicAuthenticationHandler.service_faultHandler(event);
+			}
+			
+			public function refreshTree(defaultSelectedNode:Object = null):void {
+				trace("Refreshing tree");
+				if(defaultSelectedNode != null) {
+					selectedTreeNode = defaultSelectedNode;
+				}
+					
+				BasicAuthenticationHandler.authAndSend(treePanelService);
+			}
+			
+			public function changeView():void {
+				trace("Changing View");
+				if(BasicAuthenticationHandler.startsWith(treePanelService.url, "/flex/restsrvc/nettreexml/")) {
+					treePanelService.url = "/flex/restsrvc/grouptreexml/";
+					depGrpButton.label = "D";
+				} else {
+					treePanelService.url = "/flex/restsrvc/nettreexml/";
+					depGrpButton.label = "G";
+				}
+				
+				refreshTree();
+			}
+			
+			public function loadData():void {
+				refreshTree();
+			}
+
+			protected function treePanelService_resultHandler(event:ResultEvent):void {
+				trace("treePanelService_resultHandler");
+				var treeXml:XML = XML(event.result);
+				var treeOpenItems:Object;
+				
+				treeOpenItems = liveTree.openItems;
+				
+				try {
+					liveTreeDP = new XMLList(treeXml);
+					liveTree.validateNow();
+
+					for each(var item:XML in treeOpenItems) {
+						if(item.name() == "list") {
+							// trace(treeOpenItems);
+							liveTree.expandItem(liveTreeDP[0], true);
+						} else {
+							liveTree.expandItem(liveTreeDP..jobGroup.(@id == item.@id)[0], true);
+						}
+					}
+					liveTree.validateNow();
+				} catch(err:Error) {
+					Alert.show("Hata Oluştu : " + errorString);
+					trace(err);
+				}
+				
+				setSelectedNode();
+			}
+			
+			protected function setSelectedNode():void {
+				
+				if(selectedTreeNode != null && selectedTreeNode.hasOwnProperty("@id")) {
+					trace("[selectedTreeNode] : " + ObjectUtil.toString(selectedTreeNode));
+					var selectedId:String = selectedTreeNode.@id;
+					
+					var searchResult:XMLList = TreeUtils.findNode((liveTree.dataProvider[0] as XML), selectedId);
+					
+					if (searchResult[0] != undefined) {
+						
+						// TreeUtils.expandNode(liveTree, searchResult[0]);
+						
+						liveTree.selectedItem = searchResult[0];
+						
+						if(searchResult[0].name() == "jobGroup") {
+							FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.LISTNODE_SELECTED,  selectedId));
+						} else if(searchResult[0].name() == "jobProperty") {
+							FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.JOBNODE_SELECTED,  selectedId));
+						}
+					}
+					
+				}
+			}
+
+			protected function liveTree_itemOpenHandler(event:TreeEvent):void
+			{
+				trace("liveTree_itemOpenHandler");
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function liveTree_itemCloseHandler(event:TreeEvent):void
+			{
+				trace("liveTree_itemCloseHandler");
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function liveTree_itemDoubleClickHandler(event:ListEvent):void
+			{
+				trace("liveTree_itemCloseHandler");
+				// TODO Auto-generated method stub
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		
+		<s:HTTPService id="treePanelService" 
+					   method="POST"
+					   showBusyCursor="true"
+					   resultFormat="e4x"
+					   url="{serviceUrl}"
+					   result="treePanelService_resultHandler(event)"
+					   fault="treePanelService_faultHandler(event)"
+					   />
+		
+	</fx:Declarations>
+
+	<containers:CollapsiblePanel id="tlosTreePanel" height="100%" width="100%" title="{resourceManager.getString('messages', 'tlosTree')}" >
+		
+		<!--tlosTreeData-->
+		<containers:AutoSizeTree id="liveTree"
+				 iconField="@icon"
+				 labelField="@label"
+				 fontSize="12"
+				 showRoot="true"				 
+				 dataProvider="{liveTreeDP}"
+				 labelFunction="treeLabel"
+				 iconFunction="treeIconFunc"
+				 height="100%"				 
+				 width="220"
+				 focusColor="#E67A7A"				 
+				 textRollOverColor="#FFFFFF"				 
+				 textSelectedColor="#063741"	
+				 contentBackgroundColor="#DAE0E6"
+				 rollOverColor="#596E76"
+				 chromeColor="#E2E5E7"
+				 selectionColor="#8E9DA0"  
+				 fontWeight="bold" 
+				 color="#0D173C"
+				 left="0" top="0" right="0" bottom="0"
+				 openItems="true"
+				 itemOpen="liveTree_itemOpenHandler(event)"
+				 itemClose="liveTree_itemCloseHandler(event)"
+				 itemClick="tlosTree_itemClickHandler(event)"
+				 itemDoubleClick="liveTree_itemDoubleClickHandler(event)"
+				 />
+
+		<s:Button id="depGrpButton" y="-27" right="92" width="30" click="changeView()" toolTip="(D)ep/(G)rp View" label="D"/>
+
+		<s:Button id="toggleTree" y="-27" right="32" width="60" click="toggleTreeComp()" toolTip="Expand" label="Expand"/>
+		
+		<s:Button id="refreshTreeButton" y="-27" right="2" width="30" click="refreshTree()" toolTip="Refresh" label="R"/>
+		
+	</containers:CollapsiblePanel>	
+</s:Group>

@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+<!-- containers\spark\myComponents\MyLoginForm.mxml -->
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:mx="library://ns.apache.org/royale/mx"
+			   xmlns:s="library://ns.apache.org/royale/spark"
+			   creationComplete="titlewindow1_creationCompleteHandler(event)" 
+			   close="handleCloseEvent();" xmlns:jobdetail="com.likya.pinara.comps.jobdetail.*" xmlns:jobcrud="com.likya.pinara.comps.jobcrud.*"
+			   title="Job Definition Window" xmlns:jobmanager="com.likya.pinara.services.jobmanager.*">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.likya.pinara.comps.DummyForm;
+			import com.likya.pinara.event.ResourceEvent;
+			import com.likya.pinara.utils.BasicAuthenticationHandler;
+			import com.likya.pinara.utils.JobXmlToView;
+			import com.likya.pinara.utils.ViewToJobXml;
+			
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			
+			
+
+			[Bindable]
+			public var jobDetailXml:XML;
+			
+			// 0 new ; 1 edit ; 2 clone
+			[Bindable]
+			public var isMode:Number = 0;
+			
+			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+			{
+				
+				if(jobDetailXml != null) {
+					if(isMode == 1) {
+						title = "Job Modification Window for JobId :  " + jobDetailXml.@Id;
+					} else if(isMode == 2) {
+						jobDetailXml.@Id = "";
+					}
+					// Alert.show("This window is created for edit mode !");
+					JobXmlToView.prepare_baseInfoForm(baseInfoForm_0, baseInfoForm_1, jobDetailXml);
+					JobXmlToView.prepare_stateInfosForm(stateInfosForm, jobDetailXml);
+					JobXmlToView.prepare_dependencyListForm(dependencyListForm, jobDetailXml);
+					dependencyListForm.updateData();
+					JobXmlToView.prepare_managementInfoForm(managementInfoForm_0, managementInfoForm_1, jobDetailXml);
+					JobXmlToView.prepare_logAnalysisForm(logAnalysisForm, jobDetailXml);
+					JobXmlToView.prepare_scheduleInfoForm(scheduleInfoForm, jobDetailXml);
+				} else {
+					dependencyListForm.updateData();
+				}
+
+			}
+			// Handle the close button and Cancel button.
+			private function handleCloseEvent():void {
+				PopUpManager.removePopUp(this);
+			}            
+			
+			protected function validateAll():Boolean
+			{
+				var formsValid:Boolean = true;
+				
+				formsValid = formsValid && baseInfoForm_0.validateForm() && baseInfoForm_1.validateForm();
+				formsValid = formsValid && stateInfosForm.validateForm();
+				formsValid = formsValid && dependencyListForm.validateForm();
+				formsValid = formsValid && managementInfoForm_0.validateForm() && managementInfoForm_1.validateForm();
+				formsValid = formsValid && logAnalysisForm.validateForm();
+				formsValid = formsValid && scheduleInfoForm.validateForm();
+				
+				return formsValid;
+			}
+			
+			private function checkConfirmSave():void {
+				if(!validateAll()) {
+					// Alert.show("Has validation errors !");
+					return;
+				}
+				if(isMode == 0 || isMode == 2) { // add or clone
+					// Alert.show(resourceManager.getString("messages", "confirmAdd"), resourceManager.getString("messages", "warnKey"), Alert.OK|Alert.CANCEL, this, checkConfirmSerialization, null, Alert.CANCEL);
+					Alert.show(resourceManager.getString("messages", "confirmAdd"), resourceManager.getString("messages", "warnKey"), Alert.OK|Alert.CANCEL, this, processSave, null, Alert.CANCEL);
+				} else if(isMode == 1) { // edit update
+					// Alert.show(resourceManager.getString("messages", "confirmUpdate"), resourceManager.getString("messages", "warnKey"), Alert.OK|Alert.CANCEL, this, checkConfirmSerialization, null, Alert.CANCEL);		
+					Alert.show(resourceManager.getString("messages", "confirmUpdate"), resourceManager.getString("messages", "warnKey"), Alert.OK|Alert.CANCEL, this, processSave, null, Alert.CANCEL);
+				}
+			}
+			
+			/*
+			private function checkConfirmSerialization(eventObj:CloseEvent):void {
+				if(eventObj.detail == Alert.OK) {
+					Alert.okLabel = resourceManager.getString("messages", "AlertokLabel");
+					Alert.cancelLabel = resourceManager.getString("messages", "AlertcancelLabel");
+					Alert.show(resourceManager.getString("messages", "serializeConfirm"), resourceManager.getString("messages", "warnKey"), Alert.OK|Alert.CANCEL, this, processSave, null, Alert.CANCEL);
+				}
+			}
+			*/
+			
+			// Handle the OK button.
+			private function processSave(eventObj:CloseEvent):void {
+
+				var serializationInfo:String = "false";
+				
+				if(eventObj.detail == Alert.OK) {
+					serializationInfo = "true";
+				}
+				
+				// Check credentials (not shown) then remove pop up.
+				var myraGenericJob:XML = ViewToJobXml.getXML(this);
+				// trace("myXML", myXML.toXMLString());
+				// Alert.show(myraGenericJob);
+				
+				var packedResponse:XML = XML("<data><serialize>" + serializationInfo + "</serialize><datamess>" + myraGenericJob + "</datamess></data>");
+				
+				if(isMode == 0 || isMode == 2) { // add or clone
+					// Alert.show("jobManagerService.addjob");
+					BasicAuthenticationHandler.authAndCall(jobManagerService, "addjob", packedResponse); //jobManagerService.addjob(myraGenericJob);
+				} else if(isMode == 1) { // edit update			
+					// Alert.show("jobManagerService.updatejob");
+					BasicAuthenticationHandler.authAndCall(jobManagerService, "updatejob", packedResponse); //jobManagerService.updatejob(myraGenericJob);
+				} 
+				// Aşağıdaki refreshi kaldırdım, cünkü
+				// Her job edit ya da add da netree refresh oluyor. Update sonrası yeni nettree id oluşuyor. Ancak 
+				// aşağıdaki komut eski netrre id ile server'a gidiyor ve bu nedenel de hata alıyor.
+				//refreshAfter();
+			}
+			
+			// protected function refreshAfter():void {
+				// Alert.show("Dispatching refresh event...");
+			//	FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.REFRESH));
+			// }
+			
+			protected function jobManagerService_faultHandler(event:FaultEvent):void {
+				Alert.show("Fault : " + event.message);	
+			}
+			
+			protected function jobManagerService_resultHandler(event:ResultEvent):void {
+				
+/*				var returnXml:XML;
+				var returnTxt:String = null;
+				
+				// Alert.show("Result : " + event.message.body);
+				
+				try {
+					// returnXml = XML(event.result);
+					returnXml = XML(event.message.body);
+					// Alert.show("Result : " + returnXml.toString());
+					if(returnXml.result == "NOK") {
+						WindowUtils.showDummyWindow(this, returnXml.desc.toString());
+					} else {
+						PopUpManager.removePopUp(this);
+					}
+				} catch(err:Error) {
+					Alert.show("Result : " + err.message);
+					returnTxt = String(event.result)
+				}
+				
+				// Alert.show("Result : " + event.message.body);
+				// trace(returnXml);
+*/				
+				if(BasicAuthenticationHandler.service_resultHandler(this, event)) {
+					
+					var returnXml:XML;
+					var returnTxt:String = null;
+					
+					try {
+						returnXml = XML(event.message.body);
+						// var selectedJobId:String = returnXml.jobId;
+						// FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.REFRESH_SELECT, selectedJobId));
+						FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.UPDATE_TREE, returnXml));
+					} catch(err:Error) {
+						Alert.show("jobManagerService_resultHandler Result : " + err.message);
+						returnTxt = String(event.result)
+					}
+					
+				}
+			}
+			
+			protected function viewXml_clickHandler():void
+			{
+				var myraGenericJob:XML = ViewToJobXml.getXML(this);
+				
+				var dummyWindow:DummyForm = PopUpManager.createPopUp(this, DummyForm, true) as DummyForm;
+				dummyWindow.title="Job XML";
+				dummyWindow.htmlTextAsHTML = myraGenericJob;
+				PopUpManager.centerPopUp(dummyWindow);
+				dummyWindow.setFocus();
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<jobmanager:JobManager id="jobManagerService" result="jobManagerService_resultHandler(event)" fault="jobManagerService_faultHandler(event)"/>
+		<s:CallResponder id="addJob"/>
+		<s:CallResponder id="updateJob"/>
+	</fx:Declarations>
+	
+	<s:VGroup>
+		
+		<!-- Create a Spark ButtonBar control to navigate 
+		the ViewStack container. -->
+		<s:TabBar dataProvider="{vs}" width="750"/>
+		<!-- Define the ViewStack and the three child containers. -->
+		
+		<mx:ViewStack id="vs" width="100%" height="400" left="8" y="23" creationPolicy="all">
+			
+			<s:NavigatorContent id="baseInfo" label="Base Information of Job">
+				<s:BorderContainer width="100%" height="100%" borderWeight="2" cornerRadius="3" dropShadowVisible="true">
+					<!--<jobcrud:JobBaseTypeInfoForm id="baseInfoForm" visible="false"/>-->
+					<s:VGroup>
+						<!-- Create a Spark ButtonBar control to navigate 
+						the ViewStack container. -->
+						<s:ButtonBar dataProvider="{myViewStack}"/>
+						<!-- Define the ViewStack and the three child containers. -->
+						<mx:ViewStack id="myViewStack" width="100%">
+							<s:NavigatorContent id="basicParams" label="Basic">
+								<jobcrud:JobBaseTypeInfoForm_0 id="baseInfoForm_0" includeInLayout="false"/>
+							</s:NavigatorContent>
+							<s:NavigatorContent id="extendedParams" label="Extended">
+								<jobcrud:JobBaseTypeInfoForm_1 id="baseInfoForm_1" includeInLayout="false"/>
+							</s:NavigatorContent>
+						</mx:ViewStack>
+					</s:VGroup>
+				</s:BorderContainer>
+			</s:NavigatorContent>
+			<s:NavigatorContent id="stateInfos" label="State Information of Job">
+				<jobcrud:StateInfosForm id="stateInfosForm"/>
+			</s:NavigatorContent>
+			<s:NavigatorContent id="depList" label="Dependency Definitions">
+				<s:BorderContainer width="100%" height="100%" borderWeight="2" cornerRadius="3" dropShadowVisible="true">
+					<jobcrud:DependencyListForm id="dependencyListForm" visible="true"/>
+				</s:BorderContainer>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Job Management Info"  width="100%" height="100%">
+				<s:BorderContainer width="100%" height="100%" borderWeight="2" cornerRadius="3" dropShadowVisible="true">
+					<!--<jobcrud:JobManagementInfoForm id="managementInfoForm" visible="false"/>-->
+					<s:VGroup>
+						<!-- Create a Spark ButtonBar control to navigate 
+						the ViewStack container. -->
+						<s:ButtonBar dataProvider="{myViewStack1}"/>
+						<!-- Define the ViewStack and the three child containers. -->
+						<mx:ViewStack id="myViewStack1" width="100%">
+							<s:NavigatorContent id="basicParams1" label="Common">
+								<jobcrud:JobManagementInfoForm_0 id="managementInfoForm_0" parentWin="{this}"/>
+							</s:NavigatorContent>
+							<s:NavigatorContent id="extendedParams1" label="Time Related">
+								<jobcrud:JobManagementInfoForm_1 id="managementInfoForm_1"/>
+							</s:NavigatorContent>
+						</mx:ViewStack>
+					</s:VGroup>
+				</s:BorderContainer>
+			</s:NavigatorContent>
+			<s:NavigatorContent id="logAnalysisTab" label="Log Analysis Action Definitions">
+				<s:BorderContainer width="100%" height="100%" borderWeight="2" cornerRadius="3" dropShadowVisible="true">
+					<jobcrud:LogAnalysisForm id="logAnalysisForm"/>
+				</s:BorderContainer>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Job Execution Schedule Info"  width="100%" height="100%">
+				<s:BorderContainer width="100%" height="100%" borderWeight="2" cornerRadius="3" dropShadowVisible="true">
+					<jobcrud:ScheduleInfoForm  id="scheduleInfoForm"/>
+				</s:BorderContainer>
+			</s:NavigatorContent>			
+		</mx:ViewStack>
+
+		<s:BorderContainer width="100%" height="100%" borderWeight="2" cornerRadius="3" dropShadowVisible="true" backgroundColor="8">
+			<s:HGroup paddingBottom="5" paddingTop="5" paddingLeft="300">
+				<s:Button label="Save"
+						  click="checkConfirmSave();" /> 
+				<s:Button label="Cancel"
+						  click="handleCloseEvent();"/> 
+				<s:Button label="View Job XML"
+						  click="viewXml_clickHandler();"/> 
+				
+			</s:HGroup>
+		</s:BorderContainer>
+	</s:VGroup>
+		
+</s:TitleWindow>

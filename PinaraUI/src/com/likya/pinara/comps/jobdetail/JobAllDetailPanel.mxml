@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:mx="library://ns.apache.org/royale/mx"
+		 xmlns:s="library://ns.apache.org/royale/spark"
+		 width="100%" xmlns:jobdetail="com.likya.pinara.comps.jobdetail.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.likya.pinara.comps.DummyForm;
+			import com.likya.pinara.event.ResourceEvent;
+			import com.likya.pinara.model.UserRole;
+			import com.likya.pinara.utils.BasicAuthenticationHandler;
+			import com.likya.pinara.utils.JobXmlToView;
+			import com.likya.pinara.utils.RoleFilters;
+			import com.likya.pinara.utils.Transformer;
+			import com.likya.pinara.utils.WindowUtils;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			private var serviceUrl:String = "/flex/restsrvc/jobdetailxml/";
+			
+			[Bindable] 
+			private var jobs:ArrayCollection;
+			
+			public var selectedJobId:String;
+			
+			[Bindable]
+			public var tlosMenuData:XMLListCollection = new XMLListCollection();
+			
+			[Bindable]
+			public var jobDetailXml:XML;
+			
+			[Bindable]
+			public var roleList:ArrayCollection = new ArrayCollection(
+				[ {name:"Admin", value:UserRole.ADMIN},
+					{name:"Operation", value:UserRole.OPERATION},
+					{name:"View", value:UserRole.VIEW} ]);
+			
+			[Bindable]
+			public var data:ArrayCollection = new ArrayCollection(
+				[   
+					{value:"TIME", code:"0"},
+					/*{value:"EVENT", code:"1"},*/
+					{value:"USER", code:"2"}		
+				]                
+			);
+			
+			public var role:String = UserRole.ADMIN;
+			// public var role:String = UserRole.OPERATION;
+			// public var role:String = UserRole.VIEW;
+			
+			/*public function getStateChangedDate(item:Object, column:GridColumn):String {
+				return getDate(item.@LSIDateTime);
+			}*/
+			
+			/*public function getDate(dateTxt:String):String {
+				var dateFormatter:DateFormatter = new DateFormatter();
+				dateFormatter.formatString = 'JJ:NN:SS DD/MM/YYYY';
+				return dateFormatter.format(DateFormatter.parseDateString(dateTxt))
+			}*/
+			
+			public function getStateInfo(item:Object, column:GridColumn):String {
+				var stateInfo:String = "";
+				
+				if(item.LiveStateInfo.StateName != null) {
+					stateInfo += item.StateName + "-";
+				}
+				if(item.LiveStateInfo.SubstateName != null) {
+					stateInfo += item.SubstateName + "-";
+				}
+				if(item.LiveStateInfo.StatusName != null) {
+					stateInfo += item.StatusName;
+				}
+				
+				return stateInfo;
+			}
+			
+			protected function xmlService_faultHandler(event:FaultEvent):void {
+				BasicAuthenticationHandler.service_faultHandler(event);
+			}
+			
+			public function updateData():void {
+				var testFlag:Boolean = isNaN(Number(selectedJobId));
+				
+				if(testFlag) {
+					Alert.show("Selected Job id is not valid ! >> " + selectedJobId);
+					return;
+				}
+				
+				jobDetailDS.url = serviceUrl + selectedJobId;
+				
+				BasicAuthenticationHandler.authAndSend(jobDetailDS);
+				
+			}
+			
+			protected function xmlService_resultHandler(event:ResultEvent):void {
+				
+				/*var returnXml:XML;
+				var returnTxt:String = null;
+				
+				try {
+					returnXml = XML(event.message.body);
+					if(returnXml.result == "NOK") {
+						WindowUtils.showDummyWindow(this, returnXml.desc.toString());
+						return;
+					} else {
+						//PopUpManager.removePopUp(this);
+					}
+				} catch(err:Error) {
+					Alert.show("Result : " + err.message);
+					returnTxt = String(event.result)
+				}*/
+				
+				var retValue:Boolean = BasicAuthenticationHandler.service_customHandler(this, event);
+				
+				if(!retValue) return;
+				
+				jobDetailXml = XML(event.result);
+				
+				// var treeOpenItems:Object;
+				
+				// trace(jobDetailXml);
+				
+				// treeOpenItems = jobDetailDS.openItems;
+				
+				try {
+					
+					jobId.text = jobDetailXml.@Id;
+					jobName.text = jobDetailXml.baseJobInfos.jsName;
+					
+					var selectedCombo:Number = JobXmlToView.indexOf(jobDetailXml.management.trigger, data.toArray());
+					jsJobTriggerType.selectedIndex = selectedCombo;
+					
+					// jobState.text = jobDetailXml.visualParams.statu;
+					// manage.text = jobDetailXml.visualParams.commandabilityParams;
+					jobCommandType.text = jobDetailXml.baseJobInfos.jobTypeDetails.jobCommandType;
+					groupId.text = jobDetailXml.@groupId;
+					lastCs.text = Transformer.getDate(jobDetailXml.management.timeManagement.jsRecordedTime.startTime); //Transformer.getDate(jobDetailXml.management.timeManagement.jsRealTime.startTime);
+					planlananCZ.text = Transformer.getDate(jobDetailXml.management.timeManagement.jsActualTime.startTime); //Transformer.getDate(jobDetailXml.management.timeManagement.jsPlannedTime.startTime);
+					sonSure.text = jobDetailXml.runtimeParams.realizedDuration;
+					
+					jobBaseInfoId.refreshData(jobDetailXml);
+					
+					/*
+					jobCommand.text = jobDetailXml.baseJobInfos.jobTypeDetails.jobCommand;
+					dzGroup.text = jobDetailXml.@dangerZoneGroupId;
+					jobLogFile.text = "" + jobDetailXml.baseJobInfos.jobLogPath + jobDetailXml.baseJobInfos.jobLogFile;
+					restartable.text = jobDetailXml.management.cascadingConditions.jobSafeToRestart;
+					paramValue.text = "paramValue";
+					diffDuration.text = "00:10"; // "" + (currentDataItem.management.timeManagement.previousDuration - currentDataItem.management.timeManagement.realizedDuration);
+					handlerURI.text = jobDetailXml.@handlerURI;
+					prevDuration.text = jobDetailXml.management.timeManagement.previousDuration;					
+					*/
+					
+					if(jobDetailXml.hasOwnProperty("runtimeParams")) {
+						depListComp.waitingMeJobs.dataProvider = new XMLListCollection(XMLList(jobDetailXml.runtimeParams.waitingMeJobs.jobId));
+					} else {
+						depListComp.waitingMeJobs.dataProvider = null;
+					}
+					
+					if(jobDetailXml.hasOwnProperty("DependencyList")) {
+						depListComp.meToWaitJobs.dataProvider = new XMLListCollection(XMLList(jobDetailXml.DependencyList.Item)); 
+					} else {
+						depListComp.meToWaitJobs.dataProvider = null;
+					}
+					
+					stateHistory.dataProvider = new XMLListCollection(XML(jobDetailXml.stateInfos.LiveStateInfos).children());
+					
+					// liveTreeDP = new XMLList(treeXml);
+					// liveTree.validateNow();
+					/*
+					for each(var item:XML in treeOpenItems) {
+					if(item.name() == "list") {
+					trace(treeOpenItems);
+					liveTree.expandItem(liveTreeDP[0], true);
+					} else {
+					liveTree.expandItem(liveTreeDP..jobGroup.(@id == item.@id)[0], true);
+					}
+					}
+					liveTree.validateNow();
+					*/
+					
+					FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.DECORATE_MENUBAR,  jobId.text));
+					
+				} catch(err:Error) {
+					Alert.show("Hata Oluştu : " + errorString + " \nSunucu cevabı : " + jobDetailXml);
+					trace(err);
+				}
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				var dummyWindow:DummyForm = PopUpManager.createPopUp(this, DummyForm, true) as DummyForm;
+				dummyWindow.title="Job XML";
+				dummyWindow.htmlTextAsHTML = jobDetailXml;
+				PopUpManager.centerPopUp(dummyWindow);
+				dummyWindow.setFocus();
+				
+			}
+			
+			protected function allDetailPanel1_addedToStageHandler(event:Event):void
+			{
+				var value:Boolean = RoleFilters.hasOperRole();
+				manageButtonGroup.visible = value;
+				manageButtonGroupLbl.visible = value;
+				manageButtonGroup.includeInLayout = value;
+				manageButtonGroupLbl.includeInLayout = value;
+			}
+			
+			protected function refresh_button1_clickHandler(event:MouseEvent):void {
+				dispatchEvent(new ResourceEvent(ResourceEvent.JOBNODE_SELECTED, selectedJobId));
+			}
+			
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.SELECT_TREENODE, selectedJobId));
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:HTTPService id="jobDetailDS" 
+					   method="POST"
+					   showBusyCursor="true"
+					   resultFormat="e4x"
+					   result="xmlService_resultHandler(event)"
+					   fault="xmlService_faultHandler(event)"
+					   />
+	</fx:Declarations>
+	
+	<!--
+		horizontalCenter="0"
+		verticalCenter="0"
+	width="700"
+	height="700"
+	-->
+
+	
+	<!--
+		UYARI : width ve height' dokununca scrollbar lar bozuluyor. !!!!!
+	-->
+	<s:Panel id="allDetailPanel" visible="true"
+			 title="Job All Detail Form"
+			 left="5"
+			 top="5"
+			 width="90%" 
+			 height="100%"
+			 borderColor="18"
+			 addedToStage="allDetailPanel1_addedToStageHandler(event)">
+
+<!--		<s:Button y="-27" left="200" label="{resourceManager.getString('messages', 'refresh')}" click="refresh_button1_clickHandler(event)" visible="true" includeInLayout="true"/>
+		<s:Button y="-27" left="300" visible="true" label="Show In Tree" click="button2_clickHandler(event)"/>
+-->
+		<s:Scroller width="100%" height="100%">
+			
+			<s:Group width="100%" height="100%">
+				
+				<s:layout> 
+					<s:VerticalLayout gap="5" clipAndEnableScrolling="true"/> 
+				</s:layout>  
+				<s:HGroup width="100%">
+					<s:VGroup paddingLeft="5" gap="-10" width="100%">
+						<s:HGroup verticalAlign="middle" paddingTop="5">
+							<s:Label text="Job Name :" width="105"/>
+							<s:TextInput id="jobName" top="5" editable="false"/>
+							<s:Button label="{resourceManager.getString('messages', 'refresh')}" click="refresh_button1_clickHandler(event)" visible="true" includeInLayout="true"/>
+							<s:Button label="View Job XML" click="button1_clickHandler(event)"></s:Button>
+							<s:Button visible="true" label="Show In Tree" click="button2_clickHandler(event)"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="middle" paddingTop="15">
+							<!--<s:FormItem label="Job Trigger Type">-->
+							<s:Label text="Job Trigger Type :" width="105"/>
+							<s:DropDownList id="jsJobTriggerType" labelField="value" width="{jobCommandType.width}" prompt="Select Trigger Type" selectedIndex="0" dataProvider="{data}" enabled="false" /> 
+							<!--</s:FormItem>-->
+							<s:Label text="Job Id :" width="75" paddingLeft="10" />
+							<s:TextInput id="jobId" top="5" editable="false" paddingLeft="10"/>
+							<s:Label text="Job State :" width="75" paddingLeft="10"/>
+							<!--<s:TextInput id="jobState" top="5" editable="false" />-->
+							<jobdetail:StateImageItem id="stateImageItem" data="{jobDetailXml}"/>
+							<!--<s:Button label="View Job XML" click="button1_clickHandler(event)"></s:Button>-->
+						</s:HGroup>
+						<s:HGroup verticalAlign="middle" paddingTop="15">
+							<s:Label text="Command Type :" width="105"/>
+							<s:TextInput id="jobCommandType" top="5" editable="false"/>
+							<s:Label text="Group Id :" width="75" paddingLeft="10" />
+							<s:TextInput id="groupId" top="5" editable="false" paddingLeft="10"/>
+							<s:Label id="manageButtonGroupLbl" text="Manage :" width="75" paddingLeft="10" />
+							<!--<s:TextInput id="manage" top="5" editable="false"/>-->
+							<jobdetail:ManageButtonGroup id="manageButtonGroup" data="{jobDetailXml}" />
+						</s:HGroup>
+						<s:HGroup verticalAlign="baseline" paddingTop="15">
+							<s:Label text="Planlanan ÇZ :" width="105"/>
+							<s:TextInput id="planlananCZ" top="5" editable="false"/>
+							<s:Label text="Son ÇZ :" width="75" paddingLeft="10" />
+							<s:TextInput id="lastCs" top="5" editable="false" paddingLeft="10"/>
+							<s:Label text="Son Süre :" width="75" paddingLeft="10" />
+							<s:TextInput id="sonSure" top="5" editable="false"/>
+						</s:HGroup>
+					</s:VGroup>
+					
+				</s:HGroup>
+
+				<mx:HRule width="100%" />
+				
+				<s:HGroup width="100%" paddingLeft="10">
+					<jobdetail:JobBaseInfo id="jobBaseInfoId" height="200" width="500"/>
+					<jobdetail:DepLists id="depListComp" width="120">
+						<jobdetail:layout>
+							<s:VerticalLayout gap="10" paddingLeft="5" paddingTop="10" />
+						</jobdetail:layout>
+					</jobdetail:DepLists>
+				</s:HGroup>
+				
+				<mx:HRule width="100%" />
+				
+				<s:VGroup paddingLeft="10" paddingTop="10">
+					<s:Label text="İş Tarihçesi :" width="120" />
+					<s:DataGrid id="stateHistory" width="500" height="250" >
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn labelFunction="Transformer.getStateChangedDate" headerText="Tarih" />
+								<s:GridColumn labelFunction="getStateInfo" headerText="Durum Bilgisi" width="{this.stateHistory.width * 0.65}"/>
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid> 
+				</s:VGroup>
+			
+				<mx:HRule width="100%" />
+				
+			</s:Group>
+		</s:Scroller>
+	
+	</s:Panel>
+	
+</s:Group>

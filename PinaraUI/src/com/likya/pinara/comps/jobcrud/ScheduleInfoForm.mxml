@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Form xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:mx="library://ns.apache.org/royale/mx"
+		xmlns:s="library://ns.apache.org/royale/spark"
+		xmlns:MyComp="*"
+		width="450" height="300">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.likya.pinara.utils.ViewToJobXml;
+			
+			import mx.controls.Alert;
+			import mx.events.ItemClickEvent;
+			
+			public function validateForm():Boolean
+			{
+				var regexVal:Boolean = ViewToJobXml.isValidSpecDays(specDays.text);
+				if(specDays.text.length > 0 && !regexVal) {
+					Alert.show("spec days not valid !");
+					return false;
+				}
+				
+				return true;
+			}
+			
+			private function handleCard(event:ItemClickEvent):void {
+				handleDecoration(event.currentTarget.selectedValue);
+			}
+			
+			public function handleDecoration(selectedValue:String):void {
+				if (selectedValue == "everyDaySchedule") {
+					this.dom.enabled = false;
+				} else if (selectedValue == "specificSchedule") {
+					this.dom.enabled = true;
+				} else {
+					Alert.show("You selected Nothing.");
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:RadioButtonGroup id="scheduleType" itemClick="handleCard(event);"/>
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:FormLayout gap="1"/>
+	</s:layout>
+	
+	<s:VGroup>
+		<s:RadioButton group="{scheduleType}" 
+					   id="everyDaySchedule"
+					   value="everyDaySchedule"
+					   label="Execute Everyday"
+					   selected="true"
+					   width="150"/>
+		<s:RadioButton group="{scheduleType}" 
+					   id="specificSchedule"
+					   value="specificSchedule"
+					   label="Execute On Day(s) Of Month" 
+					   width="200"/>
+	</s:VGroup>
+	
+	<s:HGroup enabled="false" id="dom">
+		<s:VGroup>
+			<s:FormItem label="">
+				<s:CheckBox width="150" label="First Day Of Month" id="fdom"/>
+			</s:FormItem>
+			<s:FormItem label="">
+				<s:CheckBox width="150" label="Last Day Of Month" id="ldom"/>
+			</s:FormItem>
+			<s:FormItem label="Day list">
+				<s:TextInput id="specDays" width="100%"/>
+				<s:helpContent>
+					<s:Label text="E.g. 1,5,9-13"/>
+				</s:helpContent>
+			</s:FormItem>
+		</s:VGroup>
+		<s:FormItem label="Days of Week">
+			<s:CheckBox width="150" label="Monday" id="d1"/>
+			<s:CheckBox width="150" label="Tuesday" id="d2"/>
+			<s:CheckBox width="150" label="Wednesday" id="d3"/>
+			<s:CheckBox width="150" label="Thursday" id="d4"/>
+			<s:CheckBox width="150" label="Friday" id="d5"/>
+			<s:CheckBox width="150" label="Saturday" id="d6"/>
+			<s:CheckBox width="150" label="Sunday" id="d7"/>
+		</s:FormItem>
+	</s:HGroup>
+	
+</s:Form>
