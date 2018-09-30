@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:mx="library://ns.apache.org/royale/mx"
-		 xmlns:s="library://ns.apache.org/royale/spark"
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 horizontalCenter="0" xmlns:jobmanager="com.likya.pinara.services.jobmanager.*">
 	<fx:Script>
 		<![CDATA[
@@ -15,7 +15,7 @@
 			import mx.rpc.events.ResultEvent;
 			
 			[Bindable]
-			public var data:Object;
+			public var data:XML //Changed from Object to XML and removed warnings according to https://forums.adobe.com/thread/72306
 			
 			[Bindable]
 			public var selectedGroupId:String;
@@ -118,7 +118,7 @@
 								
 							default:
 							{
-								Alert.show(" Tanımsız işlem komutu : " + compId);
+								Alert.show(resourceManager.getString("messages", "manageButUndefinedOperation") + compId);
 								break;
 							}
 						}

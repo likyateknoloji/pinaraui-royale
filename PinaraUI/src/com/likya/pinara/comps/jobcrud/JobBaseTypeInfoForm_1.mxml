@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Form xmlns:fx="http://ns.adobe.com/mxml/2009"
-		xmlns:mx="library://ns.apache.org/royale/mx"
-		xmlns:s="library://ns.apache.org/royale/spark"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:MyComp="*"
 		width="450" height="150">
 	
@@ -16,14 +16,23 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.likya.pinara.model.AppInfo;
+			import com.likya.pinara.model.ModelLocator;
+			
 			import mx.controls.Alert;
 			
 			import spark.components.NavigatorContent;
+			import spark.components.TextInput;
 			import spark.events.IndexChangeEvent;
 			import spark.events.TextOperationEvent;
 			
+			[Bindable] 
+			public var appInfo:AppInfo = ModelLocator.getInstance().appInfo;
+			
 			// Bu değişkeni aşağıdaki work dir enable edilince kaldır !
 			public var jsJobWorkDir:TextInput = new TextInput();
+			
+			private static var invalidFileNameChars:RegExp = /[\/\\:*?"<>|%@]/;
 			
 			public function validateForm():Boolean
 			{
@@ -32,15 +41,35 @@
 					return false;
 				}*/
 				if(jsJobActivity.selectedIndex == -1) {
-					Alert.show("Job Activity is not selected !");
+					Alert.show(resourceManager.getString("messages", "jobBaseActivityNotSelected"));
 					return false;
 				}
 				if(jsJobPriority.selectedIndex == -1) {
-					Alert.show("Job Priority is not selected !");
+					Alert.show(resourceManager.getString("messages", "jobBasePriorityNotSelected"));
 					return false;
 				}
+				if(jsJobLogFile.text != "" && invalidFileNameChars.test(jsJobLogFile.text)) {
+					Alert.show(resourceManager.getString("messages", "jobBaseLogFilename"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
+					return false;
+				}
+				checkLogPath();
 				
 				return true;
+			}
+			
+			protected function checkLogPath():void
+			{
+				var logPath:String = jsJobLogPath.text;
+				
+				if(appInfo.ostype == AppInfo.OS_UNIX && logPath.indexOf("/", logPath.length-1) == -1) {
+					logPath = logPath + "/";
+				} else if(appInfo.ostype == AppInfo.OS_WINDOWS && logPath.indexOf("\\", logPath.length-1) == -1) {
+					logPath = logPath + "\\";
+				} else {
+					logPath = logPath;
+				}
+				
+				jsJobLogPath.text = logPath;
 			}
 			
 			protected function ekle_clickHandler(event:MouseEvent):void
@@ -86,7 +115,7 @@
 		<s:FormLayout gap="-10"/>
 	</s:layout>  
 	
-	<s:FormItem label="Environment Variables"> 
+	<s:FormItem label="{resourceManager.getString('messages', 'jobEnvironmentVarsLabel')}"> 
 		<s:HGroup>
 			<s:List id="envVarList" change="envVarList_changeHandler(event)" maxHeight="70" maxWidth="300"> 
 				<mx:ArrayCollection>
@@ -95,27 +124,27 @@
 				</mx:ArrayCollection>
 			</s:List>
 			<s:VGroup>
-				<s:Label text="Key Value Pair" />
+				<s:Label text="{resourceManager.getString('messages', 'jobKeyValuePairLabel')}" />
 				<s:TextInput id="envVars" width="100%" change="envVars_changeHandler(event)"/>
 				<s:HGroup>
-					<s:Button label="Ekle" id="ekle" click="ekle_clickHandler(event)" enabled="false"/>
-					<s:Button label="Çıkar" id="cikar" click="cikar_clickHandler(event)" enabled="false"/>
+					<s:Button label="{resourceManager.getString('messages', 'jobKeyValueAdd')}" id="ekle" click="ekle_clickHandler(event)" enabled="false"/>
+					<s:Button label="{resourceManager.getString('messages', 'jobKeyValueDelete')}" id="cikar" click="cikar_clickHandler(event)" enabled="false"/>
 				</s:HGroup>
 			</s:VGroup>
 		</s:HGroup>
 	</s:FormItem>
 
-	<s:FormItem label="Job Log Filename">
+	<s:FormItem label="{resourceManager.getString('messages', 'jobLogFileNameLabel')}">
 		<s:TextInput id="jsJobLogFile" width="100%"/>
 		<s:helpContent>
-			<s:Label text="Enter your Job Log Filename"/>
+			<s:Label text="{resourceManager.getString('messages', 'jobLogFileNameHelpContent')}"/>
 		</s:helpContent>
 	</s:FormItem>
 	
-	<s:FormItem label="Job Log Path">
+	<s:FormItem label="{resourceManager.getString('messages', 'jobLogPathLabel')}">
 		<s:TextInput id="jsJobLogPath" width="100%"/>
 		<s:helpContent>
-			<s:Label text="Enter your Job Log File Physical Path"/>
+			<s:Label text="{resourceManager.getString('messages', 'jobLogLabelHelpContent')}"/>
 		</s:helpContent>
 	</s:FormItem>
 	<!--	
@@ -202,7 +231,7 @@
 		</s:DropDownList>
 	</s:FormItem>-->
 
-	<s:FormItem label="Priority">
+	<s:FormItem label="{resourceManager.getString('messages', 'jobPriorityLabel')}">
 		<s:DropDownList id="jsJobPriority" width="120" prompt="Select Priority" selectedIndex="0"> 
 			<s:dataProvider>
 				<mx:ArrayList>
@@ -214,11 +243,11 @@
 			</s:dataProvider>
 		</s:DropDownList>
 		<s:helpContent>
-			<s:Label text="Enter your Job Priority"/>
+			<s:Label text="{resourceManager.getString('messages', 'jobPriorityHelpContent')}"/>
 		</s:helpContent>
 	</s:FormItem>
 	
-	<s:FormItem label="Enabled">
+	<s:FormItem label="{resourceManager.getString('messages', 'jobEnabledLabel')}">
 		<s:DropDownList id="jsJobActivity" width="120" prompt="Select Job Activity" selectedIndex="0"> 
 			<s:dataProvider>
 				<mx:ArrayList>
@@ -228,7 +257,7 @@
 			</s:dataProvider>
 		</s:DropDownList>
 		<s:helpContent>
-			<s:Label text="Enter your Job activity"/>
+			<s:Label text="{resourceManager.getString('messages', 'jobEnabledHelpContent')}"/>
 		</s:helpContent>
 	</s:FormItem>
 	

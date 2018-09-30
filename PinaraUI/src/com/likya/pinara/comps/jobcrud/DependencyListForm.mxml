@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Form xmlns:fx="http://ns.adobe.com/mxml/2009"
-		xmlns:mx="library://ns.apache.org/royale/mx"
-		xmlns:s="library://ns.apache.org/royale/spark"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:MyComp="*"
 		width="100%" height="100%">
 	
@@ -38,9 +38,99 @@
 			
 			private var jobListForDep:XML;
 			
+			private static const NOT_VALIDATED:String = "NOT VALIDATED";
+			
 			public function validateForm():Boolean
 			{
-				return true;
+				var depListItem:Object;
+				var depExpItem:Object;
+				var depExpStr:String = depExp.text;
+				var depIdFound:Boolean = true; 
+				var loop:Boolean = true;
+				
+				
+				if(depExpStr != null && depExpStr != "") {
+					
+					depExpStr = replFN(depExp.text);
+					
+					if(depExpStr == NOT_VALIDATED) {
+						Alert.show("Hatalı DepExp tanımı!");
+						return false;
+					}
+					
+					var i:int = depExpStr.indexOf("dep_", i);
+					j = i+5;
+					var j:int = depExpStr.indexOf("", j);
+					while(loop) {
+						depExpItem = depExpStr.substring(i,j);
+						depIdFound = false;	
+						
+						for (var k:int = 0; k < dependencyListGrid.dataProvider.toArray().length; k++) {
+							depListItem = dependencyListGrid.dataProvider.toArray()[k];
+							if(depExpItem == depListItem.depid) {
+								depIdFound = true;
+							}
+						}
+						
+						i = j;
+						i = depExpStr.indexOf("dep_", i);
+						
+						if(!depIdFound || i == -1) {
+							loop = false;
+						} else {
+							j = i+5;
+							j = depExpStr.indexOf(" ", j);
+							if(j == -1) {
+								j = depExpStr.length;
+							}
+						}
+					}
+				}
+				
+				if(!depIdFound) {
+					Alert.show("Hatalı DepExp tanımı!");
+					//Alert.show(resourceManager.getString("messages", "logAnalySearchPatNotDefined"));
+				}
+				return depIdFound;
+			}
+			
+			private function replFN(strRepl:String):String 
+			{ 
+				var result:Object;
+				var strReplArray:Array;
+				var rightParantehis:int = 0;
+				var leftParantehis:int = 0;
+				var depExpPattern:RegExp = /dep_\d+/;
+				
+				for (var i:int = 0; i < strRepl.length; i++) {
+					if(strRepl.charAt(i) == "(") leftParantehis = leftParantehis + 1; 
+					if(strRepl.charAt(i) == ")") rightParantehis = rightParantehis + 1; 
+				}
+				
+				if(leftParantehis != rightParantehis) {
+					strRepl = NOT_VALIDATED;
+					return strRepl;
+				}
+				
+				strRepl = strRepl.replace("("," ");
+				strRepl = strRepl.replace(")"," ");
+				strRepl = strRepl.replace("!"," ");
+				strRepl = strRepl.replace("AND"," ");
+				strRepl = strRepl.replace("OR"," ");
+				
+				strReplArray = strRepl.split(" ");
+				
+				for (var k:int = 0; k < strReplArray.length; k++) {
+					if(strReplArray[k] != "") {
+						result = strReplArray[k].match(depExpPattern);
+						if(result == null) {
+							strRepl = NOT_VALIDATED;
+							break;
+						}
+					}
+				}
+				
+				return strRepl; 
 			}
 			
 			private function checkGridForItem(checkItem:Object, checkArr:Array):Boolean
@@ -58,7 +148,7 @@
 			{
 				
 				if(stateName.selectedIndex == -1 || selectedJobInfo.text == null || selectedJobInfo.text == "") {
-					Alert.show("State or job not selected !");
+					Alert.show(resourceManager.getString("messages", "depStateNotSelected"));
 					return;
 				}
 				
@@ -81,7 +171,7 @@
 					//trace(ObjectUtil.toString(item));
 					
 					if(item.jobinfo == selectedJobInfo.text && item.stateinfo == jobInfoTmp) {
-						Alert.show("Dependency already defined : " + ObjectUtil.toString(item));
+						Alert.show(resourceManager.getString("messages", "depAlreadyDefined") + ObjectUtil.toString(item));
 						return;
 					}
 					
@@ -113,7 +203,7 @@
 			protected function depDegistir_clickHandler(event:MouseEvent):void
 			{
 				if(stateName.selectedIndex == -1 || selectedJobInfo.text == null || selectedJobInfo.text == "") {
-					Alert.show("State or job not selected !");
+					Alert.show(resourceManager.getString("messages", "depStateNotSelected"));
 					return;
 				}
 				
@@ -143,7 +233,7 @@
 					}*/
 					
 					if(item.jobinfo == selectedJobInfo.text && item.stateinfo == jobInfoTmp) {
-						Alert.show("Dependency already defined : " + ObjectUtil.toString(item));
+						Alert.show(resourceManager.getString("messages", "depAlreadyDefined") + ObjectUtil.toString(item));
 						return;
 					}
 				}
@@ -225,7 +315,7 @@
 					lbldel.visible = true;
 					lblrel.visible = true;
 				} else {
-					Alert.show("You selected Nothing.");
+					Alert.show(resourceManager.getString("messages", "depNothingSelected"));
 				} 
 			}
 			
@@ -466,26 +556,26 @@
 		<s:FormLayout gap="1"/>
 	</s:layout>  
 	
-	<s:Label left="15" top="10" text="Dependency Info" fontSize="14" fontWeight="bold"/>
+	<s:Label left="15" top="10" text="{resourceManager.getString('messages', 'jobDependencyInfo')}" fontSize="14" fontWeight="bold"/>
 	
 	<s:VGroup left="15" top="15">
 		<s:FormItem top="5">
 			<s:HGroup verticalAlign="baseline">
-				<s:Label text="Select Ignition Priority" fontSize="12" fontWeight="bold"/>
+				<s:Label text="{resourceManager.getString('messages', 'jobSelectIgnitionPriority')}" fontSize="12" fontWeight="bold"/>
 				<s:RadioButton group="{sensInfo}" 
 							   id="dep"
 							   value="dep"
-							   label="Dependency is first"
+							   label="{resourceManager.getString('messages', 'depencyIsFirst')}"
 							   selected="true"
 							   width="130"/>
 				<s:RadioButton group="{sensInfo}" 
 							   id="time"
 							   value="time"
-							   label="Wait for time" 
+							   label="{resourceManager.getString('messages', 'waitForTime')}" 
 							   width="100"/>
-				<s:Label text="Delay" visible="false" id="lbldel"/>
+				<s:Label text="{resourceManager.getString('messages', 'delay')}" visible="false" id="lbldel"/>
 				<s:TextInput id="step" width="80" visible="false"/>
-				<s:Label text="Relative" visible="false" id="lblrel"/>
+				<s:Label text="{resourceManager.getString('messages', 'relative')}" visible="false" id="lblrel"/>
 				<s:DropDownList id="relative" selectedIndex="0" visible="false"> 
 					<s:dataProvider>
 						<mx:ArrayList>
@@ -510,7 +600,7 @@
 			<s:HGroup gap="-20">
 				<s:VGroup>
 					<s:HGroup>				
-						<s:FormItem label="State" width="140">
+						<s:FormItem label="{resourceManager.getString('messages', 'jobStateLabel')}" width="140">
 							<s:DropDownList id="stateName" width="110" prompt="Select Status" change="stateName_changeHandler(event)" selectedIndex="4" labelField="value" > 
 								<s:dataProvider>
 									<mx:ArrayList>
@@ -529,7 +619,7 @@
 							</s:DropDownList>
 						</s:FormItem>
 						
-						<s:FormItem label="Subtate" width="170">
+						<s:FormItem label="{resourceManager.getString('messages', 'jobSubStateNameLabel')}" width="170">
 							<s:DropDownList id="substateName" width="120" prompt="Select Status" labelField="value" change="substateName_changeHandler(event)" enabled="true" selectedIndex="0"> 
 								<s:dataProvider>
 									<mx:ArrayList>
@@ -558,7 +648,7 @@
 								</s:dataProvider>
 							</s:DropDownList>
 						</s:FormItem>
-						<s:FormItem label="Status">
+						<s:FormItem label="{resourceManager.getString('messages', 'jobStatusLabel')}">
 							<s:DropDownList id="statusName" width="120" prompt="Select Status" labelField="value" enabled="true" selectedIndex="0"> 
 								<s:dataProvider>
 									<mx:ArrayList>
@@ -598,12 +688,12 @@
 					<!--<s:Button label="Test" id="testCombos" click="testCombos_clickHandler(event)" enabled="true"/>-->
 					<s:HGroup>
 						<s:FormItem width="100">
-							<s:Button id="btn1" label="Select Job" click="btn_click1(event);" />
+							<s:Button id="btn1" label="{resourceManager.getString('messages', 'jobSelectButLabel')}" click="btn_click1(event);" />
 						</s:FormItem>
 						<s:FormItem width="140">
 							<s:TextInput id="selectedJobInfo" editable="false"/>
 						</s:FormItem>
-						<s:FormItem label="Comment">
+						<s:FormItem label="{resourceManager.getString('messages', 'jobCommentLabel')}">
 							<s:TextInput id="comment" width="300"/>
 						</s:FormItem>
 					</s:HGroup>
@@ -614,15 +704,15 @@
 		
 		<s:BorderContainer id="dependencyListBoxAddRemove" top="50" width="700" borderWeight="2" cornerRadius="3" dropShadowVisible="true" enabled="true">
 			<s:HGroup paddingTop="5" paddingBottom="5" paddingLeft="250">
-				<s:Button label="Ekle" id="depEkle" click="depEkle_clickHandler(event)" enabled="true"/>
-				<s:Button label="Çıkar" id="depCikar" click="depCikar_clickHandler(event)" enabled="false"/>
-				<s:Button label="Değiştir" id="depDegistir" click="depDegistir_clickHandler(event)" enabled="false"/>
+				<s:Button label="{resourceManager.getString('messages', 'retCodeAddButLabel')}" id="depEkle" click="depEkle_clickHandler(event)" enabled="true"/>
+				<s:Button label="{resourceManager.getString('messages', 'retCodeDeleteButLabel')}" id="depCikar" click="depCikar_clickHandler(event)" enabled="false"/>
+				<s:Button label="{resourceManager.getString('messages', 'retCodeUpdateButLabel')}" id="depDegistir" click="depDegistir_clickHandler(event)" enabled="false"/>
 			</s:HGroup>
 		</s:BorderContainer>
 		
 		<s:BorderContainer id="dependencyListBox" top="50" width="700" height="120" borderWeight="2" cornerRadius="3" dropShadowVisible="true" enabled="true">
 			
-			<s:Label left="15" top="10" text="Dependency List" fontSize="14" fontWeight="bold"/>
+			<s:Label left="15" top="10" text="{resourceManager.getString('messages', 'jobDependencyListLabel')}" fontSize="14" fontWeight="bold"/>
 			
 			<s:DataGrid id="dependencyListGrid" width="695" height="80" rowHeight="50" selectionChange="depListGrid_selectionChangeHandler(event)"  left="15" top="40" variableRowHeight="true" verticalCenter="10" horizontalCenter="0">
 				<s:columns>
@@ -631,7 +721,7 @@
 						Simple custom item renderer based on GridItemRenderer and Label.
 						Prevent line breaking by setting maxDisplayedLines="1".
 						-->
-						<s:GridColumn dataField="depid" headerText="Dependency id">
+						<s:GridColumn dataField="depid" headerText="{resourceManager.getString('messages', 'jobDepIdColText')}">
 							<s:itemRenderer>
 								<fx:Component>
 									<s:GridItemRenderer>
@@ -641,7 +731,7 @@
 								</fx:Component>
 							</s:itemRenderer>
 						</s:GridColumn>
-						<s:GridColumn dataField="jobinfo" headerText="Job id and name">
+						<s:GridColumn dataField="jobinfo" headerText="{resourceManager.getString('messages', 'jobInfoColText')}">
 							<s:itemRenderer>
 								<fx:Component>
 									<s:GridItemRenderer>
@@ -651,7 +741,7 @@
 								</fx:Component>
 							</s:itemRenderer>
 						</s:GridColumn>
-						<s:GridColumn dataField="stateinfo" headerText="State Substate Status" id="listGridCol">
+						<s:GridColumn dataField="stateinfo" headerText="{resourceManager.getString('messages', 'jobStateSubstateStatusColText')}" id="listGridCol">
 							<s:itemRenderer>
 								<fx:Component>
 									<s:GridItemRenderer>
@@ -666,7 +756,7 @@
 				<s:ArrayCollection />
 			</s:DataGrid>
 		</s:BorderContainer>
-		<s:FormItem label="Dependency Expression">
+		<s:FormItem label="{resourceManager.getString('messages', 'jobDepExpressionLabel')}">
 			<s:TextInput id="depExp" width="500"/>
 		</s:FormItem>
 	</s:VGroup>

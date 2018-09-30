@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Form xmlns:fx="http://ns.adobe.com/mxml/2009"
-		xmlns:mx="library://ns.apache.org/royale/mx"
-		xmlns:s="library://ns.apache.org/royale/spark"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:MyComp="*"
 		width="450" height="300">
 	

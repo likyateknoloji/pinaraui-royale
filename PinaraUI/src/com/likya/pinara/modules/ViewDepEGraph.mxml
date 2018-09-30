@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--s:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
-xmlns:mx="library://ns.apache.org/royale/mx"
-xmlns:s="library://ns.apache.org/royale/spark"
+xmlns:mx="library://ns.adobe.com/flex/mx" 
+xmlns:s="library://ns.adobe.com/flex/spark"
 xmlns:visual="org.un.cava.birdeye.ravis.enhancedGraphLayout.visual.*" 
 xmlns:code="http://code.google.com/p/flexlib/"
 implements="com.likya.pinara.modules.IModuleInterface"
 creationComplete="creationCompleteHandler(event)"
 width="100%" height="100%"-->
 <s:Module xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		  xmlns:mx="library://ns.apache.org/royale/mx"
-		  xmlns:s="library://ns.apache.org/royale/spark" 
-		  width="100%" height="100%" xmlns:local="*" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:local="*" 
 		  xmlns:visual="org.un.cava.birdeye.ravis.enhancedGraphLayout.visual.*"
 		  xmlns:controls="org.un.cava.birdeye.ravis.enhancedGraphLayout.ui.controls.*"
 		  xmlns:vc="org.un.cava.birdeye.ravis.components.ui.controls.vgraphControls.*"
@@ -97,7 +96,7 @@ width="100%" height="100%"-->
 			
 			private function initData(graphXML:XML):void {
 				if (graphXML == "false") {
-					Alert.show("Can not read xml !");
+					Alert.show(resourceManager.getString("messages", "viewDepGraphCantReadXml"));
 				}
 				
 				var rootNodeId:String = graphXML.Meta.rootnodeid;

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.likya.pinara.comps.jobcrud.DependencyListForm;
+			import com.likya.pinara.comps.jobcrud.JobEditWindow;
+			import com.likya.pinara.utils.ViewToJobXml;
+			
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.TitleWindow;
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				var jobEditWindow:TitleWindow = PopUpManager.createPopUp(this, JobEditWindow, true) as TitleWindow;
+				
+				/*var depForm:DependencyListForm = jobEditWindow["dependencyListForm"] as DependencyListForm;
+				
+				depForm.jobList.dataProvider.addItem("1:job1");
+				depForm.jobList.dataProvider.addItem("2:job2");
+				depForm.jobList.dataProvider.addItem("3:job3");
+				depForm.jobList.dataProvider.addItem("4:job4");
+				depForm.jobList.dataProvider.addItem("5:job5");*/
+				
+				PopUpManager.centerPopUp(jobEditWindow);
+				
+			}
+			
+			
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				Alert.show(tobeParsed.text.split(',')[0]);
+			}
+			
+			protected function button3_clickHandler(event:MouseEvent):void
+			{
+				Alert.show(ViewToJobXml.zeroize(tobeParsed.text));
+			}
+			
+			protected function button4_clickHandler(event:MouseEvent):void
+			{
+				var jobListXml:XML = 
+					<joblist>
+						<job><jobid>22</jobid><jobname>My name is 22</jobname></job>
+						<job><jobid>23</jobid><jobname>My name is 23</jobname></job>
+						<job><jobid>24</jobid><jobname>My name is 24</jobname></job>
+						<job><jobid>25</jobid><jobname>My name is 25</jobname></job>
+						<job><jobid>26</jobid><jobname>My name is 26</jobname></job>
+					</joblist>;
+				
+				
+				for each (var job:Object in jobListXml.children()) {
+					trace(job);
+					jobList.dataProvider.addItem(job.jobid + ":" + job.jobname);
+				}
+				
+			}
+			
+			protected function button5_clickHandler(event:MouseEvent):void
+			{
+				var jobListXml:XML = 
+					<joblist>
+						<job><jobid>22</jobid><jobname>My name is 22</jobname></job>
+						<job><jobid>23</jobid><jobname>My name is 23</jobname></job>
+						<job><jobid>24</jobid><jobname>My name is 24</jobname></job>
+						<job><jobid>25</jobid><jobname>My name is 25</jobname></job>
+						<jobserkan><jobid>26</jobid><jobname>My name is 26</jobname></jobserkan>
+					</joblist>;
+				
+				Alert.show(jobListXml.hasOwnProperty("jobserkan"));
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+	</fx:Declarations>
+	
+	<s:VGroup>
+		<s:Button id="button1" click="button1_clickHandler(event)" label="Test Me" />
+		
+		<s:TextInput id="tobeParsed">
+			
+		</s:TextInput>
+		
+		<s:Button id="button2" click="button2_clickHandler(event)" label="Split" />
+		
+		<s:Button id="button3" click="button3_clickHandler(event)" label="Zero" />
+		
+		<s:Button id="button4" click="button4_clickHandler(event)" label="XMLList" />
+	
+		<s:List id="jobList" maxHeight="120"> 
+			<mx:ArrayCollection />
+		</s:List>
+		
+		<s:Button id="button5" click="button5_clickHandler(event)" label="button5" />
+		
+	</s:VGroup>
+
+</s:Application>

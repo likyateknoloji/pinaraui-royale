@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Form xmlns:fx="http://ns.adobe.com/mxml/2009"
-		xmlns:mx="library://ns.apache.org/royale/mx"
-		xmlns:s="library://ns.apache.org/royale/spark"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:MyComp="*"
 		width="450" height="300">
 	
@@ -16,7 +16,7 @@
 			{
 				var regexVal:Boolean = ViewToJobXml.isValidSpecDays(specDays.text);
 				if(specDays.text.length > 0 && !regexVal) {
-					Alert.show("spec days not valid !");
+					Alert.show(resourceManager.getString("messages", "scheduleFormSpecDayNotValid"));
 					return false;
 				}
 				
@@ -33,7 +33,7 @@
 				} else if (selectedValue == "specificSchedule") {
 					this.dom.enabled = true;
 				} else {
-					Alert.show("You selected Nothing.");
+					Alert.show(resourceManager.getString("messages", "depNothingSelected"));
 				}
 			}
 			
@@ -52,39 +52,39 @@
 		<s:RadioButton group="{scheduleType}" 
 					   id="everyDaySchedule"
 					   value="everyDaySchedule"
-					   label="Execute Everyday"
+					   label="{resourceManager.getString('messages', 'jobExecScheduleEveryday')}"
 					   selected="true"
 					   width="150"/>
 		<s:RadioButton group="{scheduleType}" 
 					   id="specificSchedule"
 					   value="specificSchedule"
-					   label="Execute On Day(s) Of Month" 
+					   label="{resourceManager.getString('messages', 'jobExecSpecificSchedule')}" 
 					   width="200"/>
 	</s:VGroup>
 	
 	<s:HGroup enabled="false" id="dom">
 		<s:VGroup>
 			<s:FormItem label="">
-				<s:CheckBox width="150" label="First Day Of Month" id="fdom"/>
+				<s:CheckBox width="150" label="{resourceManager.getString('messages', 'jobExecScheduleFDOM')}" id="fdom"/>
 			</s:FormItem>
 			<s:FormItem label="">
-				<s:CheckBox width="150" label="Last Day Of Month" id="ldom"/>
+				<s:CheckBox width="150" label="{resourceManager.getString('messages', 'jobExecScheduleLDOM')}" id="ldom"/>
 			</s:FormItem>
-			<s:FormItem label="Day list">
+			<s:FormItem label="{resourceManager.getString('messages', 'jobExecScheduleDL')}">
 				<s:TextInput id="specDays" width="100%"/>
 				<s:helpContent>
-					<s:Label text="E.g. 1,5,9-13"/>
+					<s:Label text="{resourceManager.getString('messages', 'jobExecScheduleDLHelpContx')}"/>
 				</s:helpContent>
 			</s:FormItem>
 		</s:VGroup>
-		<s:FormItem label="Days of Week">
-			<s:CheckBox width="150" label="Monday" id="d1"/>
-			<s:CheckBox width="150" label="Tuesday" id="d2"/>
-			<s:CheckBox width="150" label="Wednesday" id="d3"/>
-			<s:CheckBox width="150" label="Thursday" id="d4"/>
-			<s:CheckBox width="150" label="Friday" id="d5"/>
-			<s:CheckBox width="150" label="Saturday" id="d6"/>
-			<s:CheckBox width="150" label="Sunday" id="d7"/>
+		<s:FormItem label="{resourceManager.getString('messages', 'jobExecScheduleLDOW')}">
+			<s:CheckBox width="150" label="Monday" id="d2"/>
+			<s:CheckBox width="150" label="Tuesday" id="d3"/>
+			<s:CheckBox width="150" label="Wednesday" id="d4"/>
+			<s:CheckBox width="150" label="Thursday" id="d5"/>
+			<s:CheckBox width="150" label="Friday" id="d6"/>
+			<s:CheckBox width="150" label="Saturday" id="d7"/>
+			<s:CheckBox width="150" label="Sunday" id="d1"/>
 		</s:FormItem>
 	</s:HGroup>
 	

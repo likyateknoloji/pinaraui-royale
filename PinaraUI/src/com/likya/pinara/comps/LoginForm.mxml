@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
-		 xmlns:mx="library://ns.apache.org/royale/mx"
-		 xmlns:s="library://ns.apache.org/royale/spark"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:services="services.*"
 		 xmlns:query="services.query.*"
 		 width="280" height="144">
@@ -47,13 +47,13 @@
 					dispatchEvent(new ResourceEvent(ResourceEvent.LOGIN, userInfo));
 					
 				} else {
-					Alert.show("Geçerlilik Hatası !", "Hata", Alert.OK, this, null, null);
+					Alert.show(resourceManager.getString("messages", "loginFormValidationError"), "Hata", Alert.OK, this, null, null);
 				}
 			}
 			
 			private function faultHandler(event:FaultEvent):void {
 				//Alert.show("Check if your database is running !");
-				Alert.show("Veri tabanınızın çalışıp çalışmadığını kontrol edin !");
+				Alert.show(resourceManager.getString("messages", "loginFormDBError"));
 			}
 			
 			private function changeLocale(locale:String):void {

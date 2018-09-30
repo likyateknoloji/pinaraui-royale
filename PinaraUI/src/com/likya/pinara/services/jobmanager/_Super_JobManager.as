@@ -191,8 +191,7 @@ internal class _Super_JobManager extends com.adobe.fiber.services.wrapper.HTTPSe
          operation.url = "/flex/restsrvc/disablegrp/{grpId}";
          operation.method = "GET";
          argsArray = new Array("grpId");
-         operation.argumentNames = argsArray;
-		 operation.serializationFilter = serializer0;
+         operation.argumentNames = argsArray;         
          operation.properties = new Object();
          operation.properties["urlParamNames"] = ["grpId"];
          operation.resultType = Object;
@@ -202,8 +201,7 @@ internal class _Super_JobManager extends com.adobe.fiber.services.wrapper.HTTPSe
          operation.url = "/flex/restsrvc/disablejob/{jobId}";
          operation.method = "GET";
          argsArray = new Array("jobId");
-         operation.argumentNames = argsArray;
-		 operation.serializationFilter = serializer0;
+         operation.argumentNames = argsArray;         
          operation.properties = new Object();
          operation.properties["urlParamNames"] = ["jobId"];
          operation.resultType = Object;
@@ -213,8 +211,7 @@ internal class _Super_JobManager extends com.adobe.fiber.services.wrapper.HTTPSe
          operation.url = "/flex/restsrvc/stopjob/{jobId}";
          operation.method = "GET";
          argsArray = new Array("jobId");
-         operation.argumentNames = argsArray;
-		 operation.serializationFilter = serializer0;
+         operation.argumentNames = argsArray;         
          operation.properties = new Object();
          operation.properties["urlParamNames"] = ["jobId"];
          operation.resultType = Object;

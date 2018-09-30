@@ -1,17 +1,18 @@
 package com.likya.pinara.utils {
+	import com.likya.pinara.comps.jobcrud.JobBaseTypeInfoForm_0;
 	import com.likya.pinara.comps.jobcrud.JobEditWindow;
+	import com.likya.pinara.modules.IModuleInterface;
 	
 	import mx.formatters.DateFormatter;
 	
 	public class ViewToJobXml {
-		
 		/*namespace xsi="http://www.w3.org/2001/XMLSchema-instance"
 		use namespace xsi;*/
 		
 		namespace myra = "http://www.likyateknoloji.com/myra-joblist";
 		use namespace myra;
 		
-		namespace myra_jobprops="http://www.likyateknoloji.com/myra-jobprops";
+		namespace myra_jobprops= "http://www.likyateknoloji.com/myra-jobprops";
 		use namespace myra_jobprops;
 		
 		namespace wla = "http://www.likyateknoloji.com/wla-gen";
@@ -20,30 +21,45 @@ package com.likya.pinara.utils {
 		namespace lik = "http://www.likyateknoloji.com/likya-gen";
 		use namespace lik;
 		
-		namespace myra_stateinfo ="http://www.likyateknoloji.com/myra-stateinfo";
+		namespace myra_stateinfo = "http://www.likyateknoloji.com/myra-stateinfo";
 		use namespace myra_stateinfo;
+		
+		namespace rs = "http://www.likyateknoloji.com/rs";
+		use namespace rs;
+
 		
 		public static function getXML(j:JobEditWindow):XML {
 			
 			var myraJobList:XML = 
 				<myra:jobList xmlns:myra="http://www.likyateknoloji.com/myra-joblist" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 						xmlns:myra-jobprops="http://www.likyateknoloji.com/myra-jobprops" xmlns:wla="http://www.likyateknoloji.com/wla-gen"
-						xmlns:lik="http://www.likyateknoloji.com/likya-gen" xmlns:myra-stateinfo="http://www.likyateknoloji.com/myra-stateinfo">
-					<myra:genericJob xsi:type="myra:simpleProperties" />
-				</myra:jobList>;
-
-			if(j.jobDetailXml == null) {
+						xmlns:lik="http://www.likyateknoloji.com/likya-gen" xmlns:myra-stateinfo="http://www.likyateknoloji.com/myra-stateinfo"
+						xmlns:rs="http://www.likyateknoloji.com/rs">
+					<myra:genericJob />
+				</myra:jobList>; 
+			
+			var jobType:String = j.baseInfoForm_0.jsJobType.selectedItem;
+			if(jobType == JobBaseTypeInfoForm_0.REMOTE_SHELL) {
+				myraJobList.myra::genericJob.@['xsi:type'] = "myra:remoteSchProperties";
+				myraJobList.myra::genericJob.@handlerURI = "com.likya.myra.jef.jobs.ExecuteSchComponent";
+			} else {
+				myraJobList.myra::genericJob.@['xsi:type'] = "myra:simpleProperties";
 				myraJobList.myra::genericJob.@handlerURI = "com.likya.myra.jef.jobs.ExecuteInShell";
+			}
+				
+			if(j.jobDetailXml == null) {
 				myraJobList.myra::genericJob.@Id = "-1"; // will be replaced on the service side with the valid value
 				myraJobList.myra::genericJob.@groupId = "my_group"; // Ekrandan girilmesi gerekiyor !!!!
 				trace("UYARI !!!! : myraJobList.myra::genericJob.@groupId ekrandan girilmeli");
 				myraJobList.myra::genericJob.@agentId = "1";
+				myraJobList.myra::genericJob.@scenarioId = "";
 				trace("UYARI !!!! : myraJobList.myra::genericJob.@agentId ekrandan girilmeli");
 			} else { 
-				myraJobList.myra::genericJob.@handlerURI = j.jobDetailXml.@handlerURI; //"com.likya.myra.jef.jobs.ExecuteInShell";
+				//myraJobList.myra::genericJob.@handlerURI = j.jobDetailXml.@handlerURI; //"com.likya.myra.jef.jobs.ExecuteInShell";
 				myraJobList.myra::genericJob.@Id = j.jobDetailXml.@Id; //"22";
 				// myraJobList.myra::genericJob.@groupId = j.jobDetailXml.@groupId; //"my_group";
 				myraJobList.myra::genericJob.@agentId = j.jobDetailXml.@agentId; //"1";
+				myraJobList.myra::genericJob.@scenarioId = j.jobDetailXml.@scenarioId;
 			}
 			
 			// Alert.show("myraJobList.myra::genericJob.@handlerURI : " + myraJobList.myra::genericJob.@handlerURI);
@@ -63,6 +79,10 @@ package com.likya.pinara.utils {
 			myraJobList = getLogAnalysis(j, myraJobList);
 
 			myraJobList = getScheduleInfo(j, myraJobList);
+			
+			if(jobType == JobBaseTypeInfoForm_0.REMOTE_SHELL) {
+				myraJobList.myra::genericJob.appendChild((j.remoteSchModule as IModuleInterface).getDataXml());
+			}
 
 			return myraJobList;
 			
@@ -255,7 +275,12 @@ package com.likya.pinara.utils {
 				managementInfoXML.appendChild(<myra-jobprops:periodInfo xmlns:myra-jobprops="http://www.likyateknoloji.com/myra-jobprops" />);
 				
 				managementInfoXML.periodInfo.@relativeStart = j.managementInfoForm_1.relativeStart.selectedItem;
-				managementInfoXML.periodInfo.@step = j.managementInfoForm_1.stepValue.text;
+				
+			
+				if(j.managementInfoForm_1.stepValue.text != "") {
+					managementInfoXML.periodInfo.@step = j.managementInfoForm_1.stepValue.text;
+				}
+				
 				if(j.managementInfoForm_1.maxCountValue.text != null && j.managementInfoForm_1.maxCountValue.text.length > 0 && j.managementInfoForm_1.maxCountValue.text != "0") {
 					managementInfoXML.periodInfo.@maxCount = j.managementInfoForm_1.maxCountValue.text;
 				}
@@ -291,12 +316,13 @@ package com.likya.pinara.utils {
 		
 		private static function get_TimeManagement(managementInfoXML:Object, j:JobEditWindow):Object {
 			
-			var currentDF:DateFormatter = new DateFormatter(); 
-			currentDF.formatString = "YYYY-MM-DD";
+			//var currentDF:DateFormatter = new DateFormatter(); 
+			//currentDF.formatString = "YYYY-MM-DD";
 			
 			managementInfoXML.appendChild(<wla:timeManagement xmlns:wla="http://www.likyateknoloji.com/wla-gen"/>);
 			
-			// if(j.managementInfoForm_0.jsJobTriggerType.selectedItem.value == "TIME") {
+			//"TIME") {
+			if(j.managementInfoForm_0.jsJobTriggerType.selectedItem.value == j.managementInfoForm_0.data[0].value) {
 				
 				var bInfo : Boolean = j.managementInfoForm_0.timeFrameStart.selected;
 				var eInfo : Boolean = j.managementInfoForm_0.timeFrameStop.selected;
@@ -308,15 +334,15 @@ package com.likya.pinara.utils {
 					if(bInfo) {
 						managementInfoXML.wla::timeManagement.wla::jsExecutionTimeFrame.appendChild(<wla:startTime xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
 						var sDate:Date = j.managementInfoForm_0.tFbdate.selectedDate;
-						var dateString:String = currentDF.format(sDate);
-						dateString = getW3Dt(sDate, j.managementInfoForm_0.tFbhour.value, j.managementInfoForm_0.tFbminute.value, j.managementInfoForm_0.tFbsecond.value);
+						// var dateString:String = currentDF.format(sDate);
+						var dateString:String = getW3Dt(sDate, j.managementInfoForm_0.tFbhour.value, j.managementInfoForm_0.tFbminute.value, j.managementInfoForm_0.tFbsecond.value);
 						managementInfoXML.timeManagement.jsExecutionTimeFrame.startTime = dateString;
 					}
 					
 					if(eInfo) {
 						managementInfoXML.wla::timeManagement.wla::jsExecutionTimeFrame.appendChild(<wla:stopTime xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
 						sDate = j.managementInfoForm_0.tFedate.selectedDate;
-						dateString = currentDF.format(sDate);
+						// dateString = currentDF.format(sDate);
 						dateString = getW3Dt(sDate, j.managementInfoForm_0.tFehour.value, j.managementInfoForm_0.tFeminute.value, j.managementInfoForm_0.tFesecond.value);
 						managementInfoXML.timeManagement.jsExecutionTimeFrame.stopTime = dateString;
 						
@@ -331,7 +357,7 @@ package com.likya.pinara.utils {
 				managementInfoXML.wla::timeManagement.wla::jsScheduledTime.appendChild(<wla:startTime xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
 				
 				sDate = j.managementInfoForm_0.bdate.selectedDate;
-				dateString = currentDF.format(sDate);
+				// dateString = currentDF.format(sDate);
 				
 				dateString = getW3Dt(sDate, j.managementInfoForm_0.bhour.value, j.managementInfoForm_0.bminute.value, j.managementInfoForm_0.bsecond.value);
 				
@@ -341,22 +367,37 @@ package com.likya.pinara.utils {
 				managementInfoXML.wla::timeManagement.wla::jsActualTime.appendChild(<wla:startTime xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
 				managementInfoXML.timeManagement.jsActualTime.startTime = dateString;
 				//}
+
+				if(parseInt(j.managementInfoForm_0.timeoutValue.text) > 0) {
+					managementInfoXML.wla::timeManagement.appendChild(<wla:jsTimeOut xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
+					managementInfoXML.wla::timeManagement.wla::jsTimeOut.appendChild(<lik:value_integer xmlns:lik="http://www.likyateknoloji.com/likya-gen" />);
+					managementInfoXML.wla::timeManagement.wla::jsTimeOut.appendChild(<lik:unit xmlns:lik="http://www.likyateknoloji.com/likya-gen"  />);
+					managementInfoXML.timeManagement.jsTimeOut.lik::value_integer = j.managementInfoForm_0.timeoutValue.text;
+					managementInfoXML.timeManagement.jsTimeOut.lik::unit = j.managementInfoForm_0.timeoutUnit.selectedItem;
+				}
 				
-			// }
-			
-			managementInfoXML.wla::timeManagement.appendChild(<wla:jsTimeOut xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
-			managementInfoXML.wla::timeManagement.wla::jsTimeOut.appendChild(<lik:value_integer xmlns:lik="http://www.likyateknoloji.com/likya-gen" />);
-			managementInfoXML.wla::timeManagement.wla::jsTimeOut.appendChild(<lik:unit xmlns:lik="http://www.likyateknoloji.com/likya-gen"  />);
-			
-			managementInfoXML.wla::timeManagement.appendChild(<wla:expectedTime xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
-			managementInfoXML.wla::timeManagement.wla::expectedTime.appendChild(<lik:value_integer xmlns:lik="http://www.likyateknoloji.com/likya-gen" />);
-			managementInfoXML.wla::timeManagement.wla::expectedTime.appendChild(<lik:unit xmlns:lik="http://www.likyateknoloji.com/likya-gen"  />);
-			
-			managementInfoXML.timeManagement.jsTimeOut.lik::value_integer = j.managementInfoForm_0.timoutValue.text;
-			managementInfoXML.timeManagement.jsTimeOut.lik::unit = j.managementInfoForm_0.timeoutUnit.selectedItem;
-			
-			managementInfoXML.timeManagement.expectedTime.lik::value_integer = j.managementInfoForm_0.expectedValue.text;
-			managementInfoXML.timeManagement.expectedTime.lik::unit = j.managementInfoForm_0.expectedTimeUnit.selectedItem;
+				if(parseInt(j.managementInfoForm_0.expectedValue.text) > 0) {
+					managementInfoXML.wla::timeManagement.appendChild(<wla:expectedTime xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
+					managementInfoXML.wla::timeManagement.wla::expectedTime.appendChild(<lik:value_integer xmlns:lik="http://www.likyateknoloji.com/likya-gen" />);
+					managementInfoXML.wla::timeManagement.wla::expectedTime.appendChild(<lik:unit xmlns:lik="http://www.likyateknoloji.com/likya-gen"  />);
+					managementInfoXML.timeManagement.expectedTime.lik::value_integer = j.managementInfoForm_0.expectedValue.text;
+					managementInfoXML.timeManagement.expectedTime.lik::unit = j.managementInfoForm_0.expectedTimeUnit.selectedItem;
+				}
+				
+			} else {//"USER - MANUEL")
+				// Boş da olsa xml element eklenmeli validasyon için.
+				var currentDateTime:Date = new Date();
+				
+				dateString = getW3Dt(currentDateTime, 0, 0, 0);
+				
+				managementInfoXML.wla::timeManagement.appendChild(<wla:jsScheduledTime xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
+				managementInfoXML.wla::timeManagement.wla::jsScheduledTime.appendChild(<wla:startTime xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
+				managementInfoXML.timeManagement.jsScheduledTime.startTime = dateString;
+				
+				managementInfoXML.wla::timeManagement.appendChild(<wla:jsActualTime xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
+				managementInfoXML.wla::timeManagement.wla::jsActualTime.appendChild(<wla:startTime xmlns:wla="http://www.likyateknoloji.com/wla-gen" />);
+				managementInfoXML.timeManagement.jsActualTime.startTime = dateString;
+			}
 			
 			return managementInfoXML;
 		}
@@ -556,11 +597,13 @@ package com.likya.pinara.utils {
 				
 				logAnalysisXML.wla::action.appendChild(elsecaseXML);
 			}
-			
-			if(liveStateInfo.hasOwnProperty("StateName")) {
+
+			// myra-stateinfo:StateName
+			// Aşağıdaki kod çalışmıyor, namespace ile çalışan sürüm gelene kadar kaldırdım.
+			// if(liveStateInfo.hasOwnProperty("StateName")) {
 				thencaseXML.wla::forcedResult.appendChild(liveStateInfo);
 				myraJobList.myra::genericJob.appendChild(logAnalysisXML);
-			}
+			// }
 			
 			trace(logAnalysisXML);
 			
@@ -718,7 +761,6 @@ package com.likya.pinara.utils {
 					
 				}
 			}
-			
 			
 			return myraJobList;
 		}

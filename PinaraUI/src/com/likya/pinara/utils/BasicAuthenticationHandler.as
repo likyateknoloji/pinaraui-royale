@@ -12,6 +12,7 @@ package com.likya.pinara.utils
 	import mx.core.FlexGlobals;
 	import mx.core.IFlexDisplayObject;
 	import mx.managers.PopUpManager;
+	import mx.resources.ResourceManager;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
@@ -29,7 +30,10 @@ package com.likya.pinara.utils
 			encoder.insertNewLines = false; // see below for why you need to do this
 			var tmpUserInfo:User = ModelLocator.getInstance().currentUser;
 			// encoder.encode("pinara:pinara");
-			encoder.encode(tmpUserInfo.username + ":" + tmpUserInfo.password);
+			// encoder.encode(tmpUserInfo.username + ":" + tmpUserInfo.password);
+			// tr şifre ve kullanıcı sorunu nedeni utf8 e geçtim
+			encoder.encodeUTFBytes(tmpUserInfo.username + ":" + tmpUserInfo.password);
+
 			
 			service.headers = {Authorization:"Basic " + encoder.toString()};   
 			
@@ -57,7 +61,10 @@ package com.likya.pinara.utils
 			encoder.insertNewLines = false;
 			//encoder.encode("pinara:pinara");
 			var tmpUserInfo:User = ModelLocator.getInstance().currentUser;
-			encoder.encode(tmpUserInfo.username + ":" + tmpUserInfo.password);
+			// encoder.encode(tmpUserInfo.username + ":" + tmpUserInfo.password);
+			// tr şifre ve kullanıcı sorunu nedeni utf8 e geçtim
+			encoder.encodeUTFBytes(tmpUserInfo.username + ":" + tmpUserInfo.password);
+
 			
 			service.operations[operationName].headers["Authorization"] = "Basic " + encoder.toString();
 			
@@ -92,7 +99,7 @@ package com.likya.pinara.utils
 			if(event.statusCode == 200) {
 				Alert.show("Url : " + event.target.url + "\nHata Mesajı : " + event.fault.faultString + "\nResponse : " + event.message.body);
 			} else if (event.statusCode == 400) {
-				Alert.show("Kullacını adı ya da şifre hatalı !");
+				Alert.show(ResourceManager.getInstance().getString('messages', 'basicAuthPassOrUserError'));
 			/*} else if (event.statusCode == 499) {
 				Alert.show("Server state is not available, please relogin !");
 				FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.UPDATE_TREE, null));

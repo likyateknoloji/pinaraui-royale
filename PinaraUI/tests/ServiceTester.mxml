@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" xmlns:jobmanager="com.likya.pinara.services.jobmanager.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.likya.pinara.model.UserInfo;
+			import com.likya.pinara.utils.BasicAuthenticationHandler;
+			
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.http.Operation;
+			import mx.utils.Base64Decoder;
+			import mx.utils.Base64Encoder;
+			import mx.utils.ObjectUtil;
+			
+			public var currentUser:UserInfo = new UserInfo();
+
+/*			
+			operation = new mx.rpc.http.Operation(null, "disable");
+			operation.url = "/flex/restsrvc/disablejob/{jobId}";
+			operation.method = "GET";
+			argsArray = new Array("jobId");
+			operation.argumentNames = argsArray;         
+			operation.serializationFilter = serializer0;
+			operation.properties = new Object();
+			operation.properties["urlParamNames"] = ["jobId"];
+			operation.resultType = Object;
+			operations.push(operation);
+			
+			
+			operation = new mx.rpc.http.Operation(null, "addjob");
+			operation.url = "/flex/restsrvc/addjob/";
+			operation.method = "POST";
+			operation.serializationFilter = serializer0;
+			operation.contentType = "application/xml";
+			operation.resultType = Object;
+			operations.push(operation);*/
+			
+			
+			protected function button1_clickHandler(event:MouseEvent):void {
+				startJobResult.token = jobManagerService.start("1");
+			}
+			
+			protected function iki_clickHandler(event:MouseEvent):void {
+				// disableJobResult.token = jobManagerService.disable("1");
+				currentUser.username = "pinara";
+				currentUser.password = "pinara";
+				disableJobResult.token = BasicAuthenticationHandler.authAndCall(jobManagerService, "disable", "1");
+			}
+			
+			protected function iki_clickHandlerAUTH(event:MouseEvent):void {
+				
+				var encoder:Base64Encoder = new Base64Encoder();
+				encoder.insertNewLines = false;
+				encoder.encode("pinara:pinara");
+				
+				jobManagerService.operations["disable"].headers["Authorization"] = "Basic " + encoder.toString();
+				jobManagerService.operations["disable"].method = "POST";
+				jobManagerService.operations["disable"].contentType = "application/xml";
+				if(jobManagerService.operations["disable"].url.indexOf('?_method=GET') <= 0) {
+					jobManagerService.operations["disable"].url += "?_method=GET";
+				}
+				
+				disableJobResult.token = jobManagerService.operations["disable"].send("1");
+				
+			}
+			protected function uc_clickHandler(event:MouseEvent):void {
+				setSuccessJobResult.token = jobManagerService.setsuccess("1");
+			}
+
+			protected function testTrChar(event:MouseEvent):void {
+				
+				// System.useCodePage = true;
+				jobManagerService.operations["updatejob"].url = "http://127.0.0.1:3000/flex/restsrvc/updatejob/";
+				// jobManagerService.operations["updatejob"].contentType = "application/windows-1254";
+				//jobManagerService.operations["updatejob"].contentType = "application/xml";
+				
+				//jobManagerService.operations["updatejob"].headers = {"Accept-Charset": "utf-8"};
+				// var obj:Object = ObjectUtil.toString(jobManagerService.operations["updatejob"].headers);
+				
+				//trace(obj);
+				// 
+				// obj = ObjectUtil.toString(jobManagerService.operations["updatejob"].contentType);
+				// trace(obj);
+				
+				// var raw:ByteArray = new ByteArray();
+				// var dec:Base64Decoder = new Base64Decoder();
+				// dec.decode("Taş");
+				// raw = dec.toByteArray();
+				
+				//var byteArray:ByteArray = new ByteArray();
+				//byteArray.writeUTFBytes("Taş");
+				
+				//var encoder:Base64Encoder = new Base64Encoder();
+				//encoder.encode("Taş");
+				//var encodedByteArray:ByteArray = new ByteArray();
+				//encodedByteArray.writeUTFBytes(encoder.flush()); 
+				// encodedTxt.text = encodedByteArray.toString();
+				
+				setSuccessJobResult.token = jobManagerService.updatejob("Taş");
+			}
+			
+			protected function jobManagerService_resultHandler(event:ResultEvent):void {
+				Alert.show("Result : " + XML(event.message.body));				
+				System.useCodePage = false;
+			}
+			
+			protected function jobManagerService_faultHandler(event:FaultEvent):void {
+				Alert.show("Fault : " + event.message);	
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<jobmanager:JobManager id="jobManagerService" result="jobManagerService_resultHandler(event)" fault="jobManagerService_faultHandler(event)"/>
+		<s:CallResponder id="startJobResult"/>
+		<s:CallResponder id="disableJobResult"/>
+		<s:CallResponder id="setSuccessJobResult"/>
+		<s:CallResponder id="addJob"/>
+		<s:CallResponder id="updateJob"/>
+	</fx:Declarations>
+
+	<s:Button id="bir" click="button1_clickHandler(event)" label="Start Job" left="100" top="100"/>
+	<s:Button id="iki" click="iki_clickHandler(event)" label="Disable Job" left="200" top="100"/>
+	<s:Button id="uc" click="uc_clickHandler(event)" label="Set Success Job" left="300" top="100"/>
+	
+	<s:Button id="Post" click="testTrChar(event)" label="Post" left="100" top="130"/>
+	
+</s:Application>
