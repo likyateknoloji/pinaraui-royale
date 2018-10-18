@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:s="library://ns.apache.org/royale/spark" 
+		 xmlns:mx="library://ns.apache.org/royale/mx"
 		 width="100%" height="27" 
 		 creationComplete="onCreationComplete(event)" 
 		 xmlns:jobmanager="com.likya.pinara.services.jobmanager.*">
@@ -27,6 +27,11 @@
 			import mx.controls.menuClasses.MenuBarItem;
 			import mx.core.FlexGlobals;
 			import mx.events.CloseEvent;
+			import mx.events.KeyboardEvent;
+			
+			import mx.core.Keyboard;
+			// import flash.ui.Keyboard;
+			
 			import mx.events.FlexEvent;
 			import mx.events.MenuEvent;
 			import mx.managers.PopUpManager;
@@ -35,6 +40,8 @@
 			import mx.rpc.events.ResultEvent;
 			
 			import spark.components.TitleWindow;
+			
+			import org.apache.royale.core.BrowserWindow;
 			
 			[Bindable]
 			public var menuBarData:XMLListCollection = new XMLListCollection();
@@ -106,7 +113,8 @@
 					aboutWindow.setFocus();
 				} else if (event.label == resourceManager.getString("messages", "userGuide")) {
 					var urlRequest:URLRequest = new URLRequest("https://likyateknoloji.atlassian.net/wiki/display/DT1/Doc+%3A+TlosLite+1.8.1");
-					navigateToURL(urlRequest, "_blank");
+					// navigateToURL(urlRequest, "_blank");
+					BrowserWindow.open(urlRequest, "_blank");
 				} else if (event.label == resourceManager.getString("messages", "pinaraProperties")) {
 					showPinaraConfigPopup();
 				} else if (event.label == resourceManager.getString("messages", "myraProperties")) {
@@ -199,7 +207,7 @@
 				//Alert.show("Selected Job id : " + "");	
 			}	
 			
-			private function showDeleteJob(eventObj:CloseEvent):void {
+			private function showDeleteJob(eventObj:mx.events.CloseEvent):void {
 				var serializationInfo:String = "false";
 				if(eventObj.detail == Alert.OK) {
 					//Alert.show("deleting job with id : " + currentDataItem.@Id);
@@ -234,21 +242,21 @@
 				showGenericPopup("infotag=pinaraEkran");
 			}
 
-			private function suspendApp(eventObj:CloseEvent):void {
+			private function suspendApp(eventObj:mx.events.CloseEvent):void {
 				if(eventObj.detail == Alert.OK) {
 					// suspendAppResult.token = jobManagerService.suspendapp();
 					suspendAppResult.token = BasicAuthenticationHandler.authAndCall(jobManagerService, "suspendapp");
 				}
 			}
 
-			private function resumeApp(eventObj:CloseEvent):void {
+			private function resumeApp(eventObj:mx.events.CloseEvent):void {
 				if(eventObj.detail == Alert.OK) {
 					// resumeAppResult.token = jobManagerService.resumeapp();
 					resumeAppResult.token = BasicAuthenticationHandler.authAndCall(jobManagerService, "resumeapp");
 				}
 			}
 
-			private function shutdownNormal(eventObj:CloseEvent):void {
+			private function shutdownNormal(eventObj:mx.events.CloseEvent):void {
 				if(eventObj.detail == Alert.OK) {
 					//shutdownNormalResult.token = jobManagerService.stopapp();
 					shutdownNormalResult.token = BasicAuthenticationHandler.authAndCall(jobManagerService, "stopapp");
@@ -256,7 +264,7 @@
 				}
 			}
 			
-			private function shutdownForce(eventObj:CloseEvent):void {
+			private function shutdownForce(eventObj:mx.events.CloseEvent):void {
 				if(eventObj.detail == Alert.OK) {
 					//shutdownForceResult.token = jobManagerService.fstopapp();
 					shutdownForceResult.token = BasicAuthenticationHandler.authAndCall(jobManagerService, "fstopapp");

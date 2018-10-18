@@ -2,14 +2,16 @@
 package com.likya.pinara.services.jobmanager
 {
 	import com.adobe.fiber.core.model_internal;
-	import com.adobe.fiber.services.wrapper.HTTPServiceWrapper;
+	//import com.adobe.fiber.services.wrapper.HTTPServiceWrapper;
+	import mx.rpc.http.HTTPServiceWrapper;
 	import com.adobe.serializers.xml.XMLSerializationFilter;
 	
 	import mx.rpc.http.HTTPMultiService;
+	import mx.rpc.http.HTTPServiceWrapper;
 	import mx.rpc.http.Operation;
 	
 	[ExcludeClass]
-	internal class Super_JobManager extends com.adobe.fiber.services.wrapper.HTTPServiceWrapper
+	internal class Super_JobManager extends mx.rpc.http.HTTPServiceWrapper
 	{
 		private static var serializer0:XMLSerializationFilter = new XMLSerializationFilter();
 		

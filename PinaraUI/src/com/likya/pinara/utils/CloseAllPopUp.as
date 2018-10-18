@@ -1,10 +1,11 @@
 package com.likya.pinara.utils
 {
-	import flash.display.DisplayObject;
+	// import flash.display.DisplayObject;
 	
 	import mx.collections.ArrayCollection;
 	import mx.core.FlexGlobals;
 	import mx.core.IChildList;
+	import mx.core.IUIComponent;
 	import mx.core.UIComponent;
 	import mx.managers.PopUpManager;
 	
@@ -42,11 +43,11 @@ package com.likya.pinara.utils
 			
 			for (var i: int = 0; i < rawChildren.numChildren; i++)
 			{
-				var currRawChild: DisplayObject = rawChildren.getChildAt(i);
+				var currRawChild: IUIComponent = rawChildren.getChildAt(i);
 				
-				if ((currRawChild is UIComponent) && UIComponent(currRawChild).isPopUp)
+				if ((currRawChild is IUIComponent) && IUIComponent(currRawChild).isPopUp)
 				{
-					if (!onlyVisible || UIComponent(currRawChild).visible)
+					if (!onlyVisible || IUIComponent(currRawChild).visible)
 					{
 						result.addItem(currRawChild);
 					}
@@ -80,10 +81,10 @@ package com.likya.pinara.utils
 			
 			for (var i: int = 0; i < rawChildren.numChildren; i++)
 			{
-				var currRawChild: DisplayObject = rawChildren.getChildAt(i);
+				var currRawChild: IUIComponent = rawChildren.getChildAt(i);
 				
-				if ((currRawChild is UIComponent) && UIComponent(currRawChild).isPopUp
-					&& UIComponent(currRawChild).visible)
+				if ((currRawChild is IUIComponent) && IUIComponent(currRawChild).isPopUp
+					&& IUIComponent(currRawChild).visible)
 				{
 					return true;
 				}

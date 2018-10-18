@@ -1,12 +1,13 @@
-<?xml version="1.0"?>
-<!-- containers\spark\myComponents\ArrayEntryForm.mxml -->
+<?xml version="1.0" encoding="latin5"?>
+<!--borderAlpha="1"-->
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
-			   xmlns:mx="library://ns.adobe.com/flex/mx" 
-			   xmlns:s="library://ns.adobe.com/flex/spark"
-			   width="520" height="450" borderAlpha="1"
+			   xmlns:mx="library://ns.apache.org/royale/mx" 
+			   xmlns:s="library://ns.apache.org/royale/spark"
+			   width="520" height="450" 
 			   title="About Tlos Pinara"
 			   close="removeMe();" keyDown="titleWindow_keyDown(event);"
 			   creationComplete="titlewindow1_creationCompleteHandler(event)">
+	
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
@@ -14,11 +15,17 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.events.CloseEvent;
+			import mx.events.KeyboardEvent;
 			import mx.events.FlexEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
 			
-			import flashx.textLayout.conversion.TextConverter;
+			import mx.core.Keyboard;
+			// import flash.ui.Keyboard;
+			
+			// import flashx.textLayout.conversion.TextConverter;
+			import org.apache.royale.textLayout.conversion.TextConverter;
+			import org.apache.royale.textLayout.elements.TextFlow;
 			
 			[Bindable]
 			public var likyaIconImg:Class;
@@ -35,9 +42,9 @@
 			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void {
 			}
 			
-			private function titleWindow_keyDown(evt:KeyboardEvent):void {
+			private function titleWindow_keyDown(evt:mx.events.KeyboardEvent):void {
 				if (evt.charCode == Keyboard.ESCAPE) {
-					this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+					this.dispatchEvent(new mx.events.CloseEvent(mx.events.CloseEvent.CLOSE));
 				}
 			}
 			
@@ -56,133 +63,129 @@
 		]]>
 	</fx:Script>
 	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<fx:String id="htmlTextAsHTML">
 			<![CDATA[
 			
-			<p><b><font size="12" face="Arial,sans-serif">YazÄ±lÄ±m Son KullanÄ±cÄ± Lisans SÃ¶zleÅŸmesi</font></b></p>
+			
+			<p><b><font size="12" face="Arial,sans-serif">Yazılım Son Kullanıcı Lisans Sözleşmesi</font></b></p>
 			
 			<p align="justify">
 			<font size="9" face="Arial,sans-serif">
-			Bu yazÄ±lÄ±mÄ± (aÅŸaÄŸÄ±da aÃ§Ä±klanmÄ±ÅŸtÄ±r) indirmeden, kurmadan veya kullanmadan Ã¶nce aÅŸaÄŸÄ±daki ÅŸart ve koÅŸullarÄ± dikkatlice okuyun. 
-			YazÄ±lÄ±mÄ± bilgisayarÄ±nÄ±za kurmanÄ±z bu ÅŸart ve koÅŸullarÄ± kabul etmeniz anlamÄ±na gelir.
+			Bu yazılımı (aşağıda açıklanmıştır) indirmeden, kurmadan veya kullanmadan önce aşağıdaki şart ve koşulları dikkatlice okuyun. 
+			Yazılımı bilgisayarınıza kurmanız bu şart ve koşulları kabul etmeniz anlamına gelir.
 			</font>
 			</p>
 			
-			<p><b><font size="12" face="Arial,sans-serif">LÄ°SANS SÃ–ZLEÅMESÄ°</font></b></p>
+			<p><b><font size="12" face="Arial,sans-serif">LİSANS SÖZLEŞMESİ</font></b></p>
 			
 			<p align="justify">
 			<font size="9" face="Arial,sans-serif">
-			Bu Son KullanÄ±cÄ± Lisans SÃ¶zleÅŸmesi (â€œLisans" veya â€œLisans SÃ¶zleÅŸmesiâ€ ) TLOS isimli yazÄ±lÄ±mÄ± kapsamaktadÄ±r. 
-			â€œYazÄ±lÄ±mâ€ terimi, bu yazÄ±lÄ±m programlarÄ±nÄ± ve bu yazÄ±lÄ±m programlarÄ±yla birlikte verilen ilgili tÃ¼m belgeleri ifade eder.
+			Bu Son Kullanıcı Lisans Sözleşmesi ("Lisans" veya "Lisans Sözleşmesi" ) TLOS isimli yazılımı kapsamaktadır. 
+			"Yazılım" terimi, bu yazılım programlarını ve bu yazılım programlarıyla birlikte verilen ilgili tüm belgeleri ifade eder.
 			</font>
 			<br/>
 			<br/>
 			<font size="9" face="Arial,sans-serif">
-			1. LisansÄ±n Verilmesi. Ä°ÅŸbu Lisans SÃ¶zleÅŸmesine uymaya devam ettiÄŸiniz sÃ¼rece, 
-			LÄ°KYA BÄ°LGÄ° TEKNOLOJÄ°LERÄ° VE Ä°LETÄ°ÅÄ°M HÄ°ZMETLERÄ° LÄ°MÄ°TED ÅÄ°RKETÄ° (â€œLÄ°KYA TEKNOLOJÄ°â€) size, aÅŸaÄŸÄ±da belirtilen Lisans sÄ±nÄ±rlamalarÄ±na tabi olarak, 
-			YazÄ±lÄ±mÄ±n bir kopyasÄ± iÃ§in, mÃ¼nhasÄ±r olmayan bir lisans verir. Ä°ÅŸbu Lisans, YazÄ±lÄ±mÄ±n ve LÄ°KYA TEKNOLOJÄ°â€™nin adlarÄ±nÄ±, 
-			logolarÄ±nÄ± veya ticari markalarÄ±nÄ± kullanma hakkÄ± vermez. Ä°ÅŸbu Lisans SÃ¶zleÅŸmesi, YazÄ±lÄ±m veya diÄŸer fikri mÃ¼lkiyetlerin satÄ±ÅŸÄ± amacÄ±na yÃ¶nelik deÄŸildir. 
-			YazÄ±lÄ±m ile ilgili tÃ¼m haklar ve Ã¼nvanlar ile fikri mÃ¼lkiyet haklarÄ± LÄ°KYA TEKNOLOJÄ°â€™ye aittir.
+			1. Lisansın Verilmesi. İşbu Lisans Sözleşmesine uymaya devam ettiğiniz sürece, 
+			LİKYA BİLGİ TEKNOLOJİLERİ VE İLETİŞİM HİZMETLERİ LİMİTED ŞİRKETİ ("LİKYA TEKNOLOJİ") size, aşağıda belirtilen Lisans sınırlamalarına tabi olarak, 
+			Yazılımın bir kopyası için, münhasır olmayan bir lisans verir. İşbu Lisans, Yazılımın ve LİKYA TEKNOLOJİ'nin adlarını, 
+			logolarını veya ticari markalarını kullanma hakkı vermez. İşbu Lisans Sözleşmesi, Yazılım veya diğer fikri mülkiyetlerin satışı amacına yönelik değildir. 
+			Yazılım ile ilgili tüm haklar ve ünvanlar ile fikri mülkiyet hakları LİKYA TEKNOLOJİ'ye aittir.
 			</font>
 			<br/>
 			<br/>
 			<font size="9" face="Arial,sans-serif">
-			2. KullanÄ±m SÄ±nÄ±rlamalarÄ±. YazÄ±lÄ±mÄ± bir bilgisayarda kullanabilirsiniz. 
-			YazÄ±lÄ±mÄ± yukarÄ±da anlatÄ±lan ÅŸekilde kullanabilmek amacÄ±yla YazÄ±lÄ±mÄ± gerektiÄŸi gibi kopyalayabilirsiniz; ancak  YazÄ±lÄ±mÄ± herhangi bir Ã¼Ã§Ã¼ncÃ¼ tarafa veremezsiniz. 
-			YazÄ±lÄ±mda, YazÄ±lÄ±m belgelerinde aÃ§Ä±klanan alt program kÃ¼tÃ¼phaneleri ve Ã¶rnek dosyalar bulunabilir. Ã–rnek dosyalarÄ± hiÃ§bir nedenle deÄŸiÅŸtiremezsiniz.
+			2. Kullanım Sınırlamaları. Yazılımı bir bilgisayarda kullanabilirsiniz. 
+			Yazılımı yukarıda anlatılan şekilde kullanabilmek amacıyla Yazılımı gerektiği gibi kopyalayabilirsiniz; ancak  Yazılımı herhangi bir üçüncü tarafa veremezsiniz. 
+			Yazılımda, Yazılım belgelerinde açıklanan alt program kütüphaneleri ve örnek dosyalar bulunabilir. Örnek dosyaları hiçbir nedenle değiştiremezsiniz.
 			</font>
 			<br/>
 			<br/>
 			<font size="9" face="Arial,sans-serif">
-			3. YazÄ±lÄ±mÄ±n Devri. YazÄ±lÄ±m hiÃ§bir ÅŸekilde Ã¼Ã§Ã¼ncÃ¼ ÅŸahÄ±slara ve tÃ¼zel kiÅŸilere devredilemez.
+			3. Yazılımın Devri. Yazılım hiçbir şekilde üçüncü şahıslara ve tüzel kişilere devredilemez.
 			</font>
 			<br/>
 			<br/>
 			<font size="9" face="Arial,sans-serif">
-			4. Telif hakkÄ±. YazÄ±lÄ±mÄ±n sahibi LÄ°KYA TEKNOLOJÄ° olup; YazÄ±lÄ±m, telif hakkÄ± kanunlarÄ± ve uluslararasÄ± anlaÅŸmalar tarafÄ±ndan korunmaktadÄ±r. 
-			Aksi bu Lisans iÃ§inde aÃ§Ä±kÃ§a belirtilmedikÃ§e, YazÄ±lÄ±mÄ± kopyalayamazsÄ±nÄ±z. YazÄ±lÄ±m Ã¼zerinde tersine mÃ¼hendislik uygulayamaz, kaynak koda dÃ¶nÃ¼ÅŸtÃ¼remez veya bileÅŸenlerine ayÄ±ramazsÄ±nÄ±z. 
-			YazÄ±lÄ±mÄ±n hiÃ§bir bÃ¶lÃ¼mÃ¼nÃ¼ LÄ°KYA TEKNOLOJÄ° tarafÄ±ndan saÄŸlandÄ±ÄŸÄ± amaÃ§ dÄ±ÅŸÄ±nda bir amaÃ§la kullanamazsÄ±nÄ±z. YazÄ±lÄ±m Ã¼zerinde deÄŸiÅŸiklik, uyarlama, Ã§eviri yapamazsÄ±nÄ±z, 
-			YazÄ±lÄ±mdan Ã§alÄ±ÅŸma tÃ¼retemezsiniz ya da YazÄ±lÄ±mÄ± baÅŸka yazÄ±lÄ±mlarla birleÅŸtiremezsiniz.
+			4. Telif hakkı. Yazılımın sahibi LİKYA TEKNOLOJİ olup; Yazılım, telif hakkı kanunları ve uluslararası anlaşmalar tarafından korunmaktadır. 
+			Aksi bu Lisans içinde açıkça belirtilmedikçe, Yazılımı kopyalayamazsınız. Yazılım üzerinde tersine mühendislik uygulayamaz, kaynak koda dönüştüremez veya bileşenlerine ayıramazsınız. 
+			Yazılımın hiçbir bölümünü LİKYA TEKNOLOJİ tarafından sağlandığı amaç dışında bir amaçla kullanamazsınız. Yazılım üzerinde değişiklik, uyarlama, çeviri yapamazsınız, 
+			Yazılımdan çalışma türetemezsiniz ya da Yazılımı başka yazılımlarla birleştiremezsiniz.
 			</font>
 			<br/>
 			<br/>
 			<font size="9" face="Arial,sans-serif">
-			5. SÃ¼re. Bu Lisans, sona erdirilene kadar geÃ§erlidir. YazÄ±lÄ±mÄ± ve her tÃ¼rlÃ¼ kopyasÄ±nÄ± imha ederek bu lisans sÃ¶zleÅŸmesini istediÄŸiniz zaman sona erdirebilirsiniz. 
-			AyrÄ±ca, iÅŸbu Lisans'Ä±n herhangi bir koÅŸuluna uymamanÄ±z durumunda da lisans otomatik olarak fesih olacaktÄ±r. Herhangi bir nedenle sona ermesi Ã¼zerine, 
-			YazÄ±lÄ±mÄ± ve tÃ¼m kopyalarÄ±nÄ± imha etmeyi kabul edersiniz. Nitelikleri gereÄŸi iÅŸbu Lisans SÃ¶zleÅŸmesinin sona ermesinden sonra da yÃ¼rÃ¼rlÃ¼kte kalmasÄ± gereken hÃ¼kÃ¼mler yÃ¼rÃ¼rlÃ¼kte kalmaya devam edecektir.
+			5. Süre. Bu Lisans, sona erdirilene kadar geçerlidir. Yazılımı ve her türlü kopyasını imha ederek bu lisans sözleşmesini istediğiniz zaman sona erdirebilirsiniz. 
+			Ayrıca, işbu Lisans'ın herhangi bir koşuluna uymamanız durumunda da lisans otomatik olarak fesih olacaktır. Herhangi bir nedenle sona ermesi üzerine, 
+			Yazılımı ve tüm kopyalarını imha etmeyi kabul edersiniz. Nitelikleri gereği işbu Lisans Sözleşmesinin sona ermesinden sonra da yürürlükte kalması gereken hükümler yürürlükte kalmaya devam edecektir.
 			</font>
 			<br/>
 			<br/>
 			<font size="9" face="Arial,sans-serif">
-			6. GARANTÄ° REDDÄ°. Bu YazÄ±lÄ±m size â€œOLDUÄU GÄ°BÄ°â€ saÄŸlanmaktadÄ±r. LÄ°KYA TEKNOLOJÄ°, YazÄ±lÄ±m iÃ§inde yer alan fonksiyonlarÄ±n gereksinimlerinizi karÅŸÄ±layacaÄŸÄ± veya 
-			YazÄ±lÄ±mÄ±n Ã§alÄ±ÅŸmasÄ±nÄ±n kesintisiz veya hatasÄ±z olacaÄŸÄ± konusunda bir garanti vermemektedir. YazÄ±lÄ±mÄ±n kullanÄ±lmasÄ± ve YazÄ±lÄ±mÄ±n kurulumu, 
-			kullanÄ±mÄ± ve elde edilecek sonuÃ§larla ilgili sorumluluk size aittir.
+			6. GARANTİ REDDİ. Bu Yazılım size "OLDUĞU GİBİ" sağlanmaktadır. LİKYA TEKNOLOJİ, Yazılım içinde yer alan fonksiyonların gereksinimlerinizi karşılayacağı veya 
+			Yazılımın çalışmasının kesintisiz veya hatasız olacağı konusunda bir garanti vermemektedir. Yazılımın kullanılması ve Yazılımın kurulumu, 
+			kullanımı ve elde edilecek sonuçlarla ilgili sorumluluk size aittir.
 			</font>
 			<br/>
 			<br/>
 			<font size="9" face="Arial,sans-serif">
-			AÅŸaÄŸÄ±daki muafiyetleri yasaklayan ilgili yasalarÄ±n izin verdiÄŸi Ã¶lÃ§Ã¼de LÄ°KYA TEKNOLOJÄ°, DOLAYLI TÄ°CARÄ° VE Ã–ZEL BÄ°R AMACA UYGUNLUK, 
-			Ä°HLAL ETMEME GARANTÄ°LERÄ° DE DAHÄ°L OLMAK ÃœZERE, PERFORMANS, KULLANIM VE TÄ°CARÄ° FAALÄ°YETLER SIRASINDA ORTAYA Ã‡IKABÄ°LEN AÃ‡IK VEYA DOLAYLI GARANTÄ°LER DAHÄ°L OLMAK ÃœZERE, 
-			YAZILIM Ä°LE Ä°LGÄ°LÄ° HÄ°Ã‡BÄ°R AÃ‡IK YA DA DOLAYLI GARANTÄ° VERMEMEKTEDÄ°R.
+			Aşağıdaki muafiyetleri yasaklayan ilgili yasaların izin verdiği ölçüde LİKYA TEKNOLOJİ, DOLAYLI TİCARİ VE ÖZEL BİR AMACA UYGUNLUK, 
+			İHLAL ETMEME GARANTİLERİ DE DAHİL OLMAK ÜZERE, PERFORMANS, KULLANIM VE TİCARİ FAALİYETLER SIRASINDA ORTAYA ÇIKABİLEN AÇIK VEYA DOLAYLI GARANTİLER DAHİL OLMAK ÜZERE, 
+			YAZILIM İLE İLGİLİ HİÇBİR AÇIK YA DA DOLAYLI GARANTİ VERMEMEKTEDİR.
 			</font>
 			<br/>
 			<br/>
 			<font size="9" face="Arial,sans-serif">
-			7. YÃœKÃœMLÃœLÃœK KONUSUNDAKÄ° KISITLAMALAR. YazÄ±lÄ±mÄ±n kullanÄ±mÄ± tamamen sizin sorumluluÄŸunuzdadÄ±r. LÄ°KYA TEKNOLOJÄ°, hiÃ§bir koÅŸul altÄ±nda YazÄ±lÄ±mÄ± kullanmanÄ±z veya hatalÄ± kullanmanÄ±z konusunda 
-			size karÅŸÄ± yÃ¼kÃ¼mlÃ¼ deÄŸildir. YASALARIN Ä°ZÄ°N VERDÄ°ÄÄ° SINIRLAR DAHÄ°LÄ°NDE LÄ°KYA TEKNOLOJÄ° HÄ°Ã‡BÄ°R KOÅUL ALTINDA YAZILIMI KULLANMANIZDAN VEYA HATALI KULLANMANIZDAN KAYNAKLANAN, KAR KAYBI, 
-			TASARRUF KAYBI, Ä°KAME ÃœRÃœN VEYA HÄ°ZMET TEDARÄ°K MASRAFLARI VEYA DÄ°ÄER ZARARLAR DA DAHÄ°L OLMAK ÃœZERE HÄ°Ã‡BÄ°R FÄ°Ä°LÄ°, DOÄRUDAN, DOLAYLI, TESADÃœFÄ°, Ã–ZEL, 
-			SONUÃ‡ OLARAK MEYDANA GELEN VEYA CEZAÄ° HASARLAR KONUSUNDA, BU TÃœR HASARLARIN Ä°HTÄ°MALÄ° KONUSUNDA Ã–NCEDEN UYARILMIÅ OLSA BÄ°LE, HÄ°Ã‡BÄ°R YÃœKÃœMLÃœLÃœK TAÅIMAMAKTADIR.
+			7. YÜKÜMLÜLÜK KONUSUNDAKİ KISITLAMALAR. Yazılımın kullanımı tamamen sizin sorumluluğunuzdadır. LİKYA TEKNOLOJİ, hiçbir koşul altında Yazılımı kullanmanız veya hatalı kullanmanız konusunda 
+			size karşı yükümlü değildir. YASALARIN İZİN VERDİĞİ SINIRLAR DAHİLİNDE LİKYA TEKNOLOJİ HİÇBİR KOŞUL ALTINDA YAZILIMI KULLANMANIZDAN VEYA HATALI KULLANMANIZDAN KAYNAKLANAN, KAR KAYBI, 
+			TASARRUF KAYBI, İKAME ÜRÜN VEYA HİZMET TEDARİK MASRAFLARI VEYA DİĞER ZARARLAR DA DAHİL OLMAK ÜZERE HİÇBİR FİİLİ, DOĞRUDAN, DOLAYLI, TESADÜFİ, ÖZEL, 
+			SONUÇ OLARAK MEYDANA GELEN VEYA CEZAİ HASARLAR KONUSUNDA, BU TÜR HASARLARIN İHTİMALİ KONUSUNDA ÖNCEDEN UYARILMIŞ OLSA BİLE, HİÇBİR YÜKÜMLÜLÜK TAŞIMAMAKTADIR.
 			</font>
 			<br/>
 			<br/>
 			<font size="9" face="Arial,sans-serif">
-			8. YazÄ±lÄ±m 5486 sayÄ±lÄ± Fikir ve Sanat Eserleri Kanunu, 765 sayÄ±lÄ± TÃ¼rk Ceza Kanunu'nun ilgili maddeleri ile ve ilgili uluslararasÄ± geÃ§erli kanunlarla korunmaktadÄ±r. 
-			Bu Lisans AnlaÅŸmasÄ± YazÄ±lÄ±mâ€™Ä±n yalnÄ±z kullanÄ±m haklarÄ±nÄ± size verir. YalnÄ±z yedekleme ve arÅŸivleme amaÃ§larÄ±yla, YazÄ±lÄ±mÄ±n Ã¶zgÃ¼n kopyalarÄ± Ã¼zerindeki bÃ¼tÃ¼n telif hakkÄ± ve 
-			mÃ¼lkiyete iliÅŸkin notlarÄ± da Ã§oÄŸaltmak koÅŸulu ile YazÄ±lÄ±mÄ±n bir kopyasÄ±nÄ± Ã§Ä±kartabilirsiniz. Bunun dÄ±ÅŸÄ±nda YazÄ±lÄ±mÄ±n tÃ¼mÃ¼nÃ¼n ya da bir bÃ¶lÃ¼mÃ¼nÃ¼n kopyalanmasÄ±, Ã§oÄŸaltÄ±lmasÄ±, 
-			haksÄ±z eylem ve suÃ§ oluÅŸturur.
+			8. Yazılım 5486 sayılı Fikir ve Sanat Eserleri Kanunu, 765 sayılı Türk Ceza Kanunu'nun ilgili maddeleri ile ve ilgili uluslararası geçerli kanunlarla korunmaktadır. 
+			Bu Lisans Anlaşması Yazılım'ın yalnız kullanım haklarını size verir. Yalnız yedekleme ve arşivleme amaçlarıyla, Yazılımın özgün kopyaları üzerindeki bütün telif hakkı ve 
+			mülkiyete ilişkin notları da çoğaltmak koşulu ile Yazılımın bir kopyasını çıkartabilirsiniz. Bunun dışında Yazılımın tümünün ya da bir bölümünün kopyalanması, çoğaltılması, 
+			haksız eylem ve suç oluşturur.
 			</font>
 			<br/>
 			<br/>
 			<font size="9" face="Arial,sans-serif">
-			9. Ã‡eÅŸitli HÃ¼kÃ¼mler. Ä°ÅŸbu Lisans SÃ¶zleÅŸmesinin tÃ¼m hÃ¼kÃ¼mleri bÃ¶lÃ¼nebilirdir. Herhangi bir hÃ¼kmÃ¼n yÃ¼rÃ¼tÃ¼lemez bulunmasÄ± halinde, bu bulgu iÅŸbu Lisans SÃ¶zleÅŸmesinin kalan hÃ¼kÃ¼mlerinin, 
-			ÅŸartlarÄ±nÄ±n ya da koÅŸullarÄ±nÄ±n yÃ¼rÃ¼tÃ¼lebilirliÄŸini etkilemez. Ä°ÅŸbu Lisans SÃ¶zleÅŸmesi, varisler ve halefler iÃ§in de baÄŸlayÄ±cÄ±dÄ±r. LÄ°KYA TEKNOLOJÄ°, tamamen ya da kÄ±smen kendi makul kontrolÃ¼ 
-			dÄ±ÅŸÄ±ndaki nedenlere isnat edilebilecek kullanÄ±lamama ya da gecikme durumlarÄ±ndan dolayÄ± sorumlu tutulamaz. Ä°ÅŸbu sÃ¶zleÅŸmede yer alan hiÃ§bir hÃ¼kÃ¼m, taraflar arasÄ±nda temsilcilik, 
-			ortaklÄ±k ya da baÅŸka bir ortak giriÅŸim oluÅŸturulmasÄ± anlamÄ±na gelmemektedir. YazÄ±lÄ±mÄ± kurmanÄ±z ya da kullanmanÄ±z iÅŸbu Lisans SÃ¶zleÅŸmesini okuduÄŸunuzu, anladÄ±ÄŸÄ±nÄ±zÄ±, 
-			koÅŸullarÄ±nÄ±n sizin iÃ§in baÄŸlayÄ±cÄ± olduÄŸunu ve yukarÄ±da anÄ±lan hÃ¼kÃ¼mlerin Lisans SÃ¶zleÅŸmesinin tam ve mÃ¼nhasÄ±r ifadesi olduÄŸunu kabul ettiÄŸiniz anlamÄ±na gelir.
+			9. Çeşitli Hükümler. İşbu Lisans Sözleşmesinin tüm hükümleri bölünebilirdir. Herhangi bir hükmün yürütülemez bulunması halinde, bu bulgu işbu Lisans Sözleşmesinin kalan hükümlerinin, 
+			şartlarının ya da koşullarının yürütülebilirliğini etkilemez. İşbu Lisans Sözleşmesi, varisler ve halefler için de bağlayıcıdır. LİKYA TEKNOLOJİ, tamamen ya da kısmen kendi makul kontrolü 
+			dışındaki nedenlere isnat edilebilecek kullanılamama ya da gecikme durumlarından dolayı sorumlu tutulamaz. İşbu sözleşmede yer alan hiçbir hüküm, taraflar arasında temsilcilik, 
+			ortaklık ya da başka bir ortak girişim oluşturulması anlamına gelmemektedir. Yazılımı kurmanız ya da kullanmanız işbu Lisans Sözleşmesini okuduğunuzu, anladığınızı, 
+			koşullarının sizin için bağlayıcı olduğunu ve yukarıda anılan hükümlerin Lisans Sözleşmesinin tam ve münhasır ifadesi olduğunu kabul ettiğiniz anlamına gelir.
 			</font>
-			</p>			
+			</p>
+			
 			
 			]]>
 		</fx:String>
+		<fx:String id="satir1"><![CDATA[ Likya Bilgi Teknolojileri ve İletişim Hizmetleri Ltd. Şti. ]]></fx:String>
+		<fx:String id="satir2"><![CDATA[ © 2008-{showYear()} Tüm Hakları Saklıdır. ]]></fx:String>
+		<fx:String id="satir3"><![CDATA[ Müşteri : Xxxxx Yyyyyy Zzzzzzz A.Ş. ]]></fx:String>
+		<fx:String id="satir4"><![CDATA[ Ürün Kimliği: {licenseId} ]]></fx:String>
 	</fx:Declarations>
+
 	<s:VGroup gap="-20" paddingLeft="10">
 		
 		<s:Image x="10" y="10" source="{aboutlogoImg}"/>
-		
-		<!--mx:Text width="450" paddingTop="-70">
-		<mx:htmlText>
-		<![CDATA[
-		<font size="11" face="Verdana,Arial">
-		<div style="float:left; padding-left:10px;">
-		<br>Likya Bilgi Teknolojileri ve Ä°letiÅŸim Hizmetleri Ltd. Åti.
-		<br>Â© 2008-2014 TÃ¼m HaklarÄ± SaklÄ±dÄ±r.
-		<br>MÃ¼ÅŸteri : Xxxxx Yyyyyy Zzzzzzz A.Å.
-		<br>ÃœrÃ¼n KimliÄŸi: XXX0120080503LT001_TEST</div>
-		</font>
-		]]>
-		</mx:htmlText>
-		</mx:Text-->
+
 		<s:TextArea borderVisible="false" width="450">
 			<s:span fontSize="11" fontFamily="Verdana,Arial" >
-				<s:br/><s:br/>Likya Bilgi Teknolojileri ve Ä°letiÅŸim Hizmetleri Ltd. Åti.
-				<s:br/><s:br/>Â© 2008-{showYear()} TÃ¼m HaklarÄ± SaklÄ±dÄ±r.
-				<s:br/><s:br/>MÃ¼ÅŸteri : Xxxxx Yyyyyy Zzzzzzz A.Å.
-				<s:br/><s:br/>ÃœrÃ¼n KimliÄŸi: {licenseId}
+				<s:br/><s:br/>{satir1}
+				<s:br/><s:br/>{satir2}
+				<s:br/><s:br/>{satir3}
+				<s:br/><s:br/>{satir4}
 			</s:span>
 		</s:TextArea>
 		<s:TextArea id="myText" width="500" height="200" textAlign="justify" fontFamily="Arial" fontSize="12" editable="false"
-					initialize="myText.textFlow = TextConverter.importToFlow(htmlTextAsHTML, TextConverter.TEXT_FIELD_HTML_FORMAT);"/>
+					initialize="myText.textFlow = TextConverter.importToFlow(htmlTextAsHTML, TextConverter.TEXT_FIELD_HTML_FORMAT) as TextFlow;"/>
 		
 	</s:VGroup>
-	
-</s:TitleWindow> 
+
+
+</s:TitleWindow>

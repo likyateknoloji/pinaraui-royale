@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<!-- containers\spark\myComponents\ArrayEntryForm.mxml -->
+<!--borderAlpha="1"-->
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
-			   xmlns:mx="library://ns.adobe.com/flex/mx" 
-			   xmlns:s="library://ns.adobe.com/flex/spark"
-			   width="520" height="450" borderAlpha="1"
+			   xmlns:mx="library://ns.apache.org/royale/mx" 
+			   xmlns:s="library://ns.apache.org/royale/spark"
+			   width="520" height="450" 
 			   close="removeMe();" keyDown="titleWindow_keyDown(event);"
 			   creationComplete="titlewindow1_creationCompleteHandler(event)" xmlns:user="com.likya.comps.crud.user.*" xmlns:userops="com.likya.pinara.services.userops.*" xmlns:jobdetail="com.likya.pinara.comps.jobdetail.*">
 	<s:layout>
@@ -22,11 +22,15 @@
 			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
 			import mx.events.CloseEvent;
+			import mx.events.KeyboardEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-
+			
+			import mx.core.Keyboard;
+			// import flash.ui.Keyboard;
+			
 			private var currentDataItem:XML;
 
 			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void {
@@ -49,9 +53,9 @@
 				currentDataItem = XML(event.object);
 			}
 			
-			private function titleWindow_keyDown(evt:KeyboardEvent):void {
+			private function titleWindow_keyDown(evt:mx.events.KeyboardEvent):void {
 				if (evt.charCode == Keyboard.ESCAPE) {
-					this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+					this.dispatchEvent(new mx.events.CloseEvent(mx.events.CloseEvent.CLOSE));
 				}
 			}
 			
@@ -130,7 +134,7 @@
 				Alert.show(confMsg, resourceManager.getString("messages", "warnKey"), Alert.OK|Alert.CANCEL, this, deleteUser, null, Alert.CANCEL);
 			}
 			
-			private function deleteUser(eventObj:CloseEvent):void {
+			private function deleteUser(eventObj:mx.events.CloseEvent):void {
 				
 				if(eventObj.detail == Alert.OK) {
 					var packedResponse:XML;

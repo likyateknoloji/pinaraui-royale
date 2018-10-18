@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<!-- containers\spark\myComponents\ArrayEntryForm.mxml -->
+<!--  borderAlpha="1" -->
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
-			   xmlns:mx="library://ns.adobe.com/flex/mx" 
-			   xmlns:s="library://ns.adobe.com/flex/spark"
-			   width="520" height="450" borderAlpha="1"
+			   xmlns:mx="library://ns.apache.org/royale/mx" 
+			   xmlns:s="library://ns.apache.org/royale/spark"
+			   width="520" height="450"
 			   close="removeMe();" keyDown="titleWindow_keyDown(event);"
 			   creationComplete="titlewindow1_creationCompleteHandler(event)">
 	<s:layout>
@@ -13,22 +13,29 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.events.CloseEvent;
+			import mx.events.KeyboardEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 			
-			import flashx.textLayout.conversion.TextConverter;
+			import mx.core.Keyboard;
+			// import flash.ui.Keyboard;
+			import mx.net.FileReference;
+			
+			// import flashx.textLayout.conversion.TextConverter;
+			import org.apache.royale.textLayout.conversion.TextConverter;
+			import org.apache.royale.textLayout.elements.TextFlow;
 
 			[Bindable]
 			public var htmlTextAsHTML:String;
 
 			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void {
 				// Alert.show("htmlTextAsHTML : " + htmlTextAsHTML);
-				myText.textFlow = TextConverter.importToFlow(htmlTextAsHTML, TextConverter.PLAIN_TEXT_FORMAT);
+				myText.textFlow = TextConverter.importToFlow(htmlTextAsHTML, TextConverter.PLAIN_TEXT_FORMAT) as TextFlow;
 			}
 			
-			private function titleWindow_keyDown(evt:KeyboardEvent):void {
+			private function titleWindow_keyDown(evt:mx.events.KeyboardEvent):void {
 				if (evt.charCode == Keyboard.ESCAPE) {
-					this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+					this.dispatchEvent(new mx.events.CloseEvent(mx.events.CloseEvent.CLOSE));
 				}
 			}
 			

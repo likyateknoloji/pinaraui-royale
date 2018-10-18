@@ -1,5 +1,7 @@
 package com.likya.pinara.event {
-	import flash.events.Event;
+	
+	// import flash.events.Event;
+	import org.apache.royale.events.Event;
 	
 	public class ResourceEvent extends Event {
 	

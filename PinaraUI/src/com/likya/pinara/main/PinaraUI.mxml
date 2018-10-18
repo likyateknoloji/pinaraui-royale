@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="latin5"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.apache.org/royale/spark"
 			   xmlns:mx="library://ns.apache.org/royale/mx"
@@ -6,7 +6,7 @@
 			   xmlns:containers="com.likya.pinara.containers.*" 
 			   xmlns:jobdetail="com.likya.pinara.comps.jobdetail.*"
 			   currentState="loggedOutState" 
-			   preloader="com.likya.pinara.utils.DownloadProgressBarSubClassMin"
+			   //preloader="com.likya.pinara.utils.DownloadProgressBarSubClassMin"
 			   minWidth="955" minHeight="600" 
 			   creationComplete="application_creationCompleteHandler()"
 			   xmlns:jobmanager="com.likya.pinara.services.jobmanager.*" 
@@ -47,7 +47,7 @@
 			import mx.rpc.events.ResultEvent;
 			import mx.utils.Base64Encoder;
 			
-			
+			import org.apache.royale.net.URLLoader;
 			
 			
 			[Bindable]
@@ -81,7 +81,7 @@
 				
 				
 				myResources = new ResourceBundle("tr_TR","locale\messages");
-				myResources.content['TITLE'] = "PÄ±nara Ä°ÅŸ YÃ¼kÃ¼ YÃ¶netim UygulamasÄ± - TÃ¼rkÃ§e SÃ¼rÃ¼mÃ¼";
+				myResources.content['TITLE'] = "Pýnara Ýþ Yükü Yönetim Uygulamasý - Türkçe Sürümü";
 				resourceManager.addResourceBundle(myResources);
 				
 				resourceManager.update();
@@ -130,7 +130,7 @@
 					
 					if (XML(event.object).hasOwnProperty("netTreeId")) {
 						
-						selectedTreeNode = ""; // Bu alanÄ± netTreeId iÃ§in kullanmÄ±ÅŸtÄ±m artÄ±k temizlemek lazÄ±m.
+						selectedTreeNode = ""; // Bu alaný netTreeId için kullanmýþtým artýk temizlemek lazým.
 						
 						var netTreeId:String = XML(event.object).netTreeId;
 						jobListDetail.selectedNetTreeId = netTreeId;
@@ -159,7 +159,7 @@
 				
 				currentState = "jobDetailState";
 				
-				if(XML(event.object).hasOwnProperty("jobId")) { // add ya da clone iÃ§in buraya giriyor
+				if(XML(event.object).hasOwnProperty("jobId")) { // add ya da clone için buraya giriyor
 					allJobDetail.selectedJobId = XML(event.object).jobId;
 					var searchResult:XMLList = TreeUtils.findNode((jobTree.liveTree.dataProvider[0] as XML), allJobDetail.selectedJobId);
 					if (searchResult[0] != undefined) {
@@ -168,7 +168,7 @@
 						jobTree.refreshTree(searchResult[0]);
 					}
 				}
-				// EÄŸer job ile iligli iÅŸlem komutu detay sayfadan geliyorsa
+				// Eðer job ile iligli iþlem komutu detay sayfadan geliyorsa
 				// bu durumda id attribute olmadan direk skalar olarak geliyor
 				else if (!XML(event.object).hasOwnProperty("@id")) {
 					allJobDetail.selectedJobId = "" + event.object;
@@ -241,9 +241,9 @@
 			private function updateTree(event:ResourceEvent):void {
 				
 				trace("Updating tree !");
-				if(XML(event.object).hasOwnProperty("netTreeId")) { // add,clone,update ve delete iÃ§in buraya giriyor
+				if(XML(event.object).hasOwnProperty("netTreeId")) { // add,clone,update ve delete için buraya giriyor
 					selectedTreeNode = XML(event.object);
-				}Â else if(event.object != null) {
+				} else if(event.object != null) {
 					selectedTreeNode = XML(event.object);
 				} else {
 					// selectedTreeNode = jobTree.liveTree.getParentItem(jobTree.liveTree.selectedItem);
@@ -267,8 +267,8 @@
 				
 				trace("onTreeUpdateComplete returned : " + new Date().valueOf());
 				
-				if(XML(selectedTreeNode).hasOwnProperty("netTreeId")) { // add,clone,update ve delete iÃ§in buraya giriyor
-					if(XML(selectedTreeNode).hasOwnProperty("jobId")) { // add,clone ve update iÃ§in buraya giriyor
+				if(XML(selectedTreeNode).hasOwnProperty("netTreeId")) { // add,clone,update ve delete için buraya giriyor
+					if(XML(selectedTreeNode).hasOwnProperty("jobId")) { // add,clone ve update için buraya giriyor
 						if(currentState == "jobListState") {
 							// var searchResult:XMLList = TreeUtils.findNode((jobTree.liveTree.dataProvider[0] as XML), selectedTreeNode.jobId);
 							//if (searchResult[0] != undefined) {
@@ -278,7 +278,7 @@
 						} else if(currentState == "jobDetailState") {
 							dispatchEvent(new ResourceEvent(ResourceEvent.JOBNODE_SELECTED, selectedTreeNode /*data.@Id*/));
 						}
-					} else {// delete iÃ§in buraya giriyor
+					} else {// delete için buraya giriyor
 						dispatchEvent(new ResourceEvent(ResourceEvent.LISTNODE_SELECTED, selectedTreeNode));
 					}
 
@@ -288,7 +288,7 @@
 				// var selectedLocal:Object = (jobTree.liveTree.dataProvider[0] as XML)..jobGroup.(@id == selectedTreeNode.@id)[0];
 				
 				/*
-				 * AÅŸaÄŸÄ±daki kÄ±sÄ±m TreePanel.xmlService_resultHandler metoduna taÅŸÄ±ndÄ±.
+				 * Aþaðýdaki kýsým TreePanel.xmlService_resultHandler metoduna taþýndý.
 				 *
 				 *
 				var searchResult:XMLList;
@@ -337,7 +337,7 @@
 					jobListDetail.updateData();*/
 				//} else if(event.type == ResourceEvent.JOBNODE_SELECTED) {
 					/*currentState = "jobDetailState";
-					// EÄŸer job ile iligli iÅŸlem komutu detay sayfadan geliyorsa
+					// Eðer job ile iligli iþlem komutu detay sayfadan geliyorsa
 					// bu durumda id attribute olmadan direk skalar olarak geliyor
 					if (!XML(event.object).hasOwnProperty("@id")) {
 						allJobDetail.selectedJobId = XML(event.object);
@@ -421,7 +421,7 @@
 				if (result == "1") {
 				dispatchEvent(new ResourceEvent(ResourceEvent.LOGIN));
 				} else {
-				Alert.show("KullacÄ±nÄ± adÄ± ya da ÅŸifre hatalÄ± !");
+				Alert.show("Kullacýný adý ya da þifre hatalý !");
 				}
 				}
 				*/
@@ -446,7 +446,7 @@
 				if(event.status == 200) {
 					// currentState = "loggedInState";
 					// currentState = "anaSayfaState"
-					// Alert.show("GiriÅŸ baÅŸarÄ±lÄ± :)");
+					// Alert.show("Giriþ baþarýlý :)");
 				} else if (event.status == 400) {
 					Alert.show(resourceManager.getString("messages", "pinaraPassOrUserError"));
 					ModelLocator.getInstance().currentUser.username = "";
@@ -470,7 +470,7 @@
 			}
 			
 			private function checkLogin(event:ResourceEvent):void {
-				// Alert.show("Burada authentacion yapÄ±lacak !", "Hata", Alert.OK, this, null, null);
+				// Alert.show("Burada authentacion yapýlacak !", "Hata", Alert.OK, this, null, null);
 				// authAndSend(UserInfo(event.object));
 				doWork(User(event.object), false);
 			}
@@ -506,7 +506,7 @@
 					
 					// encoder.encode("tlos:tlos");
 					// encoder.encode(userInfo.username + ":" + userInfo.password);
-					// tr ÅŸifre ve kullanÄ±cÄ± sorunu nedeni utf8 e geÃ§tim
+					// tr þifre ve kullanýcý sorunu nedeni utf8 e geçtim
 					encoder.encodeUTFBytes(userInfo.username + ":" + userInfo.password);
 					var credsHeader:URLRequestHeader = new URLRequestHeader("Authorization", "Basic " + encoder.toString());
 					req.requestHeaders.push(credsHeader);
@@ -554,7 +554,7 @@
 					//Alert.show(returnXml);
 					returnXml = XML(event.message.body);
 					if(returnXml.result != "OK") {
-						Alert.show(returnXml.desc.toString(), "Hata OluÅŸtu !");
+						Alert.show(returnXml.desc.toString(), "Hata Oluþtu !");
 					} else {
 						setAnaSayfaState();
 						refreshTreeAfterRelogin();

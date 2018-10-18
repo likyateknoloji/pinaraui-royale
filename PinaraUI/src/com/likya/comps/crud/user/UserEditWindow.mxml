@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
-			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:s="library://ns.apache.org/royale/spark" 
+			   xmlns:mx="library://ns.apache.org/royale/mx"
 			   close="handleCloseEvent()"
 			   creationComplete="titlewindow1_creationCompleteHandler(event)"
 			   keyDown="titleWindow_keyDown(event);"
@@ -19,10 +19,14 @@
 			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
 			import mx.events.CloseEvent;
+			import mx.events.KeyboardEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			import mx.core.Keyboard;
+			// import flash.ui.Keyboard;
 			
 			[Bindable]
 			public var parentRef:UserListWindow;
@@ -71,9 +75,9 @@
 				PopUpManager.removePopUp(this);
 			}
 			
-			private function titleWindow_keyDown(evt:KeyboardEvent):void {
+			private function titleWindow_keyDown(evt:mx.events.KeyboardEvent):void {
 				if (evt.charCode == Keyboard.ESCAPE) {
-					this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+					this.dispatchEvent(new mx.events.CloseEvent(mx.events.CloseEvent.CLOSE));
 				}
 			}
 			
@@ -85,7 +89,7 @@
 				Alert.show(confMsg, resourceManager.getString("messages", "warnKey"), Alert.OK|Alert.CANCEL, this, processWork, null, Alert.CANCEL);
 			}
 			
-			private function processWork(eventObj:CloseEvent):void {
+			private function processWork(eventObj:mx.events.CloseEvent):void {
 				
 				var serializationInfo:String = "false";
 				
