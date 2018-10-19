@@ -43,6 +43,8 @@
 			
 			import org.apache.royale.core.BrowserWindow;
 			
+			import org.apache.royale.net.URLRequest;
+			
 			[Bindable]
 			public var menuBarData:XMLListCollection = new XMLListCollection();
 			
@@ -112,9 +114,10 @@
 					PopUpManager.centerPopUp(aboutWindow);
 					aboutWindow.setFocus();
 				} else if (event.label == resourceManager.getString("messages", "userGuide")) {
-					var urlRequest:URLRequest = new URLRequest("https://likyateknoloji.atlassian.net/wiki/display/DT1/Doc+%3A+TlosLite+1.8.1");
+					// var urlRequest:URLRequest = new URLRequest("https://likyateknoloji.atlassian.net/wiki/display/DT1/Doc+%3A+TlosLite+1.8.1");
 					// navigateToURL(urlRequest, "_blank");
-					BrowserWindow.open(urlRequest, "_blank");
+					var url:String = "https://likyateknoloji.atlassian.net/wiki/display/DT1/Doc+%3A+TlosLite+1.8.1";
+					BrowserWindow.open(url, "_blank");
 				} else if (event.label == resourceManager.getString("messages", "pinaraProperties")) {
 					showPinaraConfigPopup();
 				} else if (event.label == resourceManager.getString("messages", "myraProperties")) {
