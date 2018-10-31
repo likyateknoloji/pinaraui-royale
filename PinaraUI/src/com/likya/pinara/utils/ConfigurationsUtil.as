@@ -6,10 +6,10 @@ package com.likya.pinara.utils {
 	
 	public class ConfigurationsUtil {
 		
-		namespace lik = "http://www.likyateknoloji.com/likya-gen";
+		public namespace lik = "http://www.likyateknoloji.com/likya-gen";
 		use namespace lik;
 		
-		namespace myra_stateinfo ="http://www.likyateknoloji.com/myra-stateinfo";
+		public namespace myra_stateinfo ="http://www.likyateknoloji.com/myra-stateinfo";
 		use namespace myra_stateinfo;
 		
 		public static function getXML(mailConfigForm:MailConfigurationForm):XML {

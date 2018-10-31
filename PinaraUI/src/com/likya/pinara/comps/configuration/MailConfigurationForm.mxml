@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 	   xmlns:s="library://ns.apache.org/royale/spark" 
-		 	   xmlns:mx="library://ns.apache.org/royale/mx" 
+		 	   xmlns:mx="library://ns.apache.org/royale/mx"
 		       width="100%" height="100%"
 			   title="{resourceManager.getString('messages', 'mailConfigurationwWindowTitle')}"
 			   close="removeMe();"
@@ -17,10 +17,10 @@
 		@namespace local "*";
 		@namespace mx "library://ns.adobe.com/flex/mx";
 		
-		.toggleSwitch
+		/*.toggleSwitch
 		{
 			skinClass:ClassReference("com.likya.pinara.skins.ToggleSwitchSkin");
-		}
+		}*/
 	</fx:Style>
 	
 	<fx:Script>
@@ -469,7 +469,7 @@
 				Alert.show(resourceManager.getString("messages", "mailConfigSaveConfirm"), resourceManager.getString("messages", "warnKey"), Alert.OK|Alert.CANCEL, this, processSave, null, Alert.CANCEL);
 			}
 			
-			protected function processSave(eventObj:CloseEvent):void
+			protected function processSave(eventObj:mx.events.CloseEvent):void
 			{
 				if(eventObj.detail == Alert.CANCEL) {
 					return;
@@ -510,7 +510,8 @@
 				if(mcToggle.selected == true) {
 					tmpState = "defined"; 
 				}
-				setCurrentState(tmpState);
+				// setCurrentState(tmpState);
+				currentState = tmpState;
 			}
 			
 		]]>

@@ -248,7 +248,7 @@ package com.likya.pinara.services.jobmanager
 			
 			
 			preInitializeService();
-			model_internal::initialize();
+			// model_internal::initialize();
 		}
 		
 		//init initialization routine here, child class to override

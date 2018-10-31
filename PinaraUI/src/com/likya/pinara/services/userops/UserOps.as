@@ -4,22 +4,22 @@
  * at its target location.  Thus custom behavior that you add here will survive regeneration
  * of the super-class. 
  **/
- 
+
 package com.likya.pinara.services.userops
 {
-
-public class UserOps extends _Super_UserOps
-{
-    /**
-     * Override super.init() to provide any initialization customization if needed.
-     */
-    protected override function preInitializeService():void
-    {
-		_serviceControl.baseURL = null;
-        super.preInitializeService();
-        // Initialization customization goes here
-    }
-               
-}
-
+	
+	public class UserOps extends _Super_UserOps
+	{
+		/**
+		 * Override super.init() to provide any initialization customization if needed.
+		 */
+		protected override function preInitializeService():void
+		{
+			_serviceControl.baseURL = null;
+			super.preInitializeService();
+			// Initialization customization goes here
+		}
+		
+	}
+	
 }

@@ -171,16 +171,16 @@
 				</s:GridColumn>
 				<s:GridColumn dataField="@Id" headerText="{resourceManager.getString('messages', 'jobIdGrid')}" sortDescending="false" sortCompareFunction="Transformer.compareIds" width="{this.pinaraJobList.width * 0.06}">
 					<s:itemRenderer>
-						<fx:Component>
+						<!--fx:Component>
 							<s:DefaultGridItemRenderer textAlign="left" />
-						</fx:Component>
+						</fx:Component->
 					</s:itemRenderer>
 				</s:GridColumn>
 				<s:GridColumn dataField="baseJobInfos.jsName" headerText="{resourceManager.getString('messages', 'jobNameGrid')}" width="{this.pinaraJobList.width * 0.10}">
 					<s:itemRenderer>
-						<fx:Component>
+						<!--fx:Component>
 							<s:DefaultGridItemRenderer textAlign="left" />
-						</fx:Component>
+						</fx:Component-->
 					</s:itemRenderer>
 				</s:GridColumn>
 				<s:GridColumn dataField="job_command_type" sortCompareFunction="Transformer.compareSortString" labelFunction="getJobCommandType" headerText="{resourceManager.getString('messages', 'jobCommandTypeGrid')}" width="{this.pinaraJobList.width * 0.12}"/>

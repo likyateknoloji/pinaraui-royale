@@ -117,7 +117,8 @@
 				if(laToggle.selected == true) {
 					tmpState = "defined"; 
 				}
-				setCurrentState(tmpState);
+				// setCurrentState(tmpState);
+				currentState = tmpState;
 			}
 			
 		]]>

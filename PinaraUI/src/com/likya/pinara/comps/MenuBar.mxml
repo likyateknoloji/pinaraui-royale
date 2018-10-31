@@ -24,7 +24,6 @@
 			
 			import mx.collections.XMLListCollection;
 			import mx.controls.Alert;
-			import mx.controls.menuClasses.MenuBarItem;
 			import mx.core.FlexGlobals;
 			import mx.events.CloseEvent;
 			import mx.events.KeyboardEvent;
@@ -276,7 +275,7 @@
 			}
 
 			private function showGenericPopup(fileTag:String):void {
-				var fileViewWindow:FileViewPopup = PopUpManager.createPopUp(parentApplication as DisplayObject, FileViewPopup, true) as FileViewPopup;
+				var fileViewWindow:FileViewPopup = PopUpManager.createPopUp(parentApplication as mx.core.IUIComponent /*DisplayObject*/, FileViewPopup, true) as FileViewPopup;
 				fileViewWindow.isNativeXML = true;
 				fileViewWindow.fileTag = fileTag; //"joblog=" + jobDetailLocalXml.@Id;
 				PopUpManager.centerPopUp(fileViewWindow);

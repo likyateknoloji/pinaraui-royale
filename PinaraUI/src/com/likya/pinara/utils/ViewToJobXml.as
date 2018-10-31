@@ -9,22 +9,22 @@ package com.likya.pinara.utils {
 		/*namespace xsi="http://www.w3.org/2001/XMLSchema-instance"
 		use namespace xsi;*/
 		
-		namespace myra = "http://www.likyateknoloji.com/myra-joblist";
+		private namespace myra = "http://www.likyateknoloji.com/myra-joblist";
 		use namespace myra;
 		
-		namespace myra_jobprops= "http://www.likyateknoloji.com/myra-jobprops";
+		private namespace myra_jobprops= "http://www.likyateknoloji.com/myra-jobprops";
 		use namespace myra_jobprops;
 		
-		namespace wla = "http://www.likyateknoloji.com/wla-gen";
+		private namespace wla = "http://www.likyateknoloji.com/wla-gen";
 		use namespace wla;
 		
-		namespace lik = "http://www.likyateknoloji.com/likya-gen";
+		private namespace lik = "http://www.likyateknoloji.com/likya-gen";
 		use namespace lik;
 		
-		namespace myra_stateinfo = "http://www.likyateknoloji.com/myra-stateinfo";
+		private namespace myra_stateinfo = "http://www.likyateknoloji.com/myra-stateinfo";
 		use namespace myra_stateinfo;
 		
-		namespace rs = "http://www.likyateknoloji.com/rs";
+		private namespace rs = "http://www.likyateknoloji.com/rs";
 		use namespace rs;
 
 		

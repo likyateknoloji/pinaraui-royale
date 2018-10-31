@@ -27,7 +27,7 @@ in accordance with the terms of the license agreement accompanying it.
 			 creationComplete="creationCompleteHandler(event)"
 			 alpha.disabledStates="0.7">
 	
-	<fx:Metadata>
+<!--	<fx:Metadata>
 		<![CDATA[ 
 		/** 
 		* @copy spark.skins.spark.ApplicationSkin#hostComponent
@@ -44,7 +44,7 @@ in accordance with the terms of the license agreement accompanying it.
 		/**
 		 * @private
 		 */
-		override public function get colorizeExclusions():Array
+		/*override*/ public function get colorizeExclusions():Array
 		{
 			return exclusions;
 		}
@@ -204,7 +204,7 @@ in accordance with the terms of the license agreement accompanying it.
 								<s:GradientEntry color="0x027EBD" />
 								<!--                                <s:GradientEntry color="0x999999" />
 								<s:GradientEntry color="0x777777" />-->
-							</s:LinearGradient>
+							<!--</s:LinearGradient>
 						</s:fill>
 						<s:stroke>
 							<s:SolidColorStroke color="0x888888" pixelHinting="true" />
@@ -263,7 +263,7 @@ in accordance with the terms of the license agreement accompanying it.
 				</s:filters>
 				
 				<!-- over fill -->
-				<s:Rect width="100%"
+				<!--s:Rect width="100%"
 						top="0" bottom="0" left="0" right="0"
 						radiusX="{cornerRadius}"
 						radiusY="{cornerRadius}">
@@ -276,7 +276,7 @@ in accordance with the terms of the license agreement accompanying it.
 				</s:Rect>
 				
 				<!-- over border -->
-				<s:Rect width="100%"
+				<!--s:Rect width="100%"
 						top="0" bottom="0" left="0" right="0"
 						radiusX="{cornerRadius}"
 						radiusY="{cornerRadius}">
@@ -293,7 +293,7 @@ in accordance with the terms of the license agreement accompanying it.
 	
 	<!-- Label -->
 	<!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay -->
-	<s:Label id="labelDisplay" maxDisplayedLines="1" />
+	<!--s:Label id="labelDisplay" maxDisplayedLines="1" />-->
 	
 </s:SparkSkin>
 

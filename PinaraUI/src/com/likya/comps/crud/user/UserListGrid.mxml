@@ -18,9 +18,7 @@
 			import spark.components.DataGrid;
 			import spark.components.gridClasses.GridColumn;
 			import spark.events.GridSelectionEvent;
-			
-			
-			
+					
 			[Bindable]
 			public var userListXmlCollection:XMLListCollection;
 			
@@ -56,30 +54,30 @@
 			<s:ArrayList>
 				<s:GridColumn dataField="id" headerText="{resourceManager.getString('messages', 'uculUserId')}" width="{this.pinaraUserList.width * 0.2}">
 					<s:itemRenderer>
-						<fx:Component>
+						<!--<fx:Component>
 							<s:DefaultGridItemRenderer textAlign="left" />
-						</fx:Component>
+						</fx:Component>-->
 					</s:itemRenderer>
 				</s:GridColumn>
 				<s:GridColumn dataField="statuinfo" headerText="{resourceManager.getString('messages', 'uculStatu')}" width="{this.pinaraUserList.width * 0.2}">
 					<s:itemRenderer>
-						<fx:Component>
+						<!--<fx:Component>
 							<s:DefaultGridItemRenderer textAlign="left" />
-						</fx:Component>
+						</fx:Component>-->
 					</s:itemRenderer>
 				</s:GridColumn>
 				<s:GridColumn dataField="username" headerText="{resourceManager.getString('messages', 'uculUserName')}" width="{this.pinaraUserList.width * 0.25}">
 					<s:itemRenderer>
-						<fx:Component>
+						<!--<fx:Component>
 							<s:DefaultGridItemRenderer textAlign="left" />
-						</fx:Component>
+						</fx:Component>-->
 					</s:itemRenderer>
 				</s:GridColumn>
 				<s:GridColumn dataField="roleinfo" headerText="{resourceManager.getString('messages', 'uculRoleInfo')}" width="{this.pinaraUserList.width * 0.29}">
 					<s:itemRenderer>
-						<fx:Component>
+						<!--<fx:Component>
 							<s:DefaultGridItemRenderer textAlign="left" />
-						</fx:Component>
+						</fx:Component>-->
 					</s:itemRenderer>
 				</s:GridColumn>
 			</s:ArrayList>

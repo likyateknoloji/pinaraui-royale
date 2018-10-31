@@ -101,7 +101,7 @@
 		<mx:Button y="-27" right="30" width="20" click="changeLocale('tr_TR')" icon="{trIcon}" toolTip="Türkçe"/>
 		<mx:Button y="-27" right="5" width="20" click="changeLocale('en_US')" icon="{enIcon}" toolTip="English"/>
 
-		<mx:Form defaultButton="{button}">
+		<mx:Form ><!-- defaultButton="{button}" -->
 			
 			<mx:FormItem paddingTop="20" label="{resourceManager.getString('messages', 'userName')}"> 
 				<s:TextInput id="userName" />

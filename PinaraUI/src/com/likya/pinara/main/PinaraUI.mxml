@@ -28,6 +28,10 @@
 	
 	<fx:Script>
 		<![CDATA[
+			
+			import org.apache.royale.events.Event;
+			import org.apache.royale.utils.Timer;
+			
 			import com.likya.pinara.comps.DummyForm;
 			import com.likya.pinara.event.ResourceEvent;
 			import com.likya.pinara.model.AppInfo;
@@ -588,7 +592,7 @@
 				myTimer.addEventListener("timer", checkRecoverIsCompleted);
 				myTimer.start();
 			}
-			public function checkRecoverIsCompleted(event:TimerEvent):void {
+			public function checkRecoverIsCompleted(event:Event):void {
 				myTimer.stop();
 				getappstate.token = BasicAuthenticationHandler.authAndCall(jobManagerService, "getappstate");
 			} 
@@ -687,9 +691,9 @@
 		@namespace mx "library://ns.adobe.com/flex/halo";
 		@namespace containers "com.likya.pinara.containers.*";
 		
-		containers|CollapsiblePanel {
+		/*containers|CollapsiblePanel {
 			skin-class: ClassReference('com.likya.pinara.skins.CollapsiblePanelSkin');
-		}
+		}*/
 		
 	</fx:Style>
 	

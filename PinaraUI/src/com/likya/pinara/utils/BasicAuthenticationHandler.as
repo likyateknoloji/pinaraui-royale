@@ -1,6 +1,6 @@
 package com.likya.pinara.utils
 {
-	// import com.adobe.fiber.services.wrapper.HTTPServiceWrapper;
+	import com.adobe.fiber.services.wrapper.HTTPServiceWrapper;
 	import com.likya.pinara.event.ResourceEvent;
 	import com.likya.pinara.model.ModelLocator;
 	import com.likya.pinara.model.User;
@@ -16,7 +16,6 @@ package com.likya.pinara.utils
 	import mx.rpc.AsyncToken;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
-	import mx.rpc.http.HTTPServiceWrapper;
 	import mx.rpc.http.mxml.HTTPService;
 	import mx.utils.Base64Encoder;
 

@@ -5,8 +5,7 @@
 package com.likya.pinara.services.graphlayer
 {
 import com.adobe.fiber.core.model_internal;
-//import com.adobe.fiber.services.wrapper.HTTPServiceWrapper;
-import mx.rpc.http.HTTPServiceWrapper;
+import com.adobe.fiber.services.wrapper.HTTPServiceWrapper;
 import mx.rpc.AbstractOperation;
 import mx.rpc.AsyncToken;
 import mx.rpc.http.HTTPMultiService;
@@ -15,7 +14,7 @@ import mx.rpc.http.Operation;
 import com.adobe.serializers.xml.XMLSerializationFilter;
 
 [ExcludeClass]
-internal class _Super_GraphLayer extends mx.rpc.http.HTTPServiceWrapper
+internal class _Super_GraphLayer extends com.adobe.fiber.services.wrapper.HTTPServiceWrapper
 {
     private static var serializer0:XMLSerializationFilter = new XMLSerializationFilter();
 
