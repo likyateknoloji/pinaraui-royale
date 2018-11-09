@@ -31,18 +31,20 @@
 			
 			import org.apache.royale.events.Event;
 			import org.apache.royale.utils.Timer;
+			import org.apache.royale.net.URLRequestHeader;
+			import org.apache.royale.net.URLLoader;
+			import org.apache.royale.net.URLRequest;
+			import org.apache.royale.net.HTTPConstants;
 			
-			import com.likya.pinara.comps.DummyForm;
-			import com.likya.pinara.event.ResourceEvent;
-			import com.likya.pinara.model.AppInfo;
-			import com.likya.pinara.model.ModelLocator;
-			import com.likya.pinara.model.User;
-			import com.likya.pinara.utils.BasicAuthenticationHandler;
-			import com.likya.pinara.utils.TreeUtils;
+			import mx.messaging.channels.URLVariables;
 			
-			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.events.IOErrorEvent;
+			import mx.events.HTTPStatusEvent;
+			import mx.events.SecurityErrorEvent;
+			
+			import mx.controls.Alert;
 			import mx.managers.CursorManager;
 			import mx.managers.CursorManagerPriority;
 			import mx.managers.PopUpManager;
@@ -51,8 +53,13 @@
 			import mx.rpc.events.ResultEvent;
 			import mx.utils.Base64Encoder;
 			
-			import org.apache.royale.net.URLLoader;
-			
+			import com.likya.pinara.comps.DummyForm;
+			import com.likya.pinara.event.ResourceEvent;
+			import com.likya.pinara.model.AppInfo;
+			import com.likya.pinara.model.ModelLocator;
+			import com.likya.pinara.model.User;
+			import com.likya.pinara.utils.BasicAuthenticationHandler;
+			import com.likya.pinara.utils.TreeUtils;
 			
 			[Bindable]
 			private static var modelLocator:ModelLocator = ModelLocator.getInstance();
@@ -85,7 +92,7 @@
 				
 				
 				myResources = new ResourceBundle("tr_TR","locale\messages");
-				myResources.content['TITLE'] = "Pýnara Ýþ Yükü Yönetim Uygulamasý - Türkçe Sürümü";
+				myResources.content['TITLE'] = "Pï¿½nara ï¿½ï¿½ Yï¿½kï¿½ Yï¿½netim Uygulamasï¿½ - Tï¿½rkï¿½e Sï¿½rï¿½mï¿½";
 				resourceManager.addResourceBundle(myResources);
 				
 				resourceManager.update();
@@ -134,7 +141,7 @@
 					
 					if (XML(event.object).hasOwnProperty("netTreeId")) {
 						
-						selectedTreeNode = ""; // Bu alaný netTreeId için kullanmýþtým artýk temizlemek lazým.
+						selectedTreeNode = ""; // Bu alanï¿½ netTreeId iï¿½in kullanmï¿½ï¿½tï¿½m artï¿½k temizlemek lazï¿½m.
 						
 						var netTreeId:String = XML(event.object).netTreeId;
 						jobListDetail.selectedNetTreeId = netTreeId;
@@ -163,7 +170,7 @@
 				
 				currentState = "jobDetailState";
 				
-				if(XML(event.object).hasOwnProperty("jobId")) { // add ya da clone için buraya giriyor
+				if(XML(event.object).hasOwnProperty("jobId")) { // add ya da clone iï¿½in buraya giriyor
 					allJobDetail.selectedJobId = XML(event.object).jobId;
 					var searchResult:XMLList = TreeUtils.findNode((jobTree.liveTree.dataProvider[0] as XML), allJobDetail.selectedJobId);
 					if (searchResult[0] != undefined) {
@@ -172,7 +179,7 @@
 						jobTree.refreshTree(searchResult[0]);
 					}
 				}
-				// Eðer job ile iligli iþlem komutu detay sayfadan geliyorsa
+				// Eï¿½er job ile iligli iï¿½lem komutu detay sayfadan geliyorsa
 				// bu durumda id attribute olmadan direk skalar olarak geliyor
 				else if (!XML(event.object).hasOwnProperty("@id")) {
 					allJobDetail.selectedJobId = "" + event.object;
@@ -245,9 +252,9 @@
 			private function updateTree(event:ResourceEvent):void {
 				
 				trace("Updating tree !");
-				if(XML(event.object).hasOwnProperty("netTreeId")) { // add,clone,update ve delete için buraya giriyor
+				if(XML(event.object).hasOwnProperty("netTreeId")) { // add,clone,update ve delete iï¿½in buraya giriyor
 					selectedTreeNode = XML(event.object);
-				} else if(event.object != null) {
+				}ï¿½else if(event.object != null) {
 					selectedTreeNode = XML(event.object);
 				} else {
 					// selectedTreeNode = jobTree.liveTree.getParentItem(jobTree.liveTree.selectedItem);
@@ -271,8 +278,8 @@
 				
 				trace("onTreeUpdateComplete returned : " + new Date().valueOf());
 				
-				if(XML(selectedTreeNode).hasOwnProperty("netTreeId")) { // add,clone,update ve delete için buraya giriyor
-					if(XML(selectedTreeNode).hasOwnProperty("jobId")) { // add,clone ve update için buraya giriyor
+				if(XML(selectedTreeNode).hasOwnProperty("netTreeId")) { // add,clone,update ve delete iï¿½in buraya giriyor
+					if(XML(selectedTreeNode).hasOwnProperty("jobId")) { // add,clone ve update iï¿½in buraya giriyor
 						if(currentState == "jobListState") {
 							// var searchResult:XMLList = TreeUtils.findNode((jobTree.liveTree.dataProvider[0] as XML), selectedTreeNode.jobId);
 							//if (searchResult[0] != undefined) {
@@ -282,7 +289,7 @@
 						} else if(currentState == "jobDetailState") {
 							dispatchEvent(new ResourceEvent(ResourceEvent.JOBNODE_SELECTED, selectedTreeNode /*data.@Id*/));
 						}
-					} else {// delete için buraya giriyor
+					} else {// delete iï¿½in buraya giriyor
 						dispatchEvent(new ResourceEvent(ResourceEvent.LISTNODE_SELECTED, selectedTreeNode));
 					}
 
@@ -292,7 +299,7 @@
 				// var selectedLocal:Object = (jobTree.liveTree.dataProvider[0] as XML)..jobGroup.(@id == selectedTreeNode.@id)[0];
 				
 				/*
-				 * Aþaðýdaki kýsým TreePanel.xmlService_resultHandler metoduna taþýndý.
+				 * Aï¿½aï¿½ï¿½daki kï¿½sï¿½m TreePanel.xmlService_resultHandler metoduna taï¿½ï¿½ndï¿½.
 				 *
 				 *
 				var searchResult:XMLList;
@@ -341,7 +348,7 @@
 					jobListDetail.updateData();*/
 				//} else if(event.type == ResourceEvent.JOBNODE_SELECTED) {
 					/*currentState = "jobDetailState";
-					// Eðer job ile iligli iþlem komutu detay sayfadan geliyorsa
+					// Eï¿½er job ile iligli iï¿½lem komutu detay sayfadan geliyorsa
 					// bu durumda id attribute olmadan direk skalar olarak geliyor
 					if (!XML(event.object).hasOwnProperty("@id")) {
 						allJobDetail.selectedJobId = XML(event.object);
@@ -425,7 +432,7 @@
 				if (result == "1") {
 				dispatchEvent(new ResourceEvent(ResourceEvent.LOGIN));
 				} else {
-				Alert.show("Kullacýný adý ya da þifre hatalý !");
+				Alert.show("Kullacï¿½nï¿½ adï¿½ ya da ï¿½ifre hatalï¿½ !");
 				}
 				}
 				*/
@@ -450,7 +457,7 @@
 				if(event.status == 200) {
 					// currentState = "loggedInState";
 					// currentState = "anaSayfaState"
-					// Alert.show("Giriþ baþarýlý :)");
+					// Alert.show("Giriï¿½ baï¿½arï¿½lï¿½ :)");
 				} else if (event.status == 400) {
 					Alert.show(resourceManager.getString("messages", "pinaraPassOrUserError"));
 					ModelLocator.getInstance().currentUser.username = "";
@@ -474,7 +481,7 @@
 			}
 			
 			private function checkLogin(event:ResourceEvent):void {
-				// Alert.show("Burada authentacion yapýlacak !", "Hata", Alert.OK, this, null, null);
+				// Alert.show("Burada authentacion yapï¿½lacak !", "Hata", Alert.OK, this, null, null);
 				// authAndSend(UserInfo(event.object));
 				doWork(User(event.object), false);
 			}
@@ -510,7 +517,7 @@
 					
 					// encoder.encode("tlos:tlos");
 					// encoder.encode(userInfo.username + ":" + userInfo.password);
-					// tr þifre ve kullanýcý sorunu nedeni utf8 e geçtim
+					// tr ï¿½ifre ve kullanï¿½cï¿½ sorunu nedeni utf8 e geï¿½tim
 					encoder.encodeUTFBytes(userInfo.username + ":" + userInfo.password);
 					var credsHeader:URLRequestHeader = new URLRequestHeader("Authorization", "Basic " + encoder.toString());
 					req.requestHeaders.push(credsHeader);
@@ -558,7 +565,7 @@
 					//Alert.show(returnXml);
 					returnXml = XML(event.message.body);
 					if(returnXml.result != "OK") {
-						Alert.show(returnXml.desc.toString(), "Hata Oluþtu !");
+						Alert.show(returnXml.desc.toString(), "Hata Oluï¿½tu !");
 					} else {
 						setAnaSayfaState();
 						refreshTreeAfterRelogin();
