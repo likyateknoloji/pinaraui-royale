@@ -32,7 +32,6 @@
 			
 			import spark.modules.Module;
 			
-			
 			[Bindable]
 			public var jobDetailXml:XML;
 			
@@ -116,7 +115,7 @@
 			*/
 			
 			// Handle the OK button.
-			private function processSave(eventObj:CloseEvent):void {
+			private function processSave(eventObj:mx.events.CloseEvent):void {
 
 				if(eventObj.detail == Alert.CANCEL) {
 					return;
@@ -234,7 +233,7 @@
 				remoteSchModuleInfo.addEventListener(ModuleEvent.READY, renderRemoteSchPropsModule);
 				remoteSchModuleInfo.addEventListener(ModuleEvent.ERROR, handleError);
 				try {
-					remoteSchModuleInfo.load();
+					//RO: remoteSchModuleInfo.load();
 				} catch(err:Error) {
 					Alert.show(resourceManager.getString("messages", "error") + err.message);
 				}
@@ -250,7 +249,7 @@
 				
 				var remoteSchTab:NavigatorContent = new NavigatorContent();
 				
-				remoteSchModule = remoteSchModuleInfo.factory.create() as Module;
+				//RO: remoteSchModule = remoteSchModuleInfo.factory.create() as Module;
 				
 				remoteSchTab.name = "remoteSch";
 				remoteSchTab.label = "RemoteSch Parameters";

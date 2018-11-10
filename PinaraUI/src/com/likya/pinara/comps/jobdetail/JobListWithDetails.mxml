@@ -10,6 +10,8 @@
 	
 	<fx:Script>
 		<![CDATA[
+			
+			import org.apache.royale.core.IChild;
 			import com.likya.pinara.event.ResourceEvent;
 			import com.likya.pinara.modules.IModuleInterface;
 			import com.likya.pinara.utils.BasicAuthenticationHandler;
@@ -388,12 +390,12 @@
 						depGraphModuleInfo.addEventListener(ModuleEvent.READY, renderDepGraphTabModule);
 						depGraphModuleInfo.addEventListener(ModuleEvent.ERROR, handleError);
 						addEventListener(ResourceEvent.REFRESH, renderDepGraphTabModule);
-						try {
+						/*RO: try {
 							depGraphModuleInfo.load(null, null, null, moduleFactory);
 						} catch(err:Error) {
 							Alert.show(resourceManager.getString("messages", "jobDetailsError") + err.message);
 							//trace(err);
-						}
+						}*/
 					}
 					
 				} catch(err:Error) {
@@ -411,7 +413,7 @@
 				
 				var depGraphTab:NavigatorContent = new NavigatorContent();
 
-				depGraphModule = depGraphModuleInfo.factory.create() as Module;
+				//RO: depGraphModule = depGraphModuleInfo.factory.create() as Module;
 				
 				var depGraphElement:IVisualElement = depGraphModule as IVisualElement; //depGraphModuleInfo.factory.create() as IVisualElement;
 				
@@ -420,7 +422,7 @@
 				depGraphTab.label = "Dependency Graph";
 				
 				myViewStack.addElement(depGraphTab);
-				depGraphTab.addElement(depGraphElement);
+				depGraphTab.addElement(depGraphElement as IChild);
 				
 				callService();
 			}

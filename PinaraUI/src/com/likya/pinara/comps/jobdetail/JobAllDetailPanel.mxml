@@ -253,8 +253,9 @@
 			 top="5"
 			 width="90%" 
 			 height="100%"
-			 borderColor="18"
-			 addedToStage="allDetailPanel1_addedToStageHandler(event)">
+			 
+			 addedToStage="allDetailPanel1_addedToStageHandler(event as org.apache.royale.events.Event)">
+		<!--RO: borderColor="18"-->
 
 <!--		<s:Button y="-27" left="200" label="{resourceManager.getString('messages', 'refresh')}" click="refresh_button1_clickHandler(event)" visible="true" includeInLayout="true"/>
 		<s:Button y="-27" left="300" visible="true" label="Show In Tree" click="button2_clickHandler(event)"/>

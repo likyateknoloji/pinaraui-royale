@@ -8,6 +8,9 @@
 		 xmlns:grpmanager="com.likya.pinara.services.grpmanager.*" >
 	<fx:Script>
 		<![CDATA[
+
+			import org.apache.royale.events.Event;
+			
 			import com.likya.pinara.comps.DummyForm;
 			import com.likya.pinara.comps.GrpNameForm;
 			import com.likya.pinara.event.ResourceEvent;
@@ -147,7 +150,7 @@
 		<s:Button visible="true" label="{resourceManager.getString('messages', 'showInTreeButLabel')}" click="button2_clickHandler(event)"/>
 	</s:HGroup>
 	
-	<s:DataGrid id="pinaraJobList" width="100%" height="100%" selectionChange="selectionChangeHandlerPinara(event)" dataProvider="{jobListXmlCollection}" addedToStage="pinaraJobList_addedToStageHandler(event)"> 
+	<s:DataGrid id="pinaraJobList" width="100%" height="100%" selectionChange="selectionChangeHandlerPinara(event)" dataProvider="{jobListXmlCollection}" addedToStage="pinaraJobList_addedToStageHandler(event as org.apache.royale.events.Event)"> 
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn headerText="{resourceManager.getString('messages', 'stateGrid')}" width="{this.pinaraJobList.width * 0.10}">

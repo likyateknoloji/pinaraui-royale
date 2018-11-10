@@ -6,12 +6,15 @@
 			   width="288"
 			   height="158"
 			   backgroundColor="white"
-			   backgroundAlpha="1.0"
-			   borderColor="white"
-			   borderAlpha="1.0"
 			   cornerRadius="1"
 			   close="removeMe();">
-	
+	<!--RO:
+	backgroundAlpha="1.0"
+	borderColor="white"
+	borderAlpha="1.0"
+
+	-->
+
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>

@@ -20,9 +20,8 @@
 			import com.likya.pinara.model.ModelLocator;
 			
 			import mx.collections.ArrayList;
-			import mx.controls.Alert;
 			
-			import spark.components.NavigatorContent;
+			import spark.components.TextInput;
 			
 			public static const BATCH_PROCESS:String = "BATCH PROCESS"; 
 			public static const SHELL_SCRIPT:String = "SHELL SCRIPT"; 
@@ -42,21 +41,21 @@
 			{
 				if(jsName.text == "") {
 					// Alert.show("Job Name is not defined !", "Tab Id : " + NavigatorContent(parent.parent.parent.parent.parent.parent).label);
-					Alert.show(resourceManager.getString("messages", "jobBaseNameNotDefined"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
+					// RO: Alert.show(resourceManager.getString("messages", "jobBaseNameNotDefined"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
 					return false;
 				}
 				if(jsCommand.text == "") {
 					// Alert.show("Job Command is not defined !", "Tab Id : " + NavigatorContent(parent.parent.parent.parent.parent.parent).label);
-					Alert.show(resourceManager.getString("messages", "jobBaseCommandNotDefined"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
+					// RO: Alert.show(resourceManager.getString("messages", "jobBaseCommandNotDefined"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
 					return false;
 				}
 				if(jsJobType.selectedItem == undefined) {
-					Alert.show(resourceManager.getString("messages", "jobBaseTypeNotSelected"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
+					// RO: Alert.show(resourceManager.getString("messages", "jobBaseTypeNotSelected"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
 					return false;
 				}
 				if(jsJobType.selectedItem == BATCH_PROCESS) {
 					if(!regExPath.test(jsCommand.text) || jsCommand.text.indexOf(BATCH_FILE_EXT) == -1) {
-						Alert.show(resourceManager.getString("messages", "jobBaseWinPath"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
+						// RO: Alert.show(resourceManager.getString("messages", "jobBaseWinPath"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
 						return false;
 					}
 				}

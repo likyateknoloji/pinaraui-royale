@@ -12,16 +12,16 @@
 		<s:State name="undefined"/>
 	</s:states>
 
-	<fx:Style>
+	<!--fx:Style>
 		@namespace s "library://ns.adobe.com/flex/spark";
 		@namespace local "*";
 		@namespace mx "library://ns.adobe.com/flex/mx";
 		
-		/*.toggleSwitch
+		.toggleSwitch
 		{
 			skinClass:ClassReference("com.likya.pinara.skins.ToggleSwitchSkin");
-		}*/
-	</fx:Style>
+		}
+	</fx:Style-->
 	
 	<fx:Script>
 		<![CDATA[

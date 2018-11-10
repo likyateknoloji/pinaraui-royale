@@ -18,16 +18,16 @@
 		<s:State name="undefined"/>
 	</s:states>
 	
-	<fx:Style>
+	<!--fx:Style>
 		@namespace s "library://ns.adobe.com/flex/spark";
 		@namespace local "*";
 		@namespace mx "library://ns.adobe.com/flex/mx";
 		
-		/*.toggleSwitch
+		.toggleSwitch
 		{
 			skinClass:ClassReference("com.likya.pinara.skins.ToggleSwitchSkin");
-		}*/
-	</fx:Style>
+		}
+	</fx:Style-->
 	
 	<fx:Script>
 		<![CDATA[
@@ -236,7 +236,7 @@
 							
 							<comps:SSSView paddingTop="90" id="thenSSS"/>
 							
-							<s:HGroup paddingTop="140" paddingLeft="15" alignmentBaseline="ideographicBottom">
+							<s:HGroup paddingTop="140" paddingLeft="15" ><!--RO: alignmentBaseline="ideographicBottom"-->
 								<s:Label text="{resourceManager.getString('messages', 'logAnalysReturnCode')}" fontSize="14" fontWeight="bold"/>
 								<s:TextInput id="thenRetCode" width="100%" restrict="0-9" widthInChars="8" maxChars="6" />
 								<s:Label text="{resourceManager.getString('messages', 'logAnalysReturnCodeDesc')}" fontSize="14" fontWeight="bold" paddingLeft="30"/>
@@ -289,7 +289,7 @@
 							
 							<comps:SSSView paddingTop="90" id="elseSSS"/>
 							
-							<s:HGroup paddingTop="140" paddingLeft="15" alignmentBaseline="ideographicBottom">
+							<s:HGroup paddingTop="140" paddingLeft="15" ><!--RO: alignmentBaseline="ideographicBottom"-->
 								<s:Label text="{resourceManager.getString('messages', 'logAnalysReturnCode')}" fontSize="14" fontWeight="bold"/>
 								<s:TextInput id="elseRetCode" width="100%" restrict="0-9" widthInChars="8" maxChars="6" />
 								<s:Label text="{resourceManager.getString('messages', 'logAnalysReturnCodeDesc')}" fontSize="14" fontWeight="bold" paddingLeft="30"/>

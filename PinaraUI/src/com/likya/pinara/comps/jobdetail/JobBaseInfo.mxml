@@ -95,7 +95,7 @@
 						remoteSchModuleInfo.addEventListener(ModuleEvent.READY, renderRemoteSchPropsModule);
 						remoteSchModuleInfo.addEventListener(ModuleEvent.ERROR, handleError);
 						try {
-							remoteSchModuleInfo.load();
+							//RO: remoteSchModuleInfo.load();
 						} catch(err:Error) {
 							Alert.show(resourceManager.getString("messages", "error") + err.message);
 							//trace(err);
@@ -116,7 +116,7 @@
 				
 				var remoteSchTab:NavigatorContent = new NavigatorContent();
 				
-				remoteSchModule = remoteSchModuleInfo.factory.create() as Module;
+				//RO: remoteSchModule = remoteSchModuleInfo.factory.create() as Module;
 				
 				remoteSchTab.name = "remoteSch";
 				remoteSchTab.label = "RemoteSch Parameters";
@@ -166,7 +166,7 @@
 			private function showGenericPopup(fileTag:String):void {
 				// Create a non-modal TitleWindow container.
 				// var helpWindow:TitleWindow = PopUpManager.createPopUp(this, MyWin, true) as TitleWindow;
-				var fileViewWindow:FileViewPopup = PopUpManager.createPopUp(parentApplication as DisplayObject, FileViewPopup, true) as FileViewPopup;
+				var fileViewWindow:FileViewPopup = PopUpManager.createPopUp(parentApplication as UIComponent /*RO: DisplayObject*/, FileViewPopup, true) as FileViewPopup;
 				fileViewWindow.fileTag = fileTag; //"joblog=" + jobDetailLocalXml.@Id;
 				// fileViewWindow.fileTag = "infotag=myraTrace";
 				// var helpWindow:TitleWindow = PopUpManager.createPopUp(this, JobEditWindow, true) as TitleWindow;

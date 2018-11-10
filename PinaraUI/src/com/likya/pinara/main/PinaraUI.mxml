@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="latin5"?>
+<?xml version="1.0" encoding="latin5" ?>
+
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.apache.org/royale/spark"
 			   xmlns:mx="library://ns.apache.org/royale/mx"
@@ -92,7 +93,7 @@
 				
 				
 				myResources = new ResourceBundle("tr_TR","locale\messages");
-				myResources.content['TITLE'] = "P�nara �� Y�k� Y�netim Uygulamas� - T�rk�e S�r�m�";
+				myResources.content['TITLE'] = "Pınara iş Yükü Yönetim Uygulaması - Türkçe Sürümü";
 				resourceManager.addResourceBundle(myResources);
 				
 				resourceManager.update();
@@ -141,7 +142,7 @@
 					
 					if (XML(event.object).hasOwnProperty("netTreeId")) {
 						
-						selectedTreeNode = ""; // Bu alan� netTreeId i�in kullanm��t�m art�k temizlemek laz�m.
+						selectedTreeNode = ""; // Bu alanı netTreeId için kullanmıştım artık temizlemek lazım.
 						
 						var netTreeId:String = XML(event.object).netTreeId;
 						jobListDetail.selectedNetTreeId = netTreeId;
@@ -170,7 +171,7 @@
 				
 				currentState = "jobDetailState";
 				
-				if(XML(event.object).hasOwnProperty("jobId")) { // add ya da clone i�in buraya giriyor
+				if(XML(event.object).hasOwnProperty("jobId")) { // add ya da clone için buraya giriyor
 					allJobDetail.selectedJobId = XML(event.object).jobId;
 					var searchResult:XMLList = TreeUtils.findNode((jobTree.liveTree.dataProvider[0] as XML), allJobDetail.selectedJobId);
 					if (searchResult[0] != undefined) {
@@ -179,7 +180,7 @@
 						jobTree.refreshTree(searchResult[0]);
 					}
 				}
-				// E�er job ile iligli i�lem komutu detay sayfadan geliyorsa
+				// Eğer job ile iligli işlem komutu detay sayfadan geliyorsa
 				// bu durumda id attribute olmadan direk skalar olarak geliyor
 				else if (!XML(event.object).hasOwnProperty("@id")) {
 					allJobDetail.selectedJobId = "" + event.object;
@@ -252,9 +253,9 @@
 			private function updateTree(event:ResourceEvent):void {
 				
 				trace("Updating tree !");
-				if(XML(event.object).hasOwnProperty("netTreeId")) { // add,clone,update ve delete i�in buraya giriyor
+				if(XML(event.object).hasOwnProperty("netTreeId")) { // add,clone,update ve delete için buraya giriyor
 					selectedTreeNode = XML(event.object);
-				}�else if(event.object != null) {
+				} else if(event.object != null) {
 					selectedTreeNode = XML(event.object);
 				} else {
 					// selectedTreeNode = jobTree.liveTree.getParentItem(jobTree.liveTree.selectedItem);
@@ -278,8 +279,8 @@
 				
 				trace("onTreeUpdateComplete returned : " + new Date().valueOf());
 				
-				if(XML(selectedTreeNode).hasOwnProperty("netTreeId")) { // add,clone,update ve delete i�in buraya giriyor
-					if(XML(selectedTreeNode).hasOwnProperty("jobId")) { // add,clone ve update i�in buraya giriyor
+				if(XML(selectedTreeNode).hasOwnProperty("netTreeId")) { // add,clone,update ve delete için buraya giriyor
+					if(XML(selectedTreeNode).hasOwnProperty("jobId")) { // add,clone ve update için buraya giriyor
 						if(currentState == "jobListState") {
 							// var searchResult:XMLList = TreeUtils.findNode((jobTree.liveTree.dataProvider[0] as XML), selectedTreeNode.jobId);
 							//if (searchResult[0] != undefined) {
@@ -289,86 +290,16 @@
 						} else if(currentState == "jobDetailState") {
 							dispatchEvent(new ResourceEvent(ResourceEvent.JOBNODE_SELECTED, selectedTreeNode /*data.@Id*/));
 						}
-					} else {// delete i�in buraya giriyor
+					} else {// delete için buraya giriyor
 						dispatchEvent(new ResourceEvent(ResourceEvent.LISTNODE_SELECTED, selectedTreeNode));
 					}
 
 				}
 				
 				trace((jobTree.liveTree.dataProvider[0] as XML));
-				// var selectedLocal:Object = (jobTree.liveTree.dataProvider[0] as XML)..jobGroup.(@id == selectedTreeNode.@id)[0];
-				
-				/*
-				 * A�a��daki k�s�m TreePanel.xmlService_resultHandler metoduna ta��nd�.
-				 *
-				 *
-				var searchResult:XMLList;
-				if(currentListNodeId == null) {
-					// searchResult = (jobTree.liveTree.dataProvider[0] as XML).descendants().(@id.toLowerCase().search(selectedTreeNode.@id.toLowerCase()) > -1);
-					searchResult = TreeUtils.findNode((jobTree.liveTree.dataProvider[0] as XML), selectedTreeNode.@id.toLowerCase());
-				} else {
-					// searchResult = (jobTree.liveTree.dataProvider[0] as XML).descendants().(@id.toLowerCase().search(currentListNodeId) > -1);
-					searchResult = TreeUtils.findNode((jobTree.liveTree.dataProvider[0] as XML), currentListNodeId);
-				}
-
-				if (searchResult[0] != undefined) {
-					TreeUtils.expandNode(jobTree.liveTree, searchResult[0]);
-					
-					//trace("selectedLocal :" + selectedLocal);
-					jobTree.liveTree.selectedItem = searchResult[0];
-					//jobTree.liveTree.validateNow();
-					//jobTree.liveTree.selectedIndex = selectedTreeNodeIdx;
-					//jobTree.liveTree.scrollToIndex(jobTree.liveTree.selectedIndex);
-					dispatchEvent(new ResourceEvent(ResourceEvent.LISTNODE_SELECTED, null));
-				}
-				*/
 			}
-			
-			//private function changeState(event:ResourceEvent):void {
-				
-				//if(event.type == ResourceEvent.LISTNODE_SELECTED) {
-					/*currentState = "jobListState";
-					if(event.object == null) {
-						if(currentListNodeId != null) {
-							jobListDetail.selectedNetTreeId = currentListNodeId;
-						} else {
-							Alert.show("Warning : Code : 3428");
-							currentState = "anaSayfaState";
-						}
-					} else {
-						// bazen id attribute olmadan direk olarak da gelebiliyor.
-						// Bu nedenle kontrol kondu Serkan...j
-						if (!XML(event.object).hasOwnProperty("@id")) {
-							jobListDetail.selectedNetTreeId = XML(event.object);
-						} else {
-							jobListDetail.selectedNetTreeId = XML(event.object).@id;
-						}
-						currentListNodeId = jobListDetail.selectedNetTreeId;
-					}
-					jobListDetail.updateData();*/
-				//} else if(event.type == ResourceEvent.JOBNODE_SELECTED) {
-					/*currentState = "jobDetailState";
-					// E�er job ile iligli i�lem komutu detay sayfadan geliyorsa
-					// bu durumda id attribute olmadan direk skalar olarak geliyor
-					if (!XML(event.object).hasOwnProperty("@id")) {
-						allJobDetail.selectedJobId = XML(event.object);
-						// liveTree.expandItem(liveTreeDP..jobGroup.(@id == item.@id)[0], true);
-						var tmpItem:Object = (jobTree.liveTree.dataProvider[0] as XML)..jobGroup..jobProperty.(@id == allJobDetail.selectedJobId)[0];
-						currentListNodeId = jobTree.liveTree.getParentItem(tmpItem).@id; 
-					} else {
-						allJobDetail.selectedJobId = XML(event.object).@id;
-						currentListNodeId = jobTree.liveTree.getParentItem(event.object).@id; 
-					}
-					allJobDetail.updateData();*/
-				//} else if(event.type == ResourceEvent.ANASAYFA) {
-					// currentState = "loggedInState";
-					/*currentState = "anaSayfaState";*/
-				//}
-				// menuBar.registerClickEvent();
-				// Alert.show("New State : " + currentState);
-			//}
-			
-			private function doRecoveryOnDemand(eventObj:CloseEvent):void {
+					
+			private function doRecoveryOnDemand(eventObj:mx.events.CloseEvent):void {
 				if(eventObj.detail == Alert.OK) {
 					recover.token = BasicAuthenticationHandler.authAndCall(jobManagerService, "recover");
 				} else {
@@ -421,21 +352,7 @@
 				} else {
 					setAnaSayfaState(); 
 				}
-				/*
-				Alert.show("event.result : " + event.result);
-				currentState = "tlosState";
-				if (event.result != null) {
-				var myColl:ArrayCollection = (ArrayCollection (event.result));
-				
-				var result:String = myColl.toArray().valueOf()[0].toString();
-				
-				if (result == "1") {
-				dispatchEvent(new ResourceEvent(ResourceEvent.LOGIN));
-				} else {
-				Alert.show("Kullac�n� ad� ya da �ifre hatal� !");
-				}
-				}
-				*/
+
 				if(menuBar != null) {
 					menuBar.applyFilters();
 				}
@@ -506,7 +423,7 @@
 					ModelLocator.getInstance().currentUser = userInfo;
 					
 					var req:URLRequest = new URLRequest("/flex/restsrvc/authanticate/");
-					req.method = URLRequestMethod.POST;
+					req.method = HTTPConstants.POST;
 
 					var encoder:Base64Encoder = new Base64Encoder();        
 
@@ -565,7 +482,7 @@
 					//Alert.show(returnXml);
 					returnXml = XML(event.message.body);
 					if(returnXml.result != "OK") {
-						Alert.show(returnXml.desc.toString(), "Hata Olu�tu !");
+						Alert.show(returnXml.desc.toString(), "Hata Oluştu !");
 					} else {
 						setAnaSayfaState();
 						refreshTreeAfterRelogin();
@@ -693,16 +610,16 @@
 		]]>
 	</fx:Script>
 	
-		<fx:Style>
+	<!--fx:Style>
 		@namespace s "library://ns.adobe.com/flex/spark";
 		@namespace mx "library://ns.adobe.com/flex/halo";
 		@namespace containers "com.likya.pinara.containers.*";
 		
-		/*containers|CollapsiblePanel {
+		containers|CollapsiblePanel {
 			skin-class: ClassReference('com.likya.pinara.skins.CollapsiblePanelSkin');
-		}*/
+		}
 		
-	</fx:Style>
+	</fx:Style-->
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -753,7 +670,10 @@
 			<s:Panel id="messagePanel" title="" width="100%" height="55" visible="false" includeInLayout="false">
 				<mx:Text id="messageText" text="" textAlign="center" color="0xFF2D00" width="100%" />
 			</s:Panel>
-			<s:BitmapImage source="@Embed('/images/likya.jpg')" left="0" right="0" top="0" bottom="0" scaleMode="stretch" includeIn="anaSayfaState" />
+			<!-- royale removed from  BitmapImage
+			left="0" right="0" top="0" bottom="0" scaleMode="stretch"
+			-->
+			<s:BitmapImage source="@Embed('/images/likya.jpg')"  includeIn="anaSayfaState" />
 			<!--mx:SWFLoader width="950" height="500" source="http://www.youtube.com/v/ojASzi1Kb8c" includeIn="loggedInState"/--> 
 			<!--comps:MainPanel includeIn="jobListState" height="100%"/-->
 			<jobdetail:JobListWithDetails height="100%" excludeFrom="anaSayfaState, jobDetailState, loggedOutState, dummyState" id="jobListDetail"/>

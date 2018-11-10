@@ -1,17 +1,29 @@
 package com.likya.pinara.containers
 {
 	import mx.collections.ArrayList;
-	import mx.controls.Alert;
 	
 	public class ImageContainer {
 		
 		// Ağaç için statu ikonları
 		
-		[@Embed(source='/images/clock1s.png')]
+		public static var clock1s:String = '/images/clock1s.png';
+		public static var kilits:String = '/images/kilits.png';
+		public static var kosu2s:String = '/images/kosu2s.png';
+		public static var ok2s:String = '/images/ok2s.png';
+		public static var errors:String = '/images/errors.png';
+		public static var timeouts:String = '/images/timeouts.png';
+		public static var skips:String = '/images/skips.png';
+		public static var stops:String = '/images/stops.png';
+		public static var pauses:String = '/images/pauses.png';
+		public static var disableds:String = '/images/disableds.png';
+		public static var warnings:String = '/images/warnings.png';
+		
+		/*[@Embed(source='/images/clock1s.png')]
 		public static const clock1s:Class;
 		
 		[@Embed(source='/images/kilits.png')]
 		public static const kilits:Class;
+		
 		
 		[@Embed(source='/images/kosu2s.png')]
 		public static const kosu2s:Class;
@@ -38,11 +50,23 @@ package com.likya.pinara.containers
 		public static const disableds:Class;
 		
 		[@Embed(source='/images/warnings.png')]
-		public static const warnings:Class;
+		public static const warnings:Class;*/
 		
 		// Liste için statu ikonları
 		
-		[@Embed(source='/images/clock1.jpg')]
+		public static var clock1:String = '/images/clock1.png';
+		public static var kilit:String = '/images/kilit.png';
+		public static var kosu2:String = '/images/kosu2.png';
+		public static var ok2:String = '/images/ok2.png';
+		public static var error:String = '/images/error.png';
+		public static var timeout:String = '/images/timeout.png';
+		public static var skip:String = '/images/skip.png';
+		public static var stop:String = '/images/stop.png';
+		public static var pause:String = '/images/pause.png';
+		public static var disabled:String = '/images/disabled.png';
+		public static var warning:String = '/images/warning.png';
+		
+		/*[@Embed(source='/images/clock1.jpg')]
 		public static const clock1:Class;
 		
 		[@Embed(source='/images/kilit.jpg')]
@@ -73,11 +97,21 @@ package com.likya.pinara.containers
 		public static const disabled:Class;
 		
 		[@Embed(source='/images/warning.jpg')]
-		public static const warning:Class;
+		public static const warning:Class;*/
 		
 		// Liste için komut ikonları
 		
-		[@Embed(source='/images/disableJob.jpg')]
+		public static var disableJob:String = '/images/disableJob.png';
+		public static var startJob:String = '/images/startJob.png';
+		public static var pauseJob:String = '/images/pauseJob.png';
+		public static var enableJob:String = '/images/enableJob.png';
+		public static var retryJob:String = '/images/retryJob.png';
+		public static var setSuccessJob:String = '/images/setSuccessJob.png';
+		public static var skipJob:String = '/images/skipJob.png';
+		public static var stopJob:String = '/images/stopJob.png';
+		public static var resumeJob:String = '/images/resumeJob.png';
+		
+		/*[@Embed(source='/images/disableJob.jpg')]
 		public static const disableJob:Class;
 		
 		[@Embed(source='/images/startJob.jpg')]
@@ -102,16 +136,18 @@ package com.likya.pinara.containers
 		public static const stopJob:Class;
 		
 		[@Embed(source='/images/resumeJob.jpg')]
-		public static const resumeJob:Class;
+		public static const resumeJob:Class;*/
 		
 		
 		// Log için ikonlar
 		
-		[@Embed(source='/images/logfile_s.png')]
-		public static const logFileResides:Class;
+		// [@Embed(source='/images/logfile_s.png')]
+		// public static const logFileResides:Class;
+		public static var logFileResides:String = '/images/logfile_s.png';
 		
-		[@Embed(source='/images/noLogfile_s.png')]
-		public static const logFileMissing:Class;
+		// [@Embed(source='/images/noLogfile_s.png')]
+		// public static const logFileMissing:Class;
+		public static var logFileMissing:String = '/images/noLogfile_s.png';
 		
 		private static var treeIconList:ArrayList = new ArrayList();
 		private static var statuImageList:ArrayList = new ArrayList();

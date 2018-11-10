@@ -202,22 +202,30 @@
 						restrict="0-23"
 						widthInChars="3"
 						maxChars="2" /-->
-						<s:NumericStepper id="bhour" minimum="0" maximum="23" stepSize="1" maxChars="2" valueFormatFunction="{leadingZero}"/>
 						
-						<s:Label text=" : " alignmentBaseline="ideographicBottom" fontSize="14" fontWeight="bold" />
+						<!--RO: s:NumericStepper id="bhour" minimum="0" maximum="23" stepSize="1" maxChars="2" valueFormatFunction="{leadingZero}"/-->
+						<s:NumericStepper id="bhour" minimum="0" maximum="23" stepSize="1" maxChars="2"/>
+						
+						<!--RO: s:Label text=" : " alignmentBaseline="ideographicBottom" fontSize="14" fontWeight="bold" /-->
+						<s:Label text=" : " fontSize="14" fontWeight="bold" />
 						<!--<s:TextInput  id="bminute"
 						text="00"
 						restrict="0-59"
 						widthInChars="3"
 						maxChars="2" />-->
-						<s:NumericStepper id="bminute" minimum="0" maximum="59" valueFormatFunction="{leadingZero}"/>
-						<s:Label text=" : " alignmentBaseline="ideographicBottom" fontSize="14" fontWeight="bold" />
+						<!--RO: s:NumericStepper id="bminute" minimum="0" maximum="59" valueFormatFunction="{leadingZero}"/-->
+						<s:NumericStepper id="bminute" minimum="0" maximum="59" />
+						<!--RO:s:Label text=" : " alignmentBaseline="ideographicBottom" fontSize="14" fontWeight="bold" /-->
+						<s:Label text=" : " fontSize="14" fontWeight="bold" />
+
 						<!--<s:TextInput  id="bsecond"
 						text="00"
 						restrict="0-59"
 						widthInChars="3"
 						maxChars="2" />-->
-						<s:NumericStepper id="bsecond" minimum="0" maximum="59" valueFormatFunction="{leadingZero}"/>
+						
+						<!--RO: s:NumericStepper id="bsecond" minimum="0" maximum="59" valueFormatFunction="{leadingZero}"/-->
+						<s:NumericStepper id="bsecond" minimum="0" maximum="59" />
 					</s:HGroup>
 					<s:helpContent>
 						<s:Label text="DD/MM/YYYY hh:mm:ss"/>
@@ -233,11 +241,17 @@
 						<s:FormItem label="{resourceManager.getString('messages', 'jobStartDateTime')}" top="20" id="tFStartTime" enabled="false">
 							<s:HGroup>
 								<mx:DateField id="tFbdate" top="50" left="10" formatString="DD/MM/YYYY" selectedDate="{new Date()}" />
-								<s:NumericStepper id="tFbhour" minimum="0" maximum="23" value="0" stepSize="1" maxChars="2" valueFormatFunction="{leadingZero}" />
+								<!--RO: s:NumericStepper id="tFbhour" minimum="0" maximum="23" value="0" stepSize="1" maxChars="2" valueFormatFunction="{leadingZero}" />
 								<s:Label text=" : " alignmentBaseline="ideographicBottom" fontSize="14" fontWeight="bold" />
 								<s:NumericStepper id="tFbminute" minimum="0" maximum="59" valueFormatFunction="{leadingZero}" />
 								<s:Label text=" : " alignmentBaseline="ideographicBottom" fontSize="14" fontWeight="bold" />
-								<s:NumericStepper id="tFbsecond" minimum="0" maximum="59" valueFormatFunction="{leadingZero}" />
+								<s:NumericStepper id="tFbsecond" minimum="0" maximum="59" valueFormatFunction="{leadingZero}" /-->
+
+								<s:NumericStepper id="tFbhour" minimum="0" maximum="23" value="0" stepSize="1" maxChars="2" />
+								<s:Label text=" : " fontSize="14" fontWeight="bold" />
+								<s:NumericStepper id="tFbminute" minimum="0" maximum="59" />
+								<s:Label text=" : " fontSize="14" fontWeight="bold" />
+								<s:NumericStepper id="tFbsecond" minimum="0" maximum="59" />
 							</s:HGroup>
 							<s:helpContent>
 								<s:Label text="DD/MM/YYYY hh:mm:ss"/>
@@ -249,11 +263,21 @@
 						<s:FormItem label="{resourceManager.getString('messages', 'jobFinishDateTime')}" top="20" id="tFStopTime" enabled="false">
 							<s:HGroup>
 								<mx:DateField id="tFedate" top="50" left="10" formatString="DD/MM/YYYY" selectedDate="{new Date()}"/>
-								<s:NumericStepper id="tFehour" minimum="0" maximum="23" value="0" stepSize="1" maxChars="2" valueFormatFunction="{leadingZero}" />
+								
+								<!--RO: s:NumericStepper id="tFehour" minimum="0" maximum="23" value="0" stepSize="1" maxChars="2" valueFormatFunction="{leadingZero}" />
+								<s:Label text=" : " alignmentBaseline="ideographicBottom" fontSize="14" fontWeight="bold"/>
 								<s:Label text=" : " alignmentBaseline="ideographicBottom" fontSize="14" fontWeight="bold"/>
 								<s:NumericStepper id="tFeminute" minimum="0" maximum="59" valueFormatFunction="{leadingZero}"/>
 								<s:Label text=" : " alignmentBaseline="ideographicBottom" fontSize="14" fontWeight="bold"/>
-								<s:NumericStepper id="tFesecond" minimum="0" maximum="59" valueFormatFunction="{leadingZero}"/>
+								<s:NumericStepper id="tFesecond" minimum="0" maximum="59" valueFormatFunction="{leadingZero}"/-->
+								
+								<s:NumericStepper id="tFehour" minimum="0" maximum="23" value="0" stepSize="1" maxChars="2" />
+								<s:Label text=" : " fontSize="14" fontWeight="bold"/>
+								<s:Label text=" : " fontSize="14" fontWeight="bold"/>
+								<s:NumericStepper id="tFeminute" minimum="0" maximum="59" />
+								<s:Label text=" : " fontSize="14" fontWeight="bold"/>
+								<s:NumericStepper id="tFesecond" minimum="0" maximum="59" />
+
 							</s:HGroup>
 							<s:helpContent>
 								<s:Label text="DD/MM/YYYY hh:mm:ss"/>

@@ -39,7 +39,7 @@
 	</s:VGroup>
 	<s:VGroup verticalAlign="top">
 		<s:Label text="{resourceManager.getString('messages', 'jobImWaitingforListLabel')}"/>
-		<s:List id="meToWaitJobs" height="60" width="150" labelFunction="getDepInfo"> 
+		<s:List id="meToWaitJobs" height="60" width="150" > <!--RO: labelFunction="getDepInfo"--> 
 			<s:dataProvider>
 				<mx:ArrayCollection/>
 			</s:dataProvider>

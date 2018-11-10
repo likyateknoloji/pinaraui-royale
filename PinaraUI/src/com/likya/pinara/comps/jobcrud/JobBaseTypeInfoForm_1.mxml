@@ -49,7 +49,7 @@
 					return false;
 				}
 				if(jsJobLogFile.text != "" && invalidFileNameChars.test(jsJobLogFile.text)) {
-					Alert.show(resourceManager.getString("messages", "jobBaseLogFilename"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
+					// RO: Alert.show(resourceManager.getString("messages", "jobBaseLogFilename"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
 					return false;
 				}
 				checkLogPath();

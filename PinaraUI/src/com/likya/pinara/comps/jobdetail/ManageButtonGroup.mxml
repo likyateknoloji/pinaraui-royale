@@ -59,7 +59,7 @@
 				Alert.okLabel = resourceManager.getString("messages", "yesLabel");
 				Alert.cancelLabel = resourceManager.getString("messages", "cancelLabel");
 				
-				function confirmJobOperations(eventObj:CloseEvent):void {
+				function confirmJobOperations(eventObj:mx.events.CloseEvent):void {
 					
 					if(eventObj.detail == Alert.OK) {
 						

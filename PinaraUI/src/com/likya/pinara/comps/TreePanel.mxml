@@ -44,14 +44,14 @@
 			}
 			
 			private function changeStateOfNodes(action:Boolean):void {
-				for (var i:int = 0; i < liveTree.dataProvider.length;i++) {
+				/*RO: for (var i:int = 0; i < liveTree.dataProvider.length;i++) {
 					callLater(liveTree.expandChildrenOf, [liveTree.dataProvider[i], action]);
-				}
+				}*/
 			}
 			
 			private function setWidth():void {
 				// Alert.show("width before : " + jobTree.width);
-				liveTree.percentWidth = 100;
+				/*RO: liveTree.percentWidth = 100;*/
 				// Alert.show("width after : " + jobTree.width);
 			}
 			
@@ -92,7 +92,7 @@
 					if("Dep Group" == node.@title){
 						// trace(node.@title);
 						if("false" == node.@grpState) {
-							return ImageContainer.disableds;
+							/*return ImageContainer.disableds;*/
 						} 
 					}
 					return tlosFolderImg;
@@ -164,7 +164,7 @@
 			}
 
 			protected function treePanelService_resultHandler(event:ResultEvent):void {
-				trace("treePanelService_resultHandler");
+				/*RO: trace("treePanelService_resultHandler");
 				var treeXml:XML = XML(event.result);
 				var treeOpenItems:Object;
 				
@@ -188,12 +188,12 @@
 					trace(err);
 				}
 				
-				setSelectedNode();
+				setSelectedNode();*/
 			}
 			
 			protected function setSelectedNode():void {
 				
-				if(selectedTreeNode != null && selectedTreeNode.hasOwnProperty("@id")) {
+				/*RO: if(selectedTreeNode != null && selectedTreeNode.hasOwnProperty("@id")) {
 					trace("[selectedTreeNode] : " + ObjectUtil.toString(selectedTreeNode));
 					var selectedId:String = selectedTreeNode.@id;
 					
@@ -212,7 +212,7 @@
 						}
 					}
 					
-				}
+				}*/
 			}
 
 			protected function liveTree_itemOpenHandler(event:TreeEvent):void
@@ -255,29 +255,32 @@
 	<containers:CollapsiblePanel id="tlosTreePanel" height="100%" width="100%" title="{resourceManager.getString('messages', 'tlosTree')}" >
 		
 		<!--tlosTreeData-->
+		<!--RO: from containers:AutoSizeTree id="liveTree"
+		iconField="@icon"
+		labelFunction="treeLabel"
+		iconFunction="treeIconFunc"
+		focusColor="#E67A7A"				 
+		textRollOverColor="#FFFFFF"				 
+		textSelectedColor="#063741"	
+		rollOverColor="#596E76"
+		chromeColor="#E2E5E7"
+		selectionColor="#8E9DA0"  
+		itemOpen="liveTree_itemOpenHandler(event)"
+		itemClose="liveTree_itemCloseHandler(event)"
+		
+		-->
 		<containers:AutoSizeTree id="liveTree"
-				 iconField="@icon"
 				 labelField="@label"
 				 fontSize="12"
 				 showRoot="true"				 
 				 dataProvider="{liveTreeDP}"
-				 labelFunction="treeLabel"
-				 iconFunction="treeIconFunc"
 				 height="100%"				 
 				 width="220"
-				 focusColor="#E67A7A"				 
-				 textRollOverColor="#FFFFFF"				 
-				 textSelectedColor="#063741"	
 				 contentBackgroundColor="#DAE0E6"
-				 rollOverColor="#596E76"
-				 chromeColor="#E2E5E7"
-				 selectionColor="#8E9DA0"  
 				 fontWeight="bold" 
 				 color="#0D173C"
 				 left="0" top="0" right="0" bottom="0"
 				 openItems="true"
-				 itemOpen="liveTree_itemOpenHandler(event)"
-				 itemClose="liveTree_itemCloseHandler(event)"
 				 itemClick="tlosTree_itemClickHandler(event)"
 				 itemDoubleClick="liveTree_itemDoubleClickHandler(event)"
 				 />
