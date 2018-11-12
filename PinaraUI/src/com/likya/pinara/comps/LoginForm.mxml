@@ -20,11 +20,11 @@
 			import mx.validators.Validator;
 			
 			[Bindable]
-			[Embed(source="/images/tr_icon.png")] 
+			// [Embed(source="/images/tr_icon.png")] 
 			private var trIcon:Class;
 			
 			[Bindable]
-			[Embed(source="/images/en_icon.png")] 
+			// [Embed(source="/images/en_icon.png")] 
 			private var enIcon:Class;
 				
 			protected function button_clickHandler(event:MouseEvent):void {

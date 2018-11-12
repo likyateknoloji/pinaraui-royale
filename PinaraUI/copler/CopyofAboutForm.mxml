@@ -28,7 +28,7 @@
 			[Bindable]
 			public var likyaIconImg:Class;
 			
-			[Embed(source='/images/aboutlogo.gif')]
+			//[Embed(source='/images/aboutlogo.gif')]
 			[Bindable]
 			public var aboutlogoImg:Class;
 			

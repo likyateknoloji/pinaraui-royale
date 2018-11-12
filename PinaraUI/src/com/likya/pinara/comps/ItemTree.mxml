@@ -25,19 +25,19 @@
 			//private var selectedTreeItem:Object; 
 			
 			[Bindable]
-			[Embed(source="/images/connected.jpg")] 
+			// [Embed(source="/images/connected.jpg")] 
 			private var tlosConnectedImage:Class; 
 			
 			[Bindable]
-			[Embed(source="/images/disconnected.jpg")] 
+			// [Embed(source="/images/disconnected.jpg")] 
 			private var tlosDisconnectedImage:Class;
 			
 			[Bindable]
-			[Embed(source="/images/tlosTree.jpg")]
+			// [Embed(source="/images/tlosTree.jpg")]
 			private var tlosFolderImg:Class;
 			
 			[Bindable]
-			[Embed(source="/images/addTlos.jpg")] 
+			// [Embed(source="/images/addTlos.jpg")] 
 			private var addTlosImage:Class;
 			
 			public var CONNECT_RESOURCE:String = "Kaynak Tanımla";

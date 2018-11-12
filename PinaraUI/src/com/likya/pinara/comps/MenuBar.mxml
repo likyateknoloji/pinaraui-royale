@@ -470,11 +470,15 @@
 	</fx:Declarations>
 	
 	
-	<mx:MenuBar id="pinaraMenuBar" width="100%" chromeColor="#B4CBE1" color="#0D173C" 
+	<!--RO : 
+	chromeColor="#B4CBE1"
+	selectionColor="#A8C6EE"
+	symbolColor="#F7F4F4"
+	-->
+	<mx:MenuBar id="pinaraMenuBar" width="100%"  color="#0D173C" 
 				dataProvider="{menuBarData}" fontFamily="Arial" fontWeight="bold" horizontalCenter="0"
 				itemClick="tlosMenuBar_itemClickHandler(event)" 
-				labelField="@label" selectionColor="#A8C6EE"
-				symbolColor="#F7F4F4"
+				labelField="@label" 
 				creationComplete="pinaraMenuBar_creationCompleteHandler(event)"/>
 	
 </s:Group>

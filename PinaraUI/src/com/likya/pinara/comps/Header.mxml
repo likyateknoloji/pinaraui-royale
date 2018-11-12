@@ -25,15 +25,15 @@
 			private var ticker:Timer;
 			
 			[Bindable]
-			[Embed(source="/images/logout.png")] 
+			// [Embed(source="/images/logout.png")] 
 			private var logoutIcon:Class;
 			
 			[Bindable]
-			[Embed(source="/images/tr_icon.png")] 
+			// [Embed(source="/images/tr_icon.png")] 
 			private var trIcon:Class;
 			
 			[Bindable]
-			[Embed(source="/images/en_icon.png")] 
+			// [Embed(source="/images/en_icon.png")] 
 			private var enIcon:Class;
 			
 			public function showTime():void {
@@ -96,7 +96,7 @@
 	</s:Panel--> 
 	
 	<s:Panel id="headerPanel" width="100%" height="20" chromeColor="#E1E5EA" addedToStage="headerPanel_addedToStageHandler(event as Event)">
-		<mx:Image x="10" y="-28" source="@Embed(source='/images/logo2.jpg')"/>
+		<!--RO: mx:Image x="10" y="-28" source="@Embed(source='/images/logo2.jpg')"/ -->
 		<s:Label x="95" y="-24" fontSize="18" fontWeight="normal" text="{'- ' + resourceManager.getString('messages', 'applicationName')}"/>
 		
 		<!--s:Label y="-18" right="{this.userInfo.username.length * 2 + 250}" fontWeight="bold" text="{resourceManager.getString('messages', 'welcome') + ', ' + this.userInfo.username + ', '}"/>
