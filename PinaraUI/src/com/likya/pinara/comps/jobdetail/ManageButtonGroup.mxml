@@ -187,7 +187,7 @@
 	</s:layout>
 	<!--s:Label text="isStartable : {data.visualParams.commandabilityParams.isStartable}" paddingTop="5"/-->
 	
-	<s:Image id="disableJob" source="{ImageContainer.getManageImage(0)}" toolTip="{resourceManager.getString('messages', 'disableJobTooltip')}" 
+	<!--RO: s:Image id="disableJob" source="{ImageContainer.getManageImage(0)}" toolTip="{resourceManager.getString('messages', 'disableJobTooltip')}" 
 			 includeInLayout="{data.visualParams.commandabilityParams.isDisablable == true}" buttonMode="true"
 			 visible="{data.visualParams.commandabilityParams.isDisablable == true}"
 			 click="executeJobCommand(event, data.@Id, data.Id)" />
@@ -230,5 +230,5 @@
 	<s:Image id="resumeJob" source="{ImageContainer.getManageImage(8)}" toolTip="{resourceManager.getString('messages', 'resumeJobTooltip')}" 
 			 includeInLayout="{data.visualParams.commandabilityParams.isResumable == true}" buttonMode="true"
 			 visible="{data.visualParams.commandabilityParams.isResumable == true}"
-			 click="executeJobCommand(event, data.@Id, data.Id)" />
+			 click="executeJobCommand(event, data.@Id, data.Id)" /-->
 </s:Group>
