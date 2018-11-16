@@ -17,7 +17,7 @@ set SPARK_JS=%GITREPO%\SparkRoyale\target\SparkRoyale-0.9.5-SNAPSHOT-js.swc
 
 set MAINCLASS=.\src\com\likya\pinara\main\PinaraUI.mxml
 set SRCPATH=.\src,.\locale\{locale}
-set SRVCFG=.\services\services-config.xml
+set SRVCFG=services\services-config.xml
 set PNRLIBS=.\libs\as3corelib.swc,.\libs\fiber-lib.swc,.\libs\serializers-lib.swc,.\libs\flexlib.swc,.\libs\libravis.swc
 
 @echo on
