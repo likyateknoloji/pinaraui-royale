@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<actionScriptProperties analytics="false" mainApplicationPath="com/likya/pinara/main/PinaraUI.mxml" projectUUID="d699ba95-f884-4adf-adeb-d53a38aeac26" version="11">
+  <compiler additionalCompilerArguments="-services &quot;D:/dev/git/pinaragroup/Pinara-0.0.1/WEB-INF/flex/services-config.xml&quot; -locale en_US tr_TR" autoRSLOrdering="true" copyDependentFiles="true" flex3CompatMode="false" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="D:/dev/git/pinaragroup/Pinara-0.0.1/flexroot" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" useFlashSDK="false" verifyDigests="true" warn="true">
+    <compilerSourcePath>
+      <compilerSourcePathEntry kind="1" linkType="1" path="locale/{locale}"/>
+    </compilerSourcePath>
+    <libraryPath defaultLinkType="3">
+      <libraryPathEntry kind="3" linkType="1" path="${DCD_FIBER_LOCATION}/playerfds.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/as3corelib.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/serializers-lib.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="4" path="">
+        <excludedEntries>
+          <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/flex.swc" useDefaultLinkType="false"/>
+          <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/core.swc" useDefaultLinkType="false"/>
+        </excludedEntries>
+      </libraryPathEntry>
+      <libraryPathEntry kind="1" linkType="1" path="${DCD_LIB_LOCATION}"/>
+      <libraryPathEntry kind="1" linkType="1" path="${DCD_LOCALE_LOCATION}"/>
+      <libraryPathEntry kind="1" linkType="1" path="${DCD_FIBER_LOCALE_LOCATION}"/>
+      <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/fiber-lib.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/github/royale-asjs/frameworks/projects/MXRoyale/target/MXRoyale-0.9.5-SNAPSHOT-js.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/github/royale-asjs/frameworks/projects/MXRoyale/target/MXRoyale-0.9.5-SNAPSHOT-swf.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/github/royale-asjs/frameworks/projects/SparkRoyale/target/SparkRoyale-0.9.5-SNAPSHOT-js.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/github/royale-asjs/frameworks/projects/SparkRoyale/target/SparkRoyale-0.9.5-SNAPSHOT-swf.swc" useDefaultLinkType="false"/>
+    </libraryPath>
+    <sourceAttachmentPath/>
+  </compiler>
+  <applications>
+    <application path="tests/TestCompRefresh.mxml"/>
+    <application path="tests/TestMenuFilter.mxml"/>
+    <application path="com/likya/pinara/utils/RoleFilters.as"/>
+    <application path="com/likya/pinara/comps/AboutForm.mxml"/>
+    <application path="tests/JobEditWindowTester.mxml"/>
+    <application path="tests/TestUserCrudWindows.mxml"/>
+  </applications>
+  <modules>
+    <module application="src/com/likya/pinara/main/PinaraUI.mxml" destPath="com/likya/pinara/modules/RemoteSchProps.swf" optimize="true" sourcePath="src/com/likya/pinara/modules/RemoteSchProps.mxml"/>
+    <module application="src/com/likya/pinara/main/PinaraUI.mxml" destPath="com/likya/pinara/modules/ViewDepGraph.mxml.swf" optimize="true" sourcePath="src/com/likya/pinara/modules/ViewDepGraph.mxml.txt"/>
+  </modules>
+  <workers/>
+  <buildCSSFiles/>
+  <flashCatalyst validateFlashCatalystCompatibility="false"/>
+</actionScriptProperties>

@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Form xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.apache.org/royale/spark"
+		xmlns:mx="library://ns.apache.org/royale/mx"
+		xmlns:MyComp="*"
+		width="100%" height="100%">
+	
+	<!--
+	<fx:Declarations>
+	<fx:Model id="tempXML" source="pinara.xml" />
+	<s:XMLListCollection id="pinaraXMLList" source="{tempXML.genericJob}" />
+	</fx:Declarations>
+	-->
+ 						 
+ 
+	
+	<fx:Script>
+		<![CDATA[
+			import com.likya.pinara.utils.CodeDesc;
+			
+			import mx.collections.IList;
+			import mx.controls.Alert;
+			import mx.utils.ObjectUtil;
+			
+			import spark.events.GridSelectionEvent;
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			
+			public function validateForm():Boolean
+			{
+				if(statusInfoGrid.dataProvider.length == 0) {
+					Alert.show(resourceManager.getString("messages", "stateInfoJobStatusListEmpty"));
+					return false;
+				}
+				
+				return true;
+			}
+			
+			private function checkListForItem(checkItem:Object, checkArr:Array):Boolean
+			{
+				if(checkArr.length > 0) {
+					for each (var item:Object in checkArr) {
+						var codeDescCuple:CodeDesc = new CodeDesc(String(item));
+						if(codeDescCuple.code == Number(checkItem)) {
+							//Alert.show("Return code already defined : " + checkItem);
+							return true;
+						}
+					}
+				} 
+				
+				return false;
+			}
+			
+			protected function retCodeEkle_clickHandler(event:MouseEvent):void
+			{
+				var myDp:IList = retCodeList.dataProvider;
+				
+				var newRecordFlag:Boolean = true;
+				
+				if(!checkListForItem(retCode.text, myDp.toArray())) {
+					myDp.addItem(retCode.text + " : " + retCodeDesc.text);
+					retCodeCikar.enabled = true;
+					retCodeDegistir.enabled = true;
+					retCodeList.selectedIndex = myDp.length - 1;
+				} else {
+					Alert.show(resourceManager.getString("messages", "stateInfoRetCodeAlreadyDefined") + retCode.text);
+				}
+				
+				/*if(myDp.length > 0) {
+					for each (var item:Object in myDp.toArray()) {
+						var codeDescCuple:CodeDesc = new CodeDesc(String(item));
+						if(codeDescCuple.code == Number(retCode.text)) {
+							Alert.show("Return code already defined : " + retCode.text);
+							newRecordFlag = false;
+							break;
+						}
+					}
+				} */
+				
+				// if(newRecordFlag) {
+				// 	myDp.addItem(retCode.text + " : " + retCodeDesc.text);
+				// }
+				
+			}
+			
+			protected function retCodeCikar_clickHandler(event:MouseEvent):void
+			{
+				if(retCodeList.dataProvider.length != 0 && retCodeList.selectedIndex != -1) {
+					retCodeList.dataProvider.removeItemAt(retCodeList.selectedIndex);
+					if(retCodeList.dataProvider.length == 0) {
+						retCodeCikar.enabled = false;
+						retCodeDegistir.enabled = false;
+					}
+				} else {
+					retCodeCikar.enabled = false;
+					retCodeDegistir.enabled = false;
+				}
+			}
+
+			protected function retCodeDegistir_clickHandler(event:MouseEvent):void
+			{
+				if(retCodeList.dataProvider.length != 0 && retCodeList.selectedIndex != -1) {
+					/*if(!checkListForItem(retCode.text, retCodeList.dataProvider.toArray())) {*/
+						retCodeList.dataProvider.setItemAt(retCode.text + " : " + retCodeDesc.text, retCodeList.selectedIndex);
+					/*} else {
+						Alert.show("Return code already defined : " + retCode.text);
+					}*/
+				}
+			}
+			
+			protected function retCodeDesc_changeHandler(event:TextOperationEvent):void
+			{
+				if(retCode.text.length > 0 && retCodeDesc.text.length > 0) {
+					retCodeEkle.enabled = true;
+				} else {
+					retCodeEkle.enabled = false;
+				}
+				
+			}
+			
+			protected function retCodeList_changeHandler(event:IndexChangeEvent):void
+			{
+				if(retCodeList.selectedIndex != -1) {
+					retCodeCikar.enabled = true;
+					retCodeDegistir.enabled = true;
+					var codeDescCuple:CodeDesc = new CodeDesc(String(retCodeList.selectedItem));
+					retCode.text = "" + codeDescCuple.code;
+					retCodeDesc.text = codeDescCuple.desc;
+				} else {
+					retCodeCikar.enabled = false;
+					retCodeDegistir.enabled = false;
+				}
+			}
+			
+			protected function jobStatusEkle_clickHandler(event:MouseEvent):void
+			{
+				
+				// var statColl:ArrayCollection = new ArrayCollection([
+				//	{statusname:jobStatusName.selectedItem, desc:"serkan", 
+				//	returnCodeList:[{code: "1", desc: "serkan"}, {code: "2", desc: "serkan2"}]}
+				// ]);
+				// {[{code: "1", desc: "serkan"}, {code: "2", desc: "serkan2"}]}
+				// statusInfoGrid.dataProvider.addItem({statusname:jobStatusName.selectedItem, desc: statusDescription.text, retCodeList:[{code:"rcl1", desc:"rcl2"}]});
+				// statusInfoGrid.dataProvider.addItem(statColl);
+				
+				// Alert.show("retCodeList : " + ObjectUtil.toString(retCodeList.dataProvider));
+				
+				// var stateArray:Object = {statusname:jobStatusName.selectedItem, desc:statusDescription.text, retCodeList: retCodeList.dataProvider/*new ArrayCollection(["code:a", "desc:b"])*/};
+				
+				if(jobStatusName.selectedIndex == -1 || retCodeList.dataProvider.length == 0) {
+					Alert.show(resourceManager.getString("messages", "stateInfoStatusNameNotSelected"));
+					return;
+				}
+				
+				for each (var item:Object in statusInfoGrid.dataProvider.toArray()) {
+					if(jobStatusName.selectedItem == item.statusname) {
+						Alert.show(resourceManager.getString("messages", "stateInfoStatusNameAlreadyDefined") + item.statusname);
+						return;
+					}
+				}
+				
+				// Alert.show("Column : " + ObjectUtil.toString(statusInfoGrid.dataProvider.toArray()[0]));
+				
+				// Alert.show("Column : " + statusInfoGrid.columns.getItemIndex(jobStatusName.selectedItem));
+					
+				var newDP:Object = ObjectUtil.copy(retCodeList.dataProvider);
+				var stateArray:Object = {statusname:jobStatusName.selectedItem, desc:statusDescription.text, retCodeList:newDP };
+				
+				statusInfoGrid.dataProvider.addItem(stateArray);
+			}
+			
+			protected function jobStatusCikar_clickHandler(event:MouseEvent):void
+			{
+				if(statusInfoGrid.dataProvider.length != 0 && statusInfoGrid.selectedIndex != -1) {
+					statusInfoGrid.dataProvider.removeItemAt(statusInfoGrid.selectedIndex);
+					if(statusInfoGrid.dataProvider.length == 0) {
+						jobStatusCikar.enabled = false;
+					}
+				} else {
+					jobStatusCikar.enabled = false;
+				}
+				
+			}
+			
+			protected function jobStatusDegistir_clickHandler(event:MouseEvent):void
+			{
+				if(jobStatusName.selectedIndex == -1 || retCodeList.dataProvider.length == 0) {
+					Alert.show(resourceManager.getString("messages", "stateInfoStatusNameNotSelected"));
+					return;
+				}
+				
+				/*for each (var item:Object in statusInfoGrid.dataProvider.toArray()) {
+					if(jobStatusName.selectedItem == item.statusname) {
+						Alert.show("Status Name already defined : " + item.statusname);
+						return;
+					}
+				}*/
+				
+				var newDP:Object = ObjectUtil.copy(retCodeList.dataProvider);
+				var stateArray:Object = {statusname:jobStatusName.selectedItem, desc:statusDescription.text, retCodeList:newDP };
+				
+				statusInfoGrid.dataProvider.setItemAt(stateArray, statusInfoGrid.selectedIndex);
+			}
+			
+			protected function statusInfoGrid_selectionChangeHandler(event:GridSelectionEvent):void
+			{
+				if(statusInfoGrid.selectedIndex != -1) {
+					jobStatusCikar.enabled = true;
+					jobStatusDegistir.enabled = true;
+					jobStatusName.selectedItem = "" + statusInfoGrid.selectedItem.statusname;
+					statusDescription.text = statusInfoGrid.selectedItem.desc;
+					//trace(statusInfoGrid.selectedItem.retCodeList);
+					retCodeList.dataProvider = ObjectUtil.copy(statusInfoGrid.selectedItem.retCodeList) as IList;
+					// trace(ObjectUtil.toString(ObjectUtil.copy(statusInfoGrid.selectedItem.retCodeList) as IList));
+					retCodeList.selectedIndex = retCodeList.dataProvider.length - 1;
+					
+					if(retCodeList.selectedIndex != -1) {
+						retCodeCikar.enabled = true;
+						retCodeDegistir.enabled = true;
+						var codeDescCuple:CodeDesc = new CodeDesc(String(retCodeList.selectedItem));
+						retCode.text = "" + codeDescCuple.code;
+						retCodeDesc.text = codeDescCuple.desc;
+					} 
+				} else {
+					jobStatusCikar.enabled = false;
+					jobStatusDegistir.enabled = false;
+				}
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<fx:String id="sampleText">Lorem Ipsum is the standard dummy text of the typesetting industry.</fx:String>
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:FormLayout gap="1"/>
+	</s:layout>  
+	
+	<s:BorderContainer id="jobStatusInfoBox" width="100%" height="200" borderWeight="2" cornerRadius="3" dropShadowVisible="true" enabled="true">
+
+		<s:Label left="15" top="10" text="{resourceManager.getString('messages', 'jobStatusInfoLabel')}" fontSize="14" fontWeight="bold"/>
+
+		<s:VGroup left="15" top="25">
+			
+			<s:HGroup paddingLeft="0" gap="0">
+				<s:FormItem label="{resourceManager.getString('messages', 'jobStatusNameLabel')}">
+					<s:DropDownList id="jobStatusName" width="120" prompt="Select Status"> 
+						<s:dataProvider>
+							<mx:ArrayList>
+								<fx:String>SUCCESS</fx:String>
+								<fx:String>WARNING</fx:String>
+								<fx:String>FAILED</fx:String>
+							</mx:ArrayList>
+						</s:dataProvider>
+					</s:DropDownList>
+				</s:FormItem>
+				
+				<s:FormItem label="{resourceManager.getString('messages', 'jobstatusDescriptionLabel')}">
+					<s:TextInput id="statusDescription" width="300"/>
+				</s:FormItem>
+			</s:HGroup>
+			
+			<s:BorderContainer id="retCodeListBox" width="700" height="110" borderWeight="1" cornerRadius="3" dropShadowVisible="true" enabled="true">
+				
+				<s:HGroup>
+					<s:FormItem> 
+						<s:VGroup>
+							<s:Label text="{resourceManager.getString('messages', 'retCodeListLabel')}" top="20" fontSize="14" fontWeight="bold"/>
+							<s:List id="retCodeList" change="retCodeList_changeHandler(event)" maxHeight="60" maxWidth="300" width="300"> 
+								<mx:ArrayCollection />
+							</s:List>
+						</s:VGroup>
+						
+					</s:FormItem>
+					
+					<s:VGroup paddingTop="10">
+						<s:HGroup>
+							<s:VGroup>
+								<s:Label text="{resourceManager.getString('messages', 'retCodeLabel')}" fontSize="14" fontWeight="bold"/>
+								<s:TextInput id="retCode" width="100%" change="retCodeDesc_changeHandler(event)" restrict="0-9" widthInChars="8" maxChars="6" />
+							</s:VGroup>
+							<s:VGroup>	
+								<s:Label text="{resourceManager.getString('messages', 'retCodeDescLabel')}" fontSize="14" fontWeight="bold"/>
+								<s:TextInput id="retCodeDesc" width="100%" change="retCodeDesc_changeHandler(event)"/>
+							</s:VGroup>
+						</s:HGroup>
+						<s:HGroup>
+							<s:Button label="{resourceManager.getString('messages', 'retCodeAddButLabel')}" id="retCodeEkle" click="retCodeEkle_clickHandler(event)" enabled="false"/>
+							<s:Button label="{resourceManager.getString('messages', 'retCodeDeleteButLabel')}" id="retCodeCikar" click="retCodeCikar_clickHandler(event)" enabled="false"/>
+							<s:Button label="{resourceManager.getString('messages', 'retCodeUpdateButLabel')}" id="retCodeDegistir" click="retCodeDegistir_clickHandler(event)" enabled="false"/>
+						</s:HGroup>
+					</s:VGroup>
+				</s:HGroup>
+			</s:BorderContainer>
+		</s:VGroup>
+
+		
+	</s:BorderContainer>
+	
+	<s:BorderContainer id="jobStatusInfoListBoxAddRemove" top="50" width="100%" borderWeight="2" cornerRadius="3" dropShadowVisible="true" enabled="true">
+		<s:HGroup paddingTop="5" paddingBottom="5" paddingLeft="250">
+			<s:Button label="{resourceManager.getString('messages', 'retCodeAddButLabel')}" id="jobStatusEkle" click="jobStatusEkle_clickHandler(event)" enabled="true"/>
+			<s:Button label="{resourceManager.getString('messages', 'retCodeDeleteButLabel')}" id="jobStatusCikar" click="jobStatusCikar_clickHandler(event)" enabled="false"/>
+			<s:Button label="{resourceManager.getString('messages', 'retCodeUpdateButLabel')}" id="jobStatusDegistir" click="jobStatusDegistir_clickHandler(event)" enabled="false"/>
+		</s:HGroup>
+	</s:BorderContainer>
+	
+	<s:BorderContainer id="jobStatusInfoListBox" top="50" width="100%" height="130" borderWeight="2" cornerRadius="3" dropShadowVisible="true" enabled="true">
+
+		<s:Label left="15" top="10" text="{resourceManager.getString('messages', 'jobStatusInfoListLabel')}" fontSize="14" fontWeight="bold"/>
+		
+<!--		<s:VGroup left="15" top="40">
+			<s:List id="statusInfoList" change="statusInfoList_changeHandler(event)" width="695" height="200"> 
+				<mx:ArrayCollection />
+			</s:List>
+		</s:VGroup>-->
+			
+		<s:DataGrid id="statusInfoGrid" width="695" height="100" rowHeight="50" selectionChange="statusInfoGrid_selectionChangeHandler(event)"  left="15" top="40" variableRowHeight="true" verticalCenter="10" horizontalCenter="0" >
+			<s:columns>
+				<s:ArrayList>                    
+					<!--
+					Simple custom item renderer based on GridItemRenderer and Label.
+					Prevent line breaking by setting maxDisplayedLines="1".
+					-->
+					<s:GridColumn dataField="statusname" headerText="{resourceManager.getString('messages', 'jobStatusNameColText')}">
+						<s:itemRenderer>
+							<fx:Component>
+								<s:GridItemRenderer>
+									<s:Label id="labelDisplay"
+											 left="5" top="9" right="5" bottom="5"/>
+								</s:GridItemRenderer>
+							</fx:Component>
+						</s:itemRenderer>
+					</s:GridColumn>
+					<s:GridColumn dataField="desc" headerText="{resourceManager.getString('messages', 'jobStatusDescColText')}">
+						<s:itemRenderer>
+							<fx:Component>
+								<s:GridItemRenderer>
+									<s:Label id="labelDisplay"
+											 left="5" top="9" right="5" bottom="5"/>
+								</s:GridItemRenderer>
+							</fx:Component>
+						</s:itemRenderer>
+					</s:GridColumn>
+					<s:GridColumn dataField="retCodeList" headerText="{resourceManager.getString('messages', 'jobretCodeListColText')}" id="listGridCol">
+						<s:itemRenderer>
+							<fx:Component>
+								<s:GridItemRenderer>
+									<fx:Script>
+										<![CDATA[
+											import mx.collections.IList;
+											// import mx.controls.Alert;
+											// import mx.utils.ObjectUtil;
+											
+											public function myDataFunc(data:Object):IList {
+												// Alert.show("inner : " + ObjectUtil.toString(data));
+												return data.retCodeList as IList; 
+											}
+											
+										]]>
+									</fx:Script>
+									<s:List id="inList" height="40" dataProvider="{myDataFunc(data)}" />
+								</s:GridItemRenderer>
+							</fx:Component>
+						</s:itemRenderer>
+					</s:GridColumn>
+				</s:ArrayList>
+			</s:columns>
+			
+			<!--
+			The typicalItem defines column widths and the default row height.  The text
+			occpies two lines because we've used '\n' to introduce two newlines.
+			
+			Alternatively we could have used the odd XML '&#10;' escape to introduce 
+			two newlines (the value of the newline character is decimal 10).
+			
+			<s:DataItem value="Lorem Ipsum sample text.&#10;Lorem Ipsum sample text.&#10;"/>
+			-->
+			<!--<s:typicalItem>
+				<s:DataItem value="{'Lorem Ipsum sample text.\nLorem Ipsum sample text\n'}"/>
+			</s:typicalItem>-->
+			
+			<s:ArrayCollection>
+<!--				<s:DataItem value="{sampleText}"/>
+				<s:DataItem value="{sampleText}"/>
+				<s:DataItem value="{sampleText}"/>-->
+			</s:ArrayCollection>
+		</s:DataGrid>
+	</s:BorderContainer>
+
+</s:Form>

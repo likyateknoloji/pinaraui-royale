@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Form xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.apache.org/royale/spark"
+		xmlns:mx="library://ns.apache.org/royale/mx"
+		xmlns:MyComp="*"
+		width="450" height="150" 
+		creationComplete="loadJobTypes()">
+	
+	<!--
+	<fx:Declarations>
+	<fx:Model id="tempXML" source="pinara.xml" />
+	<s:XMLListCollection id="pinaraXMLList" source="{tempXML.genericJob}" />
+	</fx:Declarations>
+	-->
+ 						 
+	<fx:Script>
+		<![CDATA[
+			import com.likya.pinara.event.ResourceEvent;
+			import com.likya.pinara.model.AppInfo;
+			import com.likya.pinara.model.ModelLocator;
+			
+			import mx.collections.ArrayList;
+			
+			import spark.components.TextInput;
+			
+			public static const BATCH_PROCESS:String = "BATCH PROCESS"; 
+			public static const SHELL_SCRIPT:String = "SHELL SCRIPT"; 
+			public static const SYSTEM_COMMAND:String = "SYSTEM COMMAND";
+			public static const REMOTE_SHELL:String = "REMOTE SHELL";
+			
+			private static const BATCH_FILE_EXT:String = ".bat";
+			private static var regExPath:RegExp = new RegExp("([abcdefgABCDEFG]:[\\\\/])?([a-zA-Z/\\\\\\.0-9_ \\-])*");
+			
+			[Bindable] 
+			public var appInfo:AppInfo = ModelLocator.getInstance().appInfo;
+			
+			// Bu değişkeni aşağıdaki work dir enable edilince kaldır !
+			public var jsJobWorkDir:TextInput = new TextInput();
+			
+			public function validateForm():Boolean
+			{
+				if(jsName.text == "") {
+					// Alert.show("Job Name is not defined !", "Tab Id : " + NavigatorContent(parent.parent.parent.parent.parent.parent).label);
+					// RO: Alert.show(resourceManager.getString("messages", "jobBaseNameNotDefined"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
+					return false;
+				}
+				if(jsCommand.text == "") {
+					// Alert.show("Job Command is not defined !", "Tab Id : " + NavigatorContent(parent.parent.parent.parent.parent.parent).label);
+					// RO: Alert.show(resourceManager.getString("messages", "jobBaseCommandNotDefined"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
+					return false;
+				}
+				if(jsJobType.selectedItem == undefined) {
+					// RO: Alert.show(resourceManager.getString("messages", "jobBaseTypeNotSelected"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
+					return false;
+				}
+				if(jsJobType.selectedItem == BATCH_PROCESS) {
+					if(!regExPath.test(jsCommand.text) || jsCommand.text.indexOf(BATCH_FILE_EXT) == -1) {
+						// RO: Alert.show(resourceManager.getString("messages", "jobBaseWinPath"), "Tab Id : " + NavigatorContent(parent.parent.parent).label);
+						return false;
+					}
+				}
+				
+				return true;
+			}
+			
+			public function loadJobTypes():void
+			{	
+				var jobTypesArray:ArrayList = new ArrayList();
+				jobTypesArray.addItem(SYSTEM_COMMAND);
+				jobTypesArray.addItem(REMOTE_SHELL);
+				
+				if(appInfo.ostype == AppInfo.OS_UNIX) {
+					jobTypesArray.addItem(SHELL_SCRIPT);
+					
+				} else if(appInfo.ostype == AppInfo.OS_WINDOWS){
+					jobTypesArray.addItem(BATCH_PROCESS);
+					
+				} else {
+					jobTypesArray.addItem(BATCH_PROCESS);
+					jobTypesArray.addItem(SHELL_SCRIPT);
+				}
+				
+				jsJobType.dataProvider = jobTypesArray;
+			}
+			
+			protected function jsJobTypeSelectionChange(event:Event):void
+			{
+				dispatchEvent(new ResourceEvent(ResourceEvent.JOB_TYPE_CHANGED, jsJobType.selectedItem));
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:FormLayout gap="1"/>
+	</s:layout>  
+	
+	<s:FormItem label="{resourceManager.getString('messages', 'jobNameItemLabel')}">
+		<s:TextInput id="jsName" width="100%"/>
+		<s:helpContent>
+			<s:Label text="{resourceManager.getString('messages', 'jobNameHelpContentLabel')}"/>
+		</s:helpContent>
+	</s:FormItem>
+
+	
+	<s:FormItem label="{resourceManager.getString('messages', 'jobCommandItemLabel')}">
+		<s:TextInput id="jsCommand" width="300" />
+		<s:helpContent>
+			<s:Label text="{resourceManager.getString('messages', 'jobCommandHelpContentLabel')}" left="50"/>
+		</s:helpContent>
+	</s:FormItem>
+
+	<s:FormItem label="{resourceManager.getString('messages', 'jobGroupItemLabel')}">
+		<s:TextInput id="jsJobGroup" width="300" />
+		<s:helpContent>
+			<s:Label text="{resourceManager.getString('messages', 'jobGroupHelpContentLabel')}" left="50"/>
+		</s:helpContent>
+	</s:FormItem>
+	
+	<s:FormItem label="{resourceManager.getString('messages', 'jobTypeItemLabel')}">
+		<s:DropDownList id="jsJobType" width="140" prompt="Select Command Type" change="jsJobTypeSelectionChange(event)" selectedIndex="0" enabled="true"/> 
+			<!--s:dataProvider>
+				<mx:ArrayList>
+					<fx:String>BATCH PROCESS</fx:String>
+					<fx:String>SHELL SCRIPT</fx:String>
+					<fx:String>SYSTEM COMMAND</fx:String>
+					<fx:String>REMOTE SHELL</fx:String>
+					<fx:String>ETL TOOL JOBS</fx:String>
+					<fx:String>SAP</fx:String>
+					<fx:String>SAS</fx:String>
+					<fx:String>FTP</fx:String>
+					<fx:String>FILE PROCESS</fx:String>
+					<fx:String>FILE LISTENER</fx:String>
+					<fx:String>PROCESS NODE</fx:String>
+					<fx:String>DB JOBS</fx:String>
+					<fx:String>WEB SERVICE</fx:String>>
+				</mx:ArrayList>
+			</s:dataProvider>
+		</s:DropDownList-->
+	</s:FormItem>
+	
+	<s:FormItem label="{resourceManager.getString('messages', 'jobArgsItemLabel')}"> 
+		<s:TextArea id="jsJobArgs" height="25"/>
+	</s:FormItem>
+		
+</s:Form>

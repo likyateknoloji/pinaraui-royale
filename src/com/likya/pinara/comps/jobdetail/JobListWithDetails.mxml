@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.apache.org/royale/spark"
+		 xmlns:mx="library://ns.apache.org/royale/mx" 
+		 creationComplete="group1_creationCompleteHandler(event)"
+		 width="100%" height="100%" 
+		 xmlns:jobdetail="com.likya.pinara.comps.jobdetail.*" 
+		 xmlns:comps="com.likya.pinara.comps.*" 
+		 xmlns:graphlayer="com.likya.pinara.services.graphlayer.*">
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import org.apache.royale.core.IChild;
+			import com.likya.pinara.event.ResourceEvent;
+			import com.likya.pinara.modules.IModuleInterface;
+			import com.likya.pinara.utils.BasicAuthenticationHandler;
+			import com.likya.pinara.utils.Transformer;
+			
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.core.IVisualElement;
+			import mx.events.FlexEvent;
+			import mx.events.ModuleEvent;
+			import mx.modules.IModuleInfo;
+			import mx.modules.ModuleManager;
+			import mx.resources.ResourceManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.modules.Module;
+			
+			private const detailPanelDefHeight:int = 240;
+			
+			private var depGraphModule:Module;
+			private var depGraphModuleInfo:IModuleInfo;
+			
+			[Bindable]
+			private var serviceUrl:String = "/flex/restsrvc/joblistxml/";
+			
+			[Bindable]
+			public var selectedNetTreeId:String;
+			
+			[Bindable]
+			public var jobListXml:XML;
+			
+			[Bindable]
+			public var jobListXmlCollection:XMLListCollection = new XMLListCollection();
+			
+			//private var freeGrpDefaultName:String = "Independents";
+			
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void {
+				addEventListener(ResourceEvent.ROW_SELECTION_CHANGED, rowSelectionChangedHandler);
+			}
+			
+			private function rowSelectionChangedHandler(event:ResourceEvent):void {
+				var currentDataItem:XML = XML(event.object);
+				//const eventGrid:Grid = event.currentTarget.grid;
+				// var currentIndx:int = eventGrid.selectedIndex; 
+				//var currentDataItem:Object = eventGrid.selectedItem; 
+				// pinaraSelIndex.text = String(currentIndx); 
+				// pinaraSelLName.text = String(currentDataItem.baseJobInfos.jsName); 
+				//Alert.show((ImageContainer.getImage(1) as Image).name);
+				/*
+				jobCommand.text = currentDataItem.baseJobInfos.jobTypeDetails.jobCommand;
+				jobLogFile.text = "" + currentDataItem.baseJobInfos.jobLogPath + currentDataItem.baseJobInfos.jobLogFile;
+				prevDuration.text = currentDataItem.runtimeParams.previousDuration;
+				
+				var prevDur:Number = Number(prevDuration.text);
+				var realDur:Number = Number(currentDataItem.runtimeParams.realizedDuration);
+				
+				if(!isNaN(prevDur) && !isNaN(realDur)) {
+					diffDuration.text = "" + (realDur - prevDur);
+				} else {
+					diffDuration.text = "-";
+				}
+				 // "" + (currentDataItem.management.timeManagement.previousDuration - currentDataItem.management.timeManagement.realizedDuration);
+				restartable.text = currentDataItem.management.cascadingConditions.jobSafeToRestart;
+				dzGroup.text = currentDataItem.@dangerZoneGroupId;
+				handlerURI.text = currentDataItem.@handlerURI;
+				*/
+				/*<myra-jobprops:DependencyList>
+							<myra-jobprops:sensInfo>
+								<myra-jobprops:sensDep />
+							</myra-jobprops:sensInfo>
+							<wla:Item dependencyID="mydep">*/
+				
+				// Alert.show("currentDataItem : " + currentDataItem);
+				
+				//Alert.show("DependencyList : " + XMLList(currentDataItem.DependencyList.Item));
+				//meToWaitJobs.dataProvider = currentDataItem.DependencyList;
+				
+				/*
+				if(XML(currentDataItem.runtimeParams).hasOwnProperty("waitingMeJobs")) {
+					Alert.show(XMLList(currentDataItem.runtimeParams.waitingMeJobs.jobId));
+				}
+				*/
+				
+				jobBaseInfoId.refreshData(currentDataItem);
+				
+				if(currentDataItem.hasOwnProperty("runtimeParams")) {
+					depListComp.waitingMeJobs.dataProvider = new XMLListCollection(XMLList(currentDataItem.runtimeParams.waitingMeJobs.jobId));
+				} else {
+					depListComp.waitingMeJobs.dataProvider = null;
+				}
+				
+				if(currentDataItem.hasOwnProperty("DependencyList")) {
+					depListComp.meToWaitJobs.dataProvider = new XMLListCollection(XMLList(currentDataItem.DependencyList.Item)); 
+				} else {
+					depListComp.meToWaitJobs.dataProvider = null;
+				}
+				
+				stateHistory.dataProvider = new XMLListCollection(XML(currentDataItem.stateInfos.LiveStateInfos).children());
+				
+				detailPanel.visible = true;
+				detailPanel.includeInLayout = true;
+			}
+			
+			public static function getNodeByName(xml:XML, nodeName:Object):XMLList {
+				return xml.descendants(nodeName);
+			}
+			
+			public static function getJobNameId(item:Object, column:GridColumn):String {
+				// Alert.show("" + item);
+				//var node:XML = XML(item); 
+				//item["baseJobInfos.jsName"].toString() + item["@Id"].toString();
+				return item.baseJobInfos.jsName.toString() + " [id:" + item.@Id + "]";
+			}
+			
+			public function getExpectedDuration(item:Object, column:GridColumn):String {
+				return item.management.timeManagement.expectedDuration;
+			}
+
+			private function formatedDate(date:String):String{
+				var arr:Array = date.split(/\:/);
+				return arr[0] + " " + arr[1] + " " + arr[2] + " " + arr[3];
+			}
+			
+			private function toggleTreeComp():void {
+				if(toggleTree.toolTip == ResourceManager.getInstance().getString('messages', 'jobSummaryPanelColpBut')) {
+					toggleTree.toolTip = ResourceManager.getInstance().getString('messages', 'jobSummaryPanelExpand');
+					toggleTree.label = ResourceManager.getInstance().getString('messages', 'jobSummaryPanelExpand');
+					detailPanel.height = 25;
+					// detailPanelGroup.visible = false;
+				} else {
+					toggleTree.toolTip = ResourceManager.getInstance().getString('messages', 'jobSummaryPanelColpBut');
+					toggleTree.label = ResourceManager.getInstance().getString('messages', 'jobSummaryPanelColpBut');
+					detailPanel.height = detailPanelDefHeight;
+					// detailPanelGroup.visible = true;
+				}
+			}
+			
+			public function getStateInfo(item:Object, column:GridColumn):String {
+				var stateInfo:String = "";
+
+				if(item.LiveStateInfo.StateName != null) {
+					stateInfo += item.StateName;
+				}
+				if(item.LiveStateInfo.SubstateName != null) {
+					stateInfo +=  ("-" + item.SubstateName);
+				}
+				if(item.LiveStateInfo.StatusName != null) {
+					stateInfo += ("-" + item.StatusName);
+				}
+				
+				return stateInfo;
+			}
+
+			public function getDepInfo(item:Object):String {
+				var depInfo:String = "";
+				//Alert.show("item : " + XML(item).jsName);
+				if(XML(item).jsId != null) {
+					depInfo += "[id:" + XML(item).jsId + "]";
+				}
+				if(XML(item).jsName != null) {
+					depInfo += ("[" + XML(item).jsName + "]");
+				}
+				
+				return depInfo;
+			}
+
+			public function getDepInfoMeJobs(item:Object):String {
+				var depInfo:String = "";
+				//Alert.show("item : " + XML(item).jsName);
+				if(XML(item).jsId != null) {
+					depInfo += "[id:" + XML(item).jsId + "]";
+				}
+				if(XML(item).jsName != null) {
+					depInfo += ("[" + XML(item).jsName + "]");
+				}
+				
+				return depInfo;
+			}
+			
+			public function updateData():void {
+				
+				var testFlag:Boolean = /*isNaN(Number(selectedNetTreeId)) ||*/ selectedNetTreeId == "";
+				
+				if(testFlag) {
+					Alert.show("Selected NetTree id is not valid ! >> " + selectedNetTreeId);
+					return;
+				}
+				
+				checkForDepGraph(Number(selectedNetTreeId));
+				
+				jobListDS.url = serviceUrl + selectedNetTreeId;
+				
+				BasicAuthenticationHandler.authAndSend(jobListDS);
+				
+				// permitEnableAllBtn();
+				
+			}
+			
+			/*
+			protected function isAllDisableable():Boolean
+			{
+				var disableable:Boolean = true;
+				for each (var item:Object in jobListXmlCollection) {
+					var test:String = "" + item.visualParams.commandabilityParams.isDisablable;
+					if(test == "false") {
+						disableable = false;
+						break;
+					}
+				}
+				return disableable;
+			}
+			
+			protected function permitEnableAllBtn():void
+			{
+				if(pinaraJobListGrid == null) {
+					// not ready yet
+					return;
+				}
+				if(selectedNetTreeId == '-1') {
+					pinaraJobListGrid.enableAllBtn.visible = false;
+					pinaraJobListGrid.enableAllBtn.includeInLayout = false;
+					return;
+				}
+				
+				var found:Boolean = false;
+				
+				for each (var item:Object in jobListXmlCollection) {
+					var test:String = "" + item.visualParams.commandabilityParams.isEnablable;
+					if(test == "true") {
+						found = true;
+						break;
+					}
+				}
+				
+				if(found) {
+					pinaraJobListGrid.enableAllBtn.visible = true;
+					pinaraJobListGrid.enableAllBtn.includeInLayout = true;
+				} 
+				
+				if(isAllDisableable()) {
+					pinaraJobListGrid.disableAllBtn.visible = true;
+					pinaraJobListGrid.disableAllBtn.includeInLayout = true;
+				} 
+				
+			}
+			*/
+			
+			protected function permitEnableAllBtn(netTreeEnablable:Boolean, netTreeDisablable:Boolean):void
+			{
+				
+				if(netTreeEnablable) {
+					pinaraJobListGrid.enableAllBtn.visible = true;
+					pinaraJobListGrid.enableAllBtn.includeInLayout = true;
+					
+					pinaraJobListGrid.changeGrpNameBtn.visible = true;
+					pinaraJobListGrid.changeGrpNameBtn.includeInLayout = true;
+					
+					pinaraJobListGrid.grpState.visible = true;
+					pinaraJobListGrid.grpState.includeInLayout = true;
+				}  else {
+					pinaraJobListGrid.enableAllBtn.visible = false;
+					pinaraJobListGrid.enableAllBtn.includeInLayout = false;
+					
+					pinaraJobListGrid.changeGrpNameBtn.visible = false;
+					pinaraJobListGrid.changeGrpNameBtn.includeInLayout = false;
+
+					pinaraJobListGrid.grpState.visible = false;
+					pinaraJobListGrid.grpState.includeInLayout = false;
+				}
+				
+				if(netTreeDisablable && !netTreeEnablable) {
+					pinaraJobListGrid.disableAllBtn.visible = true;
+					pinaraJobListGrid.disableAllBtn.includeInLayout = true;
+					
+					pinaraJobListGrid.changeGrpNameBtn.visible = true;
+					pinaraJobListGrid.changeGrpNameBtn.includeInLayout = true;
+				} else {
+					pinaraJobListGrid.disableAllBtn.visible = false;
+					pinaraJobListGrid.disableAllBtn.includeInLayout = false;
+				}
+				
+				//pinaraJobListGrid.changeGrpNameBtn.visible = changeGrpNameBtnEnabled();
+				
+			}
+
+			protected function xmlService_faultHandler(event:FaultEvent):void {
+				BasicAuthenticationHandler.service_faultHandler(event);
+			}
+			
+			protected function xmlService_resultHandler(event:ResultEvent):void {
+				
+				
+				var returnXml:XML = XML(event.message.body);
+				if(returnXml.result == "NOK") {
+					trace(returnXml);
+
+					if(XML(returnXml).hasOwnProperty("desc")) {
+						// WindowUtils.showDummyWindow(this, returnXml.desc.toString());
+						Alert.show(returnXml.desc.toString() + resourceManager.getString("messages", "jobDetailsTreeDataRefresh"));
+					} else {
+						/**
+						 * Ekran çalışırken server kapanıp açıldığında her şeyin yenilenmesi lazım,
+						 * buna nettree id ler de dahil. Bunun için zorla login sonrası ağaç güncellemesi
+						 * yapılıyor.
+						 */
+						Alert.show(resourceManager.getString("messages", "jobDetailsServerState"));
+						FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.LOGOUT));
+					}
+					return;
+				} 
+				
+				jobListXml = XML(event.result);
+				
+				/*if(jobListXml.contains("NOK")) {
+					Alert.show(jobListXml);
+				}*/
+				// var treeOpenItems:Object;
+				
+				// trace(jobListXml);
+				
+				jobListXmlCollection.source = jobListXml.children(); 
+				if(detailPanel != null) {
+					detailPanel.visible = false;
+					detailPanel.includeInLayout = false;
+				}
+				
+				
+				var isNetTreeEnablable:Boolean = false;
+				var isNetTreeDisablable:Boolean = false;
+				
+				var test:String = "" + jobListXml.@netTreeEnablable;
+				if(test == "true") {
+					isNetTreeEnablable = true;
+				}
+				test = "" + jobListXml.@netTreeDisablable;
+				if(test == "true") {
+					isNetTreeDisablable = true;
+				}
+				
+				permitEnableAllBtn(isNetTreeEnablable, isNetTreeDisablable);
+				
+			}
+			
+			public function testMe(data:Object):int {
+				
+				// Alert.show("" + (data == "false"));
+				
+				if(data == "false") {
+					return 0;
+					Alert.show("" + data);
+				}
+				
+				return 1;
+			}
+			
+			private function checkForDepGraph(selectedNetTreeId:Number):void {
+			
+				try {
+					
+					var isDepGraph:Boolean = false;
+					
+					if(selectedNetTreeId > 0) {
+						isDepGraph = true;
+					}
+					
+					if(!isDepGraph && myViewStack.getChildByName("depGraph") != null) {
+						
+						myViewStack.removeChild(myViewStack.getChildByName("depGraph"));
+						
+					} else if(isDepGraph && myViewStack.getChildByName("depGraph") == null) {
+						
+						depGraphModuleInfo = ModuleManager.getModule("ViewDepGraph.swf");
+						depGraphModuleInfo.addEventListener(ModuleEvent.READY, renderDepGraphTabModule);
+						depGraphModuleInfo.addEventListener(ModuleEvent.ERROR, handleError);
+						addEventListener(ResourceEvent.REFRESH, renderDepGraphTabModule);
+						/*RO: try {
+							depGraphModuleInfo.load(null, null, null, moduleFactory);
+						} catch(err:Error) {
+							Alert.show(resourceManager.getString("messages", "jobDetailsError") + err.message);
+							//trace(err);
+						}*/
+					}
+					
+				} catch(err:Error) {
+					Alert.show(resourceManager.getString("messages", "jobDetailsError") + errorString);
+					trace(err);
+				}
+			}
+			
+			private function handleError(event:ModuleEvent):void {
+				// Alert.show(event.errorText, "Error");
+				trace(event.errorText + " Error");
+			}
+			
+			private function renderDepGraphTabModule(event:ModuleEvent):void {
+				
+				var depGraphTab:NavigatorContent = new NavigatorContent();
+
+				//RO: depGraphModule = depGraphModuleInfo.factory.create() as Module;
+				
+				var depGraphElement:IVisualElement = depGraphModule as IVisualElement; //depGraphModuleInfo.factory.create() as IVisualElement;
+				
+				depGraphTab.id = "depGraph";
+				depGraphTab.name = "depGraph";
+				depGraphTab.label = "Dependency Graph";
+				
+				myViewStack.addElement(depGraphTab);
+				depGraphTab.addElement(depGraphElement as IChild);
+				
+				callService();
+			}
+			
+			public function callService():void {
+				// depGraphService.getdepgraph(selectedNetTreeId);
+				BasicAuthenticationHandler.authAndCall(depGraphService, "getdepgraph", selectedNetTreeId);
+			}
+			
+			protected function graphLayerService_resultHandler(event:ResultEvent):void {
+				
+				var retValue:Boolean = BasicAuthenticationHandler.service_customHandler(this, event);
+				
+				if(!retValue) return;
+					
+				(depGraphModule as IModuleInterface).setDataXml(XML(event.message.body));
+			}
+			
+			protected function graphLayerService_faultHandler(event:FaultEvent):void {
+				Alert.show( resourceManager.getString("messages", "jobDetailsFault") + event.message);	
+			}
+			
+			protected function pinaraJobListGrid_creationCompleteHandler(event:FlexEvent):void
+			{
+				pinaraJobListGrid.jobListXmlCollection = jobListXmlCollection;
+				// permitEnableAllBtn();
+			}
+			
+/*			private function changeGrpNameBtnEnabled():Boolean {
+				var grpNameStr:String = "";
+				var btnEnabled:Boolean = false;
+				var searchResult:XMLList = TreeUtils.findNode((this.parentApplication.jobTree.liveTree.dataProvider[0] as XML), selectedNetTreeId);
+				
+				if (searchResult.hasOwnProperty("@title")) {
+					grpNameStr = searchResult[0].@title;
+					if(grpNameStr == freeGrpDefaultName) {
+						btnEnabled = false;
+					} else {
+						btnEnabled = true;
+					}
+				}
+				
+				return btnEnabled;
+			}*/
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+			
+		<s:HTTPService id="jobListDS" 
+					   method="POST"
+					   showBusyCursor="true"
+					   resultFormat="e4x"
+					   result="xmlService_resultHandler(event)"
+					   fault="xmlService_faultHandler(event)"
+					   />
+		
+		<!--s:XMLListCollection id="jobListXmlCollection" source="{jobListXml.children()}" /-->
+		
+		<graphlayer:GraphLayer id="depGraphService" result="graphLayerService_resultHandler(event)" fault="graphLayerService_faultHandler(event)"/>
+		<s:CallResponder id="getDepGraph"/>
+		
+		<!--<fx:XML id="graphgml" source="/PinaraUI/xmls/graph.xml"/>-->
+		
+	</fx:Declarations>
+	
+	<s:VGroup paddingTop="0" width="100%" height="100%">
+		<!-- Create a Spark ButtonBar control to navigate 
+		the ViewStack container. -->
+		<s:TabBar id="tabNavigator" dataProvider="{myViewStack}"/>
+		
+		<!-- Define the ViewStack and the three child containers. -->
+		<mx:ViewStack id="myViewStack" borderStyle="none" width="100%" height="100%">
+			
+			<s:NavigatorContent id="jobListGridTab" label="{resourceManager.getString('messages', 'jobListGridTabLabel')}" width="100%" height="100%">
+				<s:layout> 
+					<s:VerticalLayout/> 
+				</s:layout> 
+				
+				<jobdetail:PinaraJobListGrid selectedGroupId="{selectedNetTreeId}" id="pinaraJobListGrid" creationComplete="pinaraJobListGrid_creationCompleteHandler(event)"/>
+				
+				<s:Panel id="detailPanel" title="{resourceManager.getString('messages', 'jobSummaryDetailPanel')}" height="{detailPanelDefHeight}" width="100%" visible="false" includeInLayout="false">
+					
+					<s:Button id="toggleTree" y="-27" right="10" width="80" click="toggleTreeComp()" toolTip="Collapse" label="{resourceManager.getString('messages', 'jobSummaryPanelColpBut')}"/>
+					
+					<s:Scroller width="100%" height="100%">
+
+						<s:HGroup width="100%" paddingLeft="10">
+							
+							<jobdetail:JobBaseInfo id="jobBaseInfoId" height="150" width="500"/>
+							
+							<s:VGroup paddingLeft="0" paddingTop="10" clipAndEnableScrolling="true" width="500">
+								<s:Label text="{resourceManager.getString('messages', 'jobHistoryLabel')}" width="120" />
+								<s:DataGrid id="stateHistory" width="500" height="150" >
+									<s:columns>
+										<s:ArrayList>
+											<!-- width="{this.stateHistory.width * 0.35}" birinci kolon icin verince kolon başlık kısmı çizilemiyor. serkan...-->
+											
+											<s:GridColumn dataField="tarih" sortCompareFunction="Transformer.compareSortForDate" labelFunction="Transformer.getStateChangedDate" headerText="{resourceManager.getString('messages', 'jobHisColHeaderTextDate')}" />
+											<s:GridColumn dataField="durum_bilgisi" sortCompareFunction="Transformer.compareSortString" labelFunction="getStateInfo" headerText="{resourceManager.getString('messages', 'jobHisColHeaderTextState')}" width="{this.stateHistory.width * 0.65}" />
+										</s:ArrayList>
+									</s:columns>
+								</s:DataGrid> 
+							</s:VGroup>
+	
+							<jobdetail:DepLists id="depListComp" width="150">
+								<jobdetail:layout>
+									<s:VerticalLayout gap="10" paddingLeft="5" paddingTop="10" />
+								</jobdetail:layout>
+							</jobdetail:DepLists>
+
+							<mx:VRule height="100%"/>
+							
+						</s:HGroup>
+					</s:Scroller>
+					
+				</s:Panel>
+				
+			</s:NavigatorContent>
+
+		</mx:ViewStack>
+		
+	</s:VGroup>	
+	
+</s:Group>

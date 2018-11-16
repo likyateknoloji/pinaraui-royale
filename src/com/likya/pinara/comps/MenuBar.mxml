@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.apache.org/royale/spark" 
+		 xmlns:mx="library://ns.apache.org/royale/mx"
+		 width="100%" height="27" 
+		 creationComplete="onCreationComplete(event)" 
+		 xmlns:jobmanager="com.likya.pinara.services.jobmanager.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.likya.comps.crud.user.ChangePass;
+			import com.likya.comps.crud.user.UserListWindow;
+			import com.likya.pinara.comps.configuration.MailConfigurationForm;
+			import com.likya.pinara.comps.jobcrud.JobEditWindow;
+			import com.likya.pinara.comps.jobdetail.JobAllDetailPanel;
+			import com.likya.pinara.event.ResourceEvent;
+			import com.likya.pinara.model.ModelLocator;
+			import com.likya.pinara.model.UserRole;
+			import com.likya.pinara.utils.AddJobDefaults;
+			import com.likya.pinara.utils.BasicAuthenticationHandler;
+			import com.likya.pinara.utils.MessageUtil;
+			import com.likya.pinara.utils.RoleFilters;
+			import com.likya.pinara.utils.UserUtils;
+			
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
+			import mx.events.KeyboardEvent;
+			
+			import mx.core.Keyboard;
+			// import flash.ui.Keyboard;
+			
+			import mx.events.FlexEvent;
+			import mx.events.MenuEvent;
+			import mx.managers.PopUpManager;
+			import mx.resources.ResourceManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.components.TitleWindow;
+			
+			import org.apache.royale.core.BrowserWindow;
+			
+			import org.apache.royale.net.URLRequest;
+			
+			[Bindable]
+			public var menuBarData:XMLListCollection = new XMLListCollection();
+			
+			private var currentDataItem:XML;
+			
+			private var timerId:uint;
+			
+			private function setMenuItems(value:String):void {
+				menuDataXMLList.menuitem.(attribute("label")==resourceManager.getString("messages", "editJob")).@enabled = value;
+				menuDataXMLList.menuitem.(attribute("label")==resourceManager.getString("messages", "deleteJob")).@enabled = value;
+				menuDataXMLList.menuitem.(attribute("label")==resourceManager.getString("messages", "cloneJob")).@enabled = true;
+			}
+			
+			public function onCreationComplete(event:FlexEvent):void {
+				FlexGlobals.topLevelApplication.addEventListener(ResourceEvent.ROW_SELECTION_CHANGED, rowSelectionChanged);
+				FlexGlobals.topLevelApplication.addEventListener(ResourceEvent.DECORATE_MENUBAR, decorateMenubar);
+				FlexGlobals.topLevelApplication.addEventListener(ResourceEvent.LISTNODE_SELECTED, listNodeSelected);
+			}
+			
+			private function decorateMenubar(event:ResourceEvent): void {
+				var allDetailPanel:JobAllDetailPanel = FlexGlobals.topLevelApplication["allJobDetail"] as JobAllDetailPanel;
+				if(allDetailPanel != null && allDetailPanel.jobDetailXml != null) {
+					currentDataItem = allDetailPanel.jobDetailXml;
+					handleEvent();
+				}
+			}
+			
+			private function handleEvent(): void {
+				// Alert.show("handler : " + currentDataItem);
+				
+				// Alert.show("Last State : " + currentDataItem.stateInfos.LiveStateInfos.LiveStateInfo[0]);
+				
+				if(currentDataItem != null && currentDataItem.stateInfos.LiveStateInfos.LiveStateInfo[0] != null) {
+					var stateName:String = currentDataItem.stateInfos.LiveStateInfos.LiveStateInfo[0].StateName;
+					var substateName:String = currentDataItem.stateInfos.LiveStateInfos.LiveStateInfo[0].SubstateName;
+					
+					// Alert.show("stateName.subStateName : " + stateName + "." + substateName);
+					if(stateName == "PENDING" && substateName == "DEACTIVATED") {
+						setMenuItems("true");					
+					} else {
+						setMenuItems("false");
+					}
+				} else {
+					setMenuItems("false");
+				}
+			}
+			
+			public function rowSelectionChanged(event:ResourceEvent):void {
+				//Alert.show("rowSelectionChangedd");
+				currentDataItem = XML(event.object)
+				handleEvent();
+			}
+			
+			public function listNodeSelected(event:ResourceEvent):void {
+				setMenuItems("false");
+			}
+			
+			protected function tlosMenuBar_itemClickHandler(event:MenuEvent):void {
+				var userRole:UserRole = null;
+				
+				var warningStr:String = resourceManager.getString("messages", "warning");
+				Alert.okLabel = resourceManager.getString("messages", "yesLabel");
+				Alert.cancelLabel = resourceManager.getString("messages", "cancelLabel");
+				
+				if (event.label == resourceManager.getString("messages", "aboutTlos")) {
+					var aboutWindow:TitleWindow = PopUpManager.createPopUp(this, AboutForm, true) as TitleWindow;
+					PopUpManager.centerPopUp(aboutWindow);
+					aboutWindow.setFocus();
+				} else if (event.label == resourceManager.getString("messages", "userGuide")) {
+					// var urlRequest:URLRequest = new URLRequest("https://likyateknoloji.atlassian.net/wiki/display/DT1/Doc+%3A+TlosLite+1.8.1");
+					// navigateToURL(urlRequest, "_blank");
+					var url:String = "https://likyateknoloji.atlassian.net/wiki/display/DT1/Doc+%3A+TlosLite+1.8.1";
+					BrowserWindow.open(url, "_blank");
+				} else if (event.label == resourceManager.getString("messages", "pinaraProperties")) {
+					showPinaraConfigPopup();
+				} else if (event.label == resourceManager.getString("messages", "myraProperties")) {
+					showMyraConfigPopup();
+				} else if (event.label == resourceManager.getString("messages", "senaryoFile")) {
+					showSenaryoPopup();
+				} else if (event.label == resourceManager.getString("messages", "myraLog")) {
+					showMyraLogPopup();
+				} else if (event.label == resourceManager.getString("messages", "pinaraLog")) {
+					showPinaraLogPopup();
+				} else if (event.label == resourceManager.getString("messages", "pinaraEkran")) {
+					showPinaraEkranLogPopup();
+				} else if (event.label == resourceManager.getString("messages", "suspendApp")) {
+					// Alert.show("suspendApp : " + currentDataItem);
+					Alert.show(ResourceManager.getInstance().getString('messages', 'suspendPinaraConfirmation'), warningStr, Alert.OK|Alert.CANCEL, this, suspendApp, null, Alert.CANCEL);
+				} else if (event.label == resourceManager.getString("messages", "resumeApp")) {
+					Alert.show(ResourceManager.getInstance().getString('messages', 'resumePinaraConfirmation'), warningStr, Alert.OK|Alert.CANCEL, this, resumeApp, null, Alert.CANCEL);
+				} else if (event.label == resourceManager.getString("messages", "shutdownNormal")) {
+					Alert.show(ResourceManager.getInstance().getString('messages', 'shutdownPinaraNormalConfirmation'), warningStr, Alert.OK|Alert.CANCEL, this, shutdownNormal, null, Alert.CANCEL);
+				} else if (event.label == resourceManager.getString("messages", "shutdownForce")) {
+					Alert.show(ResourceManager.getInstance().getString('messages', 'shutdownPinaraForcefulConfirmation'), warningStr, Alert.OK|Alert.CANCEL, this, shutdownForce, null, Alert.CANCEL);
+				} else if(event.label == resourceManager.getString("messages", "mailConfiguration")) {
+					showMailConfigPopup();
+				} else if(event.label == resourceManager.getString("messages", "addJob")) {
+					showAddJob();
+				} else if(event.label == resourceManager.getString("messages", "editJob")) {
+					showEditJob();
+				} else if(event.label == resourceManager.getString("messages", "cloneJob")) {
+					showCloneJob();
+				} else if(event.label == resourceManager.getString("messages", "deleteJob")) {
+					// Alert.show(resourceManager.getString("messages", "confirmDelete"), warningStr, Alert.OK|Alert.CANCEL, this, checkConfirmSerialization, null, Alert.CANCEL);
+					Alert.show(resourceManager.getString("messages", "confirmDelete"), warningStr, Alert.OK|Alert.CANCEL, this, showDeleteJob, null, Alert.CANCEL);
+				} else if(event.label == resourceManager.getString("messages", "changePassword")) {
+					showChangePass();
+				} else if(event.label == resourceManager.getString("messages", "uculWindowTitle")) {
+					showUserList();
+				}
+			}
+			
+			private function showMailConfigPopup():void {
+				var mailConfigurationForm:MailConfigurationForm = PopUpManager.createPopUp(this, MailConfigurationForm, true) as MailConfigurationForm;
+				mailConfigurationForm.init();
+				PopUpManager.centerPopUp(mailConfigurationForm);
+				mailConfigurationForm.setFocus();
+			}
+
+			private function showChangePass():void {
+				var changePassWindow:ChangePass = PopUpManager.createPopUp(this, ChangePass, true) as ChangePass;
+				changePassWindow.currentUser = ModelLocator.getInstance().currentUser.username;
+				changePassWindow = UserUtils.initChangePassWindow(changePassWindow);
+				PopUpManager.centerPopUp(changePassWindow);
+				changePassWindow.setFocus();
+			}
+
+			private function showUserList():void {
+				var userListWindow:UserListWindow = PopUpManager.createPopUp(this, UserListWindow, true) as UserListWindow;
+				userListWindow.title = resourceManager.getString('messages', 'uculWindowTitle');
+				PopUpManager.centerPopUp(userListWindow);
+				userListWindow.setFocus();
+			}
+					
+			private function showAddJob():void {
+				var addJobWindow:TitleWindow = PopUpManager.createPopUp(this, JobEditWindow, true) as TitleWindow;
+				AddJobDefaults.prepare_stateInfosForm((addJobWindow as JobEditWindow).stateInfosForm);
+				PopUpManager.centerPopUp(addJobWindow);
+			}
+			
+			/*
+			private function checkConfirmSerialization(eventObj:CloseEvent):void {
+				if(eventObj.detail == Alert.OK) {
+					Alert.okLabel = resourceManager.getString("messages", "AlertokLabel");
+					Alert.cancelLabel = resourceManager.getString("messages", "AlertcancelLabel");
+					Alert.show(resourceManager.getString("messages", "serializeConfirm"), resourceManager.getString("messages", "warnKey"), Alert.OK|Alert.CANCEL, this, showDeleteJob, null, Alert.CANCEL);
+				}
+			}
+			*/
+			
+			private function showEditJob():void {
+				var editJobWindow:JobEditWindow = PopUpManager.createPopUp(this, JobEditWindow, true) as JobEditWindow;
+				editJobWindow.jobDetailXml = currentDataItem;
+				editJobWindow.isMode = 1;
+				PopUpManager.centerPopUp(editJobWindow);
+				//Alert.show("Selected Job id : " + "");	
+			}
+			private function showCloneJob():void {
+				var cloneJobWindow:JobEditWindow = PopUpManager.createPopUp(this, JobEditWindow, true) as JobEditWindow;
+				cloneJobWindow.jobDetailXml = currentDataItem.copy();
+				cloneJobWindow.isMode = 2;
+				PopUpManager.centerPopUp(cloneJobWindow);
+				//Alert.show("Selected Job id : " + "");	
+			}	
+			
+			private function showDeleteJob(eventObj:mx.events.CloseEvent):void {
+				var serializationInfo:String = "false";
+				if(eventObj.detail == Alert.OK) {
+					//Alert.show("deleting job with id : " + currentDataItem.@Id);
+					serializationInfo = "true";
+					var packedResponse:XML = XML("<data><serialize>" + serializationInfo + "</serialize><datamess>" + currentDataItem.@Id + "</datamess></data>");
+					BasicAuthenticationHandler.authAndCall(jobManagerService, "deletejob", packedResponse);
+				} 
+				//dispatchEvent(new ResourceEvent(ResourceEvent.UPDATE_TREE, null));
+			}
+			
+			private function showPinaraConfigPopup():void {
+				showGenericPopup("infotag=pinaraConfig");
+			}
+			
+			private function showMyraConfigPopup():void {
+				showGenericPopup("infotag=myraConfig");
+			}
+			
+			private function showSenaryoPopup():void {
+				showGenericPopup("infotag=myraSenaryo");
+			}
+			
+			private function showMyraLogPopup():void {
+				showGenericPopup("infotag=myraLog");
+			}
+			
+			private function showPinaraLogPopup():void {
+				showGenericPopup("infotag=pinaraLog");
+			}
+			
+			private function showPinaraEkranLogPopup():void {
+				showGenericPopup("infotag=pinaraEkran");
+			}
+
+			private function suspendApp(eventObj:mx.events.CloseEvent):void {
+				if(eventObj.detail == Alert.OK) {
+					// suspendAppResult.token = jobManagerService.suspendapp();
+					suspendAppResult.token = BasicAuthenticationHandler.authAndCall(jobManagerService, "suspendapp");
+				}
+			}
+
+			private function resumeApp(eventObj:mx.events.CloseEvent):void {
+				if(eventObj.detail == Alert.OK) {
+					// resumeAppResult.token = jobManagerService.resumeapp();
+					resumeAppResult.token = BasicAuthenticationHandler.authAndCall(jobManagerService, "resumeapp");
+				}
+			}
+
+			private function shutdownNormal(eventObj:mx.events.CloseEvent):void {
+				if(eventObj.detail == Alert.OK) {
+					//shutdownNormalResult.token = jobManagerService.stopapp();
+					shutdownNormalResult.token = BasicAuthenticationHandler.authAndCall(jobManagerService, "stopapp");
+					dispatchEvent(new ResourceEvent(ResourceEvent.LOGOUT));
+				}
+			}
+			
+			private function shutdownForce(eventObj:mx.events.CloseEvent):void {
+				if(eventObj.detail == Alert.OK) {
+					//shutdownForceResult.token = jobManagerService.fstopapp();
+					shutdownForceResult.token = BasicAuthenticationHandler.authAndCall(jobManagerService, "fstopapp");
+					dispatchEvent(new ResourceEvent(ResourceEvent.LOGOUT));
+				}
+			}
+
+			private function showGenericPopup(fileTag:String):void {
+				var fileViewWindow:FileViewPopup = PopUpManager.createPopUp(parentApplication as mx.core.IUIComponent /*DisplayObject*/, FileViewPopup, true) as FileViewPopup;
+				fileViewWindow.isNativeXML = true;
+				fileViewWindow.fileTag = fileTag; //"joblog=" + jobDetailLocalXml.@Id;
+				PopUpManager.centerPopUp(fileViewWindow);
+				fileViewWindow.setFocus();
+			}
+			
+			protected function jobManagerService_resultHandler(event:ResultEvent):void {
+
+				trace("jobManagerService_resultHandler returned : " + new Date().valueOf());
+				
+				var returnXml:XML;
+				var returnTxt:String = null;
+				
+				try {
+					returnXml = XML(event.result);
+					//Alert.show(returnXml);
+					returnXml = XML(event.message.body);
+					if(returnXml.result == "NOK") {
+						Alert.show(returnXml.desc.toString(), resourceManager.getString("messages", "jobDetailsError"));
+					} 
+					if(XML(returnXml).hasOwnProperty("netTreeId")) {
+						FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.UPDATE_TREE, returnXml));
+					}
+				} catch(err:Error) {
+					returnTxt = String(event.result)
+				}
+			}
+			
+			protected function jobManagerService_faultHandler(event:FaultEvent):void {
+				Alert.show(resourceManager.getString("messages", "jobDetailsFault") + event.message);	
+			}
+			
+			protected function suspendAppResult_resultHandler(event:ResultEvent):void {
+				
+				var returnXml:XML;
+				returnXml = XML(event.message.body);
+				if(returnXml.result == "OK") {
+					// trace(XML(menuDataXMLList[3]).children()[0].@label);
+					XML(menuDataXMLList[1]).children()[0].@label = ResourceManager.getInstance().getString('messages', 'resumeApp');
+					XML(menuDataXMLList[1]).children()[0].@id = "resumeApp";
+					// trace(XML(menuDataXMLList[3]).children()[0].@label);
+					// trace(XML(menuDataXMLList[3]).children()[0].@id);
+					MessageUtil.showMessagePanel(MessageUtil.INFO, ResourceManager.getInstance().getString('messages', 'tlosSuspendMessage'));
+				}
+				
+			}
+			
+			protected function resumeAppResult_resultHandler(event:ResultEvent):void {
+				// Alert.show(String(event.result));
+				var returnXml:XML;
+				returnXml = XML(event.message.body);
+				if(returnXml.result == "OK") {
+					XML(menuDataXMLList[1]).children()[0].@label = ResourceManager.getInstance().getString('messages', 'suspendApp');
+					XML(menuDataXMLList[1]).children()[0].@id = "suspendApp";
+					MessageUtil.closeMessagePanel();
+				}
+			}
+			
+			protected function xmlService_resultHandler(event:ResultEvent):void {
+				currentDataItem = XML(event.result);
+				Alert.show("xmlService_resultHandler : " + currentDataItem);
+				handleEvent();
+			}
+			
+			protected function xmlService_faultHandler(event:FaultEvent):void {
+				Alert.show(resourceManager.getString("messages", "jobDetailsFault") + event.message);
+			}
+			
+			protected function pinaraMenuBar_creationCompleteHandler(event:FlexEvent):void
+			{
+				// trace("Applying filters...");
+				applyFilters();
+				// pinaraMenuBar.callLater(registerClickEvent);
+				// registerClickEvent();
+			}
+			
+			public function applyFilters():void {
+
+				var roleInfo:String = ModelLocator.getInstance().currentUser.roleinfo;
+
+				/*
+				if (roleInfo == UserRole.ADMIN) {
+					//permissionList = userRole.adminPermissions;
+					menuBarData.filterFunction = adminRoleFilter;
+					
+				} else if (roleInfo == UserRole.OPERATION) {
+					//permissionList = userRole.operationPermissions;
+					menuBarData.filterFunction = operationRoleFilter;
+					
+				} else if (roleInfo == UserRole.VIEW) {
+					//permissionList = userRole.viewPermissions;
+					menuBarData.filterFunction = viewRoleFilter;
+				} else {
+					menuBarData.filterFunction = noRoleFilter;
+				}
+				*/
+				
+				var tmpXmlList:XMLListCollection = new XMLListCollection();
+				tmpXmlList.source = menuDataXMLList;
+				
+				tmpXmlList = RoleFilters.deleteRoledMenuItems(tmpXmlList, roleInfo);
+				
+				menuDataXMLList = tmpXmlList.source.copy();
+				
+				menuBarData.source = menuDataXMLList;
+				
+				// trace("Refreshing menubar...");
+				menuBarData.refresh();
+				
+			}
+			
+			private function adminRoleFilter(item:XML):Boolean {
+				return true;
+			}
+			
+			private function operationRoleFilter(item:XML):Boolean {
+				var operationStr:String = UserRole.OPERATION;
+				var viewStr:String = UserRole.VIEW;
+				var itemRole:String = item.@role;
+				
+				return itemRole == operationStr || itemRole == viewStr;
+			}
+			
+			private function viewRoleFilter(item:XML):Boolean {
+				var viewStr:String = UserRole.VIEW;
+				trace("item : " + item.@label);
+				trace("role : " + item.@role);
+				if(item.@role == viewStr) {
+					trace("keeping item ");
+				}
+				return item.@role == viewStr || !item.hasOwnProperty("@role");;
+			}
+			
+			private function noRoleFilter(item:XML):Boolean {
+				return false;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		
+		<fx:XMLList id="menuDataXMLList">
+			<menuitem label="{resourceManager.getString('messages', 'configFiles')}" id="configfiles" role="{UserRole.OPERATION}">			
+				<menuitem label="{resourceManager.getString('messages', 'pinaraProperties')}" id="pinaraProperties"/>			
+				<menuitem label="{resourceManager.getString('messages', 'myraProperties')}" id="myraProperties"/>
+				<!--menuitem label="{resourceManager.getString('messages', 'senaryoFile')}" id="scenarioFile"/-->			
+				<menuitem label="{resourceManager.getString('messages', 'myraLog')}" id="myraLog"/>
+				<menuitem label="{resourceManager.getString('messages', 'pinaraLog')}" id="pinaraLog"/>
+				<menuitem label="{resourceManager.getString('messages', 'pinaraEkran')}" id="pinaraEkran"/>
+			</menuitem>
+			<menuitem label="{resourceManager.getString('messages', 'management')}" id="admin" role="{UserRole.OPERATION}">
+				<menuitem label="{resourceManager.getString('messages', 'suspendApp')}" id="suspendApp"/>
+				<menuitem label="{resourceManager.getString('messages', 'shutdownNormal')}" id="shutdownNormal"/>		
+				<menuitem label="{resourceManager.getString('messages', 'shutdownForce')}" id="shutdownForce"/>
+			</menuitem>
+			<menuitem label="{resourceManager.getString('messages', 'configuration')}" id="admin" role="{UserRole.ADMIN}">
+				<menuitem label="{resourceManager.getString('messages', 'mailConfiguration')}" id="mailConfig"/>
+			</menuitem>
+			<menuitem label="{resourceManager.getString('messages', 'jobOps')}" id="jobOps" role="{UserRole.OPERATION}">			
+				<menuitem label="{resourceManager.getString('messages', 'addJob')}" id="addJob" />			
+				<menuitem label="{resourceManager.getString('messages', 'editJob')}" id="editJob" enabled="false"/>			
+				<menuitem label="{resourceManager.getString('messages', 'deleteJob')}" id="deleteJob" enabled="false"/>
+				<menuitem label="{resourceManager.getString('messages', 'cloneJob')}" id="cloneJob" enabled="false"/>
+			</menuitem>
+			<menuitem label="{resourceManager.getString('messages', 'manageUsers')}" id="userOps">			
+				<menuitem label="{resourceManager.getString('messages', 'changePassword')}" id="changePassword" />			
+				<menuitem label="{resourceManager.getString('messages', 'uculWindowTitle')}" id="listUser" role="{UserRole.ADMIN}"/>			
+			</menuitem>
+			<menuitem label="{resourceManager.getString('messages', 'help')}" id="help" role="{UserRole.VIEW}">			
+				<menuitem label="{resourceManager.getString('messages', 'userGuide')}"/>			
+				<menuitem label="{resourceManager.getString('messages', 'aboutTlos')}"/>			
+			</menuitem>
+			
+		</fx:XMLList>
+		
+		<jobmanager:JobManager id="jobManagerService" result="jobManagerService_resultHandler(event)" fault="jobManagerService_faultHandler(event)"/>
+		<s:CallResponder id="suspendAppResult" result="suspendAppResult_resultHandler(event)"/>
+		<s:CallResponder id="resumeAppResult" result="resumeAppResult_resultHandler(event)"/>
+		<s:CallResponder id="shutdownNormalResult"/>
+		<s:CallResponder id="shutdownForceResult"/>
+		<s:CallResponder id="deleteJob"/>
+		
+		<s:HTTPService id="jobListDS" 
+					   method="GET"
+					   showBusyCursor="true"
+					   resultFormat="e4x"
+					   result="xmlService_resultHandler(event)"
+					   fault="xmlService_faultHandler(event)"
+					   />
+		
+	</fx:Declarations>
+	
+	
+	<!--RO : 
+	chromeColor="#B4CBE1"
+	selectionColor="#A8C6EE"
+	symbolColor="#F7F4F4"
+	-->
+	<mx:MenuBar id="pinaraMenuBar" width="100%"  color="#0D173C" 
+				dataProvider="{menuBarData}" fontFamily="Arial" fontWeight="bold" horizontalCenter="0"
+				itemClick="tlosMenuBar_itemClickHandler(event)" 
+				labelField="@label" 
+				creationComplete="pinaraMenuBar_creationCompleteHandler(event)"/>
+	
+</s:Group>
