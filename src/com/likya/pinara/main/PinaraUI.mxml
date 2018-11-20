@@ -5,16 +5,15 @@
 			   xmlns:mx="library://ns.apache.org/royale/mx"
 			   currentState="loggedOutState" 
 			   creationComplete="application_creationCompleteHandler()"
+			   xmlns:comps="com.likya.pinara.comps.*"
+			   xmlns:containers="com.likya.pinara.containers.*" 
+			   xmlns:jobdetail="com.likya.pinara.comps.jobdetail.*"
+			   xmlns:jobmanager="com.likya.pinara.services.jobmanager.*" 
+			   xmlns:userops="com.likya.pinara.services.userops.*"
 			   minWidth="955" minHeight="600" >
 	
 	<!--RO:
 	//preloader="com.likya.pinara.utils.DownloadProgressBarSubClassMin"
-	xmlns:comps="com.likya.pinara.comps.*"
-	xmlns:containers="com.likya.pinara.containers.*" 
-	xmlns:jobdetail="com.likya.pinara.comps.jobdetail.*"
-	xmlns:jobmanager="com.likya.pinara.services.jobmanager.*" 
-	xmlns:userops="com.likya.pinara.services.userops.*"
-	
 	-->
 	
 	<fx:Metadata>

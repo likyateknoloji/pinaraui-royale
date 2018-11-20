@@ -8,12 +8,10 @@
 		 xmlns:grpmanager="com.likya.pinara.services.grpmanager.*" >
 	<fx:Script>
 		<![CDATA[
-
-			import org.apache.royale.events.Event;
-			
 			import com.likya.pinara.comps.DummyForm;
 			import com.likya.pinara.comps.GrpNameForm;
 			import com.likya.pinara.event.ResourceEvent;
+			import com.likya.pinara.model.ModelLocator;
 			import com.likya.pinara.utils.BasicAuthenticationHandler;
 			import com.likya.pinara.utils.RoleFilters;
 			import com.likya.pinara.utils.Transformer;
@@ -26,6 +24,8 @@
 			
 			import spark.components.Grid;
 			import spark.events.GridSelectionEvent;
+			
+			import org.apache.royale.events.Event;
 			
 			[Bindable]
 			public var jobListXmlCollection:XMLListCollection;
@@ -76,11 +76,6 @@
 				dispatchEvent(new ResourceEvent(ResourceEvent.LISTNODE_SELECTED, selectedGroupId));
 			}
 			
-			protected function pinaraJobList_addedToStageHandler(event:Event):void
-			{
-				mngColumn.visible = RoleFilters.hasOperRole();
-			}
-			
 			protected function button1_clickHandler(event:MouseEvent):void {
 				
 				var dummyWindow:DummyForm = PopUpManager.createPopUp(this, DummyForm, true) as DummyForm;
@@ -126,6 +121,16 @@
 				grpNameWindow.setFocus();
 			}
 
+			/*RO: protected function pinaraJobList_addedToStageHandler(event:Event):void
+			{
+				mngColumn.visible = RoleFilters.hasOperRole();
+			}*/
+			
+			override public function addedToParent():void
+			{
+				super.addedToParent();
+				mngColumn.visible = RoleFilters.hasOperRole();
+			}
 			
 		]]>
 	</fx:Script>
@@ -150,7 +155,8 @@
 		<s:Button visible="true" label="{resourceManager.getString('messages', 'showInTreeButLabel')}" click="button2_clickHandler(event)"/>
 	</s:HGroup>
 	
-	<s:DataGrid id="pinaraJobList" width="100%" height="100%" selectionChange="selectionChangeHandlerPinara(event)" dataProvider="{jobListXmlCollection}" addedToStage="pinaraJobList_addedToStageHandler(event as org.apache.royale.events.Event)"> 
+	<!--RO: s:DataGrid id="pinaraJobList" width="100%" height="100%" selectionChange="selectionChangeHandlerPinara(event)" dataProvider="{jobListXmlCollection}" addedToStage="pinaraJobList_addedToStageHandler(event as org.apache.royale.events.Event)" --> 
+	<s:DataGrid id="pinaraJobList" width="100%" height="100%" selectionChange="selectionChangeHandlerPinara(event)" dataProvider="{jobListXmlCollection}"> 
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn headerText="{resourceManager.getString('messages', 'stateGrid')}" width="{this.pinaraJobList.width * 0.10}">

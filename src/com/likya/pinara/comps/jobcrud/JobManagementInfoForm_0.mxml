@@ -8,14 +8,10 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
-			import mx.containers.ViewStack;
-			import mx.controls.Alert;
-			import mx.core.UIComponent;
-			
 			import spark.events.IndexChangeEvent;
 			
 			
-			public var parentWin:JobEditWindow;
+			private var _parentWin:JobEditWindow;
 			
 			[Bindable]
 			public var data:ArrayCollection = new ArrayCollection(
@@ -26,6 +22,14 @@
 				]                
 			);
 			
+			public function set parentWin(pW:JobEditWindow):void {
+				_parentWin = pW;
+			}
+
+			public function get parentWin():JobEditWindow {
+				return _parentWin;
+			}
+
 			public function validateForm():Boolean
 			{
 				/*if(stepValue.text == "") {

@@ -44,7 +44,7 @@
 					userInfo.username = userName.text;
 					userInfo.password = password.text;
 					
-					dispatchEvent(new ResourceEvent(ResourceEvent.LOGIN, userInfo));
+					dispatchEvent(new ResourceEvent(ResourceEvent.LOGIN, userInfo as Object));
 					
 				} else {
 					Alert.show(resourceManager.getString("messages", "loginFormValidationError"), "Hata", Alert.OK, this, null, null);

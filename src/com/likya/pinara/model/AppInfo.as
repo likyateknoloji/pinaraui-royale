@@ -1,6 +1,7 @@
 package com.likya.pinara.model {
 	
-	import flash.events.EventDispatcher;
+	// import flash.events.EventDispatcher;
+	import org.apache.royale.events.EventDispatcher;
 	
 	public class AppInfo extends EventDispatcher {
 		

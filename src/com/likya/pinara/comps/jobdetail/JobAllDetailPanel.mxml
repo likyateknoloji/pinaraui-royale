@@ -8,6 +8,7 @@
 		<![CDATA[
 			import com.likya.pinara.comps.DummyForm;
 			import com.likya.pinara.event.ResourceEvent;
+			import com.likya.pinara.model.ModelLocator;
 			import com.likya.pinara.model.UserRole;
 			import com.likya.pinara.utils.BasicAuthenticationHandler;
 			import com.likya.pinara.utils.JobXmlToView;
@@ -204,16 +205,7 @@
 				dummyWindow.setFocus();
 				
 			}
-			
-			protected function allDetailPanel1_addedToStageHandler(event:Event):void
-			{
-				var value:Boolean = RoleFilters.hasOperRole();
-				manageButtonGroup.visible = value;
-				manageButtonGroupLbl.visible = value;
-				manageButtonGroup.includeInLayout = value;
-				manageButtonGroupLbl.includeInLayout = value;
-			}
-			
+
 			protected function refresh_button1_clickHandler(event:MouseEvent):void {
 				dispatchEvent(new ResourceEvent(ResourceEvent.JOBNODE_SELECTED, selectedJobId));
 			}
@@ -221,6 +213,25 @@
 			protected function button2_clickHandler(event:MouseEvent):void
 			{
 				FlexGlobals.topLevelApplication.dispatchEvent(new ResourceEvent(ResourceEvent.SELECT_TREENODE, selectedJobId));
+			}
+			
+			/*RO: protected function allDetailPanel1_addedToStageHandler(event:Event):void
+			{
+				var value:Boolean = RoleFilters.hasOperRole();
+				manageButtonGroup.visible = value;
+				manageButtonGroupLbl.visible = value;
+				manageButtonGroup.includeInLayout = value;
+				manageButtonGroupLbl.includeInLayout = value;
+			}*/
+
+			override public function addedToParent():void
+			{
+				super.addedToParent();
+				var value:Boolean = RoleFilters.hasOperRole();
+				manageButtonGroup.visible = value;
+				manageButtonGroupLbl.visible = value;
+				manageButtonGroup.includeInLayout = value;
+				manageButtonGroupLbl.includeInLayout = value;
 			}
 			
 		]]>
@@ -253,9 +264,8 @@
 			 top="5"
 			 width="90%" 
 			 height="100%"
-			 
-			 addedToStage="allDetailPanel1_addedToStageHandler(event as org.apache.royale.events.Event)">
-		<!--RO: borderColor="18"-->
+			 >
+		<!--RO: addedToStage="allDetailPanel1_addedToStageHandler(event as org.apache.royale.events.Event)" borderColor="18"-->
 
 <!--		<s:Button y="-27" left="200" label="{resourceManager.getString('messages', 'refresh')}" click="refresh_button1_clickHandler(event)" visible="true" includeInLayout="true"/>
 		<s:Button y="-27" left="300" visible="true" label="Show In Tree" click="button2_clickHandler(event)"/>

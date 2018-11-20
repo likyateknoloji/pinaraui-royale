@@ -35,7 +35,15 @@
 			public var appInfo:AppInfo = ModelLocator.getInstance().appInfo;
 			
 			// Bu değişkeni aşağıdaki work dir enable edilince kaldır !
-			public var jsJobWorkDir:TextInput = new TextInput();
+			private var _jsJobWorkDir:TextInput = new TextInput();
+			
+			public function set jsJobWorkDir(ti:TextInput):void {
+				_jsJobWorkDir = ti;
+			}
+			
+			public function get jsJobWorkDir():TextInput {
+				return _jsJobWorkDir;
+			}
 			
 			public function validateForm():Boolean
 			{

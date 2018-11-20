@@ -50,7 +50,9 @@
 			private var logViewCTX:String = "/logview";
 			
 			private function titleWindow_keyDown(evt:mx.events.KeyboardEvent):void {
-				if (evt.charCode == Keyboard.ESCAPE) {
+				COMPILE::SWF {var charCode:uint = evt.charCode;}
+				COMPILE::JS {var charCode:uint = evt.keyCode;}					
+				if (charCode == Keyboard.ESCAPE) {
 					this.dispatchEvent(new mx.events.CloseEvent(mx.events.CloseEvent.CLOSE));
 				}
 			}

@@ -5,8 +5,10 @@ package com.likya.pinara.utils
 	import com.likya.pinara.model.ModelLocator;
 	import com.likya.pinara.model.User;
 	
-	import flash.display.DisplayObject;
-	import flash.net.URLVariables;
+	//import flash.display.DisplayObject;
+	//import flash.net.URLVariables;
+	import mx.core.UIComponent;
+	import mx.messaging.channels.URLVariables;
 	
 	import mx.controls.Alert;
 	import mx.core.FlexGlobals;
@@ -27,7 +29,9 @@ package com.likya.pinara.utils
 		
 		public static function authAndSend(service:HTTPService):void {
 			var encoder:Base64Encoder = new Base64Encoder();
-			encoder.insertNewLines = false; // see below for why you need to do this
+			COMPILE::SWF {
+				encoder.insertNewLines = false; // see below for why you need to do this
+			}
 			var tmpUserInfo:User = ModelLocator.getInstance().currentUser;
 			// encoder.encode("pinara:pinara");
 			// encoder.encode(tmpUserInfo.username + ":" + tmpUserInfo.password);
@@ -58,7 +62,9 @@ package com.likya.pinara.utils
 		public static function authAndCall(service:HTTPServiceWrapper, operationName:String, parameter:String = null):mx.rpc.AsyncToken {
 			
 			var encoder:Base64Encoder = new Base64Encoder();
-			encoder.insertNewLines = false;
+			COMPILE::SWF {
+				encoder.insertNewLines = false;
+			}
 			//encoder.encode("pinara:pinara");
 			var tmpUserInfo:User = ModelLocator.getInstance().currentUser;
 			// encoder.encode(tmpUserInfo.username + ":" + tmpUserInfo.password);
@@ -114,7 +120,7 @@ package com.likya.pinara.utils
 			}
 		}
 		
-		public static function service_resultHandler(refObject:DisplayObject, event:ResultEvent):Boolean {
+		public static function service_resultHandler(refObject:UIComponent/*DisplayObject*/, event:ResultEvent):Boolean {
 			
 	/*		var returnXml:XML;
 			var returnTxt:String = null;
@@ -164,7 +170,7 @@ package com.likya.pinara.utils
 			return retValue;
 		}
 		
-		public static function service_customHandler(refObject:DisplayObject, event:ResultEvent, showWin:Boolean = false):Boolean {
+		public static function service_customHandler(refObject:UIComponent /*DisplayObject*/, event:ResultEvent, showWin:Boolean = false):Boolean {
 			var returnXml:XML;
 			var returnTxt:String = null;
 			

@@ -49,11 +49,11 @@
 				}*/
 			}
 			
-			private function setWidth():void {
+			/*RO: private function setWidth():void {
 				// Alert.show("width before : " + jobTree.width);
-				/*RO: liveTree.percentWidth = 100;*/
+				liveTree.percentWidth = 100;
 				// Alert.show("width after : " + jobTree.width);
-			}
+			}*/
 			
 			private function treeLabel(item:Object):String { 
 				

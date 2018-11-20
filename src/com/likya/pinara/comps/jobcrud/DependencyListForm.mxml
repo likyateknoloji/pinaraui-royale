@@ -16,6 +16,9 @@
 	
 	<fx:Script>
 		<![CDATA[
+			
+			import mx.events.MouseEvent;
+			
 			import com.likya.pinara.utils.BasicAuthenticationHandler;
 			import com.likya.pinara.utils.JobXmlToView;
 			import com.likya.pinara.utils.SSS;
@@ -144,7 +147,7 @@
 				return false;
 			}
 			
-			protected function depEkle_clickHandler(event:MouseEvent):void
+			protected function depEkle_clickHandler(event:mx.events.MouseEvent):void
 			{
 				
 				if(stateName.selectedIndex == -1 || selectedJobInfo.text == null || selectedJobInfo.text == "") {
@@ -200,7 +203,7 @@
 				dependencyListGrid.dataProvider.addItem(depArray);
 			}
 			
-			protected function depDegistir_clickHandler(event:MouseEvent):void
+			protected function depDegistir_clickHandler(event:mx.events.MouseEvent):void
 			{
 				if(stateName.selectedIndex == -1 || selectedJobInfo.text == null || selectedJobInfo.text == "") {
 					Alert.show(resourceManager.getString("messages", "depStateNotSelected"));
@@ -245,7 +248,7 @@
 				dependencyListGrid.dataProvider.setItemAt(depArray, dependencyListGrid.selectedIndex);
 			}
 			
-			protected function depCikar_clickHandler(event:MouseEvent):void
+			protected function depCikar_clickHandler(event:mx.events.MouseEvent):void
 			{
 				if(dependencyListGrid.dataProvider.length != 0 && dependencyListGrid.selectedIndex != -1) {
 					dependencyListGrid.dataProvider.removeItemAt(dependencyListGrid.selectedIndex);
@@ -495,7 +498,7 @@
 				statusName.dataProvider = data;
 			}
 			
-			/*protected function testCombos_clickHandler(event:MouseEvent):void
+			/*protected function testCombos_clickHandler(event:mx.events.MouseEvent):void
 			{
 				Alert.show("Value : " + stateName.selectedItem.value + " " + substateName.selectedItem.value + " " + statusName.selectedItem.value);
 			}*/
@@ -509,10 +512,9 @@
 				}				
 			}	*/		
 			
-			protected function btn_click1(evt:MouseEvent):void {
+			protected function btn_click1(evt:mx.events.MouseEvent):void {
 				
 				var selectJobPopup:JobListPopup = new JobListPopup();
-				
 				
 				selectJobPopup.x = evt.stageX + 50;
 				selectJobPopup.y = evt.stageY - 60;
@@ -688,7 +690,7 @@
 					<!--<s:Button label="Test" id="testCombos" click="testCombos_clickHandler(event)" enabled="true"/>-->
 					<s:HGroup>
 						<s:FormItem width="100">
-							<s:Button id="btn1" label="{resourceManager.getString('messages', 'jobSelectButLabel')}" click="btn_click1(event);" />
+							<s:Button id="btn1" label="{resourceManager.getString('messages', 'jobSelectButLabel')}" click="btn_click1(event as mx.events.MouseEvent);" />
 						</s:FormItem>
 						<s:FormItem width="140">
 							<s:TextInput id="selectedJobInfo" editable="false"/>
@@ -704,9 +706,9 @@
 		
 		<s:BorderContainer id="dependencyListBoxAddRemove" top="50" width="700" borderWeight="2" cornerRadius="3" dropShadowVisible="true" enabled="true">
 			<s:HGroup paddingTop="5" paddingBottom="5" paddingLeft="250">
-				<s:Button label="{resourceManager.getString('messages', 'retCodeAddButLabel')}" id="depEkle" click="depEkle_clickHandler(event)" enabled="true"/>
-				<s:Button label="{resourceManager.getString('messages', 'retCodeDeleteButLabel')}" id="depCikar" click="depCikar_clickHandler(event)" enabled="false"/>
-				<s:Button label="{resourceManager.getString('messages', 'retCodeUpdateButLabel')}" id="depDegistir" click="depDegistir_clickHandler(event)" enabled="false"/>
+				<s:Button label="{resourceManager.getString('messages', 'retCodeAddButLabel')}" id="depEkle" click="depEkle_clickHandler(event as mx.events.MouseEvent)" enabled="true"/>
+				<s:Button label="{resourceManager.getString('messages', 'retCodeDeleteButLabel')}" id="depCikar" click="depCikar_clickHandler(event as mx.events.MouseEvent)" enabled="false"/>
+				<s:Button label="{resourceManager.getString('messages', 'retCodeUpdateButLabel')}" id="depDegistir" click="depDegistir_clickHandler(event as mx.events.MouseEvent)" enabled="false"/>
 			</s:HGroup>
 		</s:BorderContainer>
 		

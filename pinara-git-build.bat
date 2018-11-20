@@ -1,6 +1,6 @@
 @echo off
 
-set COMPILER_PATH=D:\dev\royale-emulation-works\apache-royale-0.9.4-bin-js-swf\royale-asjs\js\bin
+set COMPILER_PATH=D:\dev\royale-emulation-works\apache-royale-0.9.5-bin-js-swf\royale-asjs\js\bin
 set ROYALE_ASJS=D:\dev\royale-emulation-works\github\royale-asjs
 set PROJECTS=%ROYALE_ASJS%\frameworks\projects
 
@@ -15,13 +15,13 @@ set MX_JS=%PROJECTS%\MXRoyale\target\MXRoyale-0.9.5-SNAPSHOT-js.swc
 set SPARK_SWC=%PROJECTS%\SparkRoyale\target\SparkRoyale-0.9.5-SNAPSHOT-swf.swc
 set SPARK_JS=%PROJECTS%\SparkRoyale\target\SparkRoyale-0.9.5-SNAPSHOT-js.swc
 
-rem set MAINCLASS=.\src\com\likya\pinara\main\PinaraUI.mxml
-set MAINCLASS=.\src\com\likya\pinara\main\FindBug.mxml
+set MAINCLASS=.\src\com\likya\pinara\main\PinaraUI.mxml
+rem set MAINCLASS=.\src\com\likya\pinara\main\FindBug.mxml
 set SRCPATH=.\src,.\locale\{locale}
 set SRVCFG=services\services-config.xml
 set PNRLIBS=.\libs\as3corelib.swc,.\libs\fiber-lib.swc,.\libs\serializers-lib.swc,.\libs\flexlib.swc,.\libs\libravis.swc
 
+rem -diagnostics=14335
 @echo on
 
-
-%COMPILER_PATH%\mxmlc -diagnostics=14335 %MAINCLASS% -compiler.namespaces.namespace %COMPILER_NS% -library-path+=%PNRLIBS%,%MX_SWC%,%SPARK_SWC% -js-library-path+=%PNRLIBS%,%MX_JS%,%SPARK_JS% -source-path=%SRCPATH%  -services=%SRVCFG% -locale+=tr_TR  -o pinaraui-royale.swf
+%COMPILER_PATH%\mxmlc  %MAINCLASS% -compiler.namespaces.namespace %COMPILER_NS% -library-path+=%PNRLIBS%,%MX_SWC%,%SPARK_SWC% -js-library-path+=%PNRLIBS%,%MX_JS%,%SPARK_JS% -source-path=%SRCPATH%  -services=%SRVCFG% -locale+=tr_TR  -o pinaraui-royale.swf

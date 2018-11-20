@@ -2,13 +2,14 @@ package com.likya.pinara.utils
 {
 	import com.likya.pinara.comps.DummyForm;
 	
-	import flash.display.DisplayObject;
+	// import flash.display.DisplayObject;
+	import mx.core.UIComponent;
 	
 	import mx.managers.PopUpManager;
 
 	public class WindowUtils
 	{
-		public static function showDummyWindow(refObject:DisplayObject, xmlText:String):void {
+		public static function showDummyWindow(refObject:UIComponent/*DisplayObject*/, xmlText:String):void {
 			var dummyWindow:DummyForm = PopUpManager.createPopUp(refObject, DummyForm, true) as DummyForm;
 			dummyWindow.title="ERROR : Content of the error message..."
 			dummyWindow.htmlTextAsHTML = xmlText;

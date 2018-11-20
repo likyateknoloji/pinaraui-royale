@@ -19,7 +19,8 @@ Contributor(s):
 */
 package com.likya.pinara.containers
 {
-	import flash.events.MouseEvent;
+	// import flash.events.MouseEvent;
+	import mx.events.MouseEvent;
 	
 	import spark.components.Button;Button;
 	import spark.components.Panel;

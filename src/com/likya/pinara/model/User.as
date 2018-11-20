@@ -1,7 +1,9 @@
 package com.likya.pinara.model {
 	
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
+	// import flash.events.;
+	// import flash.events.EventDispatcher;
+	import org.apache.royale.events.Event;
+	import org.apache.royale.events.EventDispatcher;
 	
 	
 	public class User extends EventDispatcher

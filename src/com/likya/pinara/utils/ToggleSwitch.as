@@ -48,7 +48,7 @@ package com.likya.pinara.utils
 		
 		/*override*/ protected function partAdded(partName:String, instance:Object):void
 		{
-			super.partAdded(partName, instance);
+			//RO: super.partAdded(partName, instance);
 			if(instance == selectedLabelField)
 			{
 				selectedLabelField.text = selectedLabel;

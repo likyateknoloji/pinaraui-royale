@@ -15,14 +15,13 @@
 			
 			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
+			import mx.core.Keyboard;
 			import mx.events.CloseEvent;
 			import mx.events.KeyboardEvent;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import mx.validators.Validator;
-			
-			import mx.core.Keyboard;
 			// import flash.ui.Keyboard;
 			// import mx.events.utils.Keyboard;
 
@@ -52,11 +51,31 @@
 				PopUpManager.removePopUp(this);
 			}
 			
+			/*
+			COMPILE::SWF
 			private function titleWindow_keyDown(evt:mx.events.KeyboardEvent):void {
 				if (evt.charCode == Keyboard.ESCAPE) {
 					this.dispatchEvent(new mx.events.CloseEvent(mx.events.CloseEvent.CLOSE));
 				}
 			}
+			COMPILE::JS
+			private function titleWindow_keyDown(evt:mx.events.KeyboardEvent):void {
+				if (evt.keyCode == Keyboard.ESCAPE) {
+					this.dispatchEvent(new mx.events.CloseEvent(mx.events.CloseEvent.CLOSE));
+				}
+			}
+			*/
+
+			private function titleWindow_keyDown(evt:mx.events.KeyboardEvent):void {
+				
+				COMPILE::SWF {var charCode:uint = evt.charCode;}
+				COMPILE::JS {var charCode:uint = evt.keyCode;}
+				
+				if (charCode == Keyboard.ESCAPE) {
+					this.dispatchEvent(new mx.events.CloseEvent(mx.events.CloseEvent.CLOSE));
+				}
+			}
+
 			
 			private function validateChangePassword():Boolean {
 				oldPasswordValidator.source = oldPassword;
