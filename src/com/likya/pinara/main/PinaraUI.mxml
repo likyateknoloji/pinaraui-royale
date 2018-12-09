@@ -66,7 +66,7 @@
 			import com.likya.pinara.utils.TreeUtils;
 			
 			[Bindable]
-			private static var modelLocator:ModelLocator = ModelLocator.getInstance();
+			// private static var modelLocator:ModelLocator = ModelLocator.getInstance();
 			
 			[Bindable]
 			private var httpServiceUrl:String = "/flex/restsrvc/joblistxml/";
@@ -126,7 +126,7 @@
 				currentState = "loggedOutState";
 				// currentState = "loggedInState";
 				
-				CursorManager.removeCursor(ModelLocator.getInstance().currentBusyCursorId);
+				// RO: CursorManager.removeCursor(ModelLocator.getInstance().currentBusyCursorId);
 
 			}
 			
@@ -626,7 +626,8 @@
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<jobmanager:JobManager showBusyCursor="true" id="jobManagerService" fault="jobManagerService_faultHandler(event)"/>
+		<!--RO: jobmanager:JobManager showBusyCursor="true" id="jobManagerService" fault="jobManagerService_faultHandler(event)"/ -->
+		<jobmanager:JobManager id="jobManagerService" fault="jobManagerService_faultHandler(event)"/>
 		<s:CallResponder id="recover" result="recover_resultHandler(event)"/>
 		<s:CallResponder id="norecover" result="norecover_resultHandler(event)"/>
 		<s:CallResponder id="getappstate" result="getappstate_resultHandler(event)" />
@@ -669,7 +670,7 @@
 			<s:layout>
 				<s:VerticalLayout clipAndEnableScrolling="true" paddingRight="0" paddingLeft="0" paddingTop="10" paddingBottom="10" />
 			</s:layout>
-			<comps:MenuBar excludeFrom="loggedOutState, dummyState" id="menuBar"/>
+			<comps:MenuBar id="menuBar"/>
 			<s:Panel id="messagePanel" title="" width="100%" height="55" visible="false" includeInLayout="false">
 				<mx:Text id="messageText" text="" textAlign="center" color="0xFF2D00" width="100%" />
 			</s:Panel>
@@ -678,7 +679,7 @@
 			-->			
 			<!--mx:SWFLoader width="950" height="500" source="http://www.youtube.com/v/ojASzi1Kb8c" includeIn="loggedInState"/--> 
 			<!--comps:MainPanel includeIn="jobListState" height="100%"/-->
-			<jobdetail:JobListWithDetails height="100%" excludeFrom="anaSayfaState, jobDetailState, loggedOutState, dummyState" id="jobListDetail"/>
+			<jobdetail:JobListWithDetails height="100%" excludeFrom="anaSayfaState, jobDetailState" id="jobListDetail"/>
 			<jobdetail:JobAllDetailPanel includeIn="jobDetailState" id="allJobDetail" height="100%"/>
 		</s:Group>
 		
