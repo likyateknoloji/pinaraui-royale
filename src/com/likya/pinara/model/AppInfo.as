@@ -22,11 +22,31 @@ package com.likya.pinara.model {
 		[Bindable]
 		public var version:String = "";
 		
-		public var osname:String = "";
-		public var ostype:String = "";
+		private var _osname:String = "";
+		private var _ostype:String = "";
 
 		public function AppInfo()
 		{
+		}
+
+		public function get osname():String
+		{
+			return _osname;
+		}
+		
+		public function set osname(osname:String):void
+		{
+			_osname = osname;
+		}
+
+		public function get ostype():String
+		{
+			return _ostype;
+		}
+		
+		public function set ostype(osname:String):void
+		{
+			_ostype = ostype;
 		}
 		
 		public function getVersion():String

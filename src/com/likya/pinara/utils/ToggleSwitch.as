@@ -5,10 +5,27 @@ package com.likya.pinara.utils
 	
 	public class ToggleSwitch extends CheckBox
 	{
-		[SkinPart( "false")]
-		public var selectedLabelField:IDisplayText;
-		[SkinPart( "false")]
-		public var deselectedLabelField:IDisplayText;
+		//RO: [SkinPart( "false")]
+		private var _selectedLabelField:IDisplayText;
+		public function get selectedLabelField():IDisplayText
+		{
+			return _selectedLabelField;
+		}
+		public function set selectedLabelField(selectedLabelField:IDisplayText):void
+		{
+			_selectedLabelField = selectedLabelField;
+		}
+		
+		//RO: [SkinPart( "false")]
+		private var _deselectedLabelField:IDisplayText;
+		public function get deselectedLabelField():IDisplayText
+		{
+			return _deselectedLabelField;
+		}
+		public function set deselectedLabelField(deselectedLabelField:IDisplayText):void
+		{
+			_deselectedLabelField = deselectedLabelField;
+		}
 		
 		private var _selectedLabel:String = 'Yes';
 		private var _deselectedLabel:String = 'No';

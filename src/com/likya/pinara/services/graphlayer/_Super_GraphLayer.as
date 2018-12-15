@@ -42,7 +42,7 @@ internal class _Super_GraphLayer extends com.adobe.fiber.services.wrapper.HTTPSe
 
 
          preInitializeService();
-         model_internal::initialize();
+         //RO: model_internal::initialize();
     }
     
     //init initialization routine here, child class to override

@@ -5,7 +5,7 @@
 		 horizontalCenter="0" xmlns:jobmanager="com.likya.pinara.services.jobmanager.*">
 	<fx:Script>
 		<![CDATA[
-			import com.likya.pinara.containers.ImageContainer;
+			//RO: import com.likya.pinara.containers.ImageContainer;
 			import com.likya.pinara.event.ResourceEvent;
 			import com.likya.pinara.utils.BasicAuthenticationHandler;
 			
@@ -18,8 +18,18 @@
 			public var data:XML //Changed from Object to XML and removed warnings according to https://forums.adobe.com/thread/72306
 			
 			[Bindable]
-			public var selectedGroupId:String;
+			private var _selectedGroupId:String;
 			
+			public function get selectedGroupId():String
+			{
+				return _selectedGroupId;
+			}
+
+			public function set selectedGroupId(selectedGroupId:String):void
+			{
+				_selectedGroupId = selectedGroupId;
+			}
+
 			/*
 			<visualParams>
 			<statu>1</statu>

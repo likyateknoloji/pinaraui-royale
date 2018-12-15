@@ -31,12 +31,20 @@ package com.likya.pinara.containers
 	 */
 	public class CollapsiblePanel extends Panel
 	{
-		[SkinPart(required="false")]
+		//RO: [SkinPart(required="false")]
 		/**
 		 *  The skin part that defines the appearance of the 
 		 *  button responsible for collapsing/uncollapsing the panel.
 		 */
-		public var collapseButton:Button;
+		private var _collapseButton:Button;
+		public function get collapseButton():Button
+		{
+			return _collapseButton;
+		}
+		public function set collapseButton(collapseButton:Button):void
+		{
+			_collapseButton = collapseButton;
+		}
 		
 		/**
 		 * Flag indicating whether this panel is collapsed (minimized) or not.

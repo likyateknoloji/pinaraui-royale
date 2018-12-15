@@ -40,8 +40,26 @@
 			protected var oldSearchResult:int = 0;
 			protected var vScrollPos:int = 0;
 			
-			public var isNativeXML:Boolean = false;
-			public var fileTag:String;
+			private var _isNativeXML:Boolean = false;
+			public function get isNativeXML():Boolean
+			{
+				return _isNativeXML;
+			}
+			public function set isNativeXML(isNativeXML:Boolean):void
+			{
+				_isNativeXML = isNativeXML;
+			}
+			
+			private var _fileTag:String;
+			public function get fileTag():String
+			{
+				return _fileTag;
+			}
+			public function set fileTag(fileTag:String):void
+			{
+				_fileTag = fileTag;
+			}
+			
 			private var titlePrefix:String = ResourceManager.getInstance().getString('messages', 'logViewWindowTitle');
 			
 			[Bindable]	

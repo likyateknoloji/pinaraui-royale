@@ -39,7 +39,16 @@
 			[Bindable]
 			public var isMode:Number = 0;
 			
-			public var remoteSchModule:Module;
+			private var _remoteSchModule:Module;
+			public function get remoteSchModule():Module
+			{
+				return _remoteSchModule;
+			}
+			public function set remoteSchModule(remoteSchModule:Module):void
+			{
+				_remoteSchModule = remoteSchModule;
+			}
+			
 			private var remoteSchModuleInfo:IModuleInfo;
 			
 			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void

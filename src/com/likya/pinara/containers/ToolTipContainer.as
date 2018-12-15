@@ -5,19 +5,7 @@ package com.likya.pinara.containers
 	
 	public class ToolTipContainer {
 		
-		private static var toolTipList:ArrayList = new ArrayList();
-
-		toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'readyTooltip'))
-		toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'waitingTooltip'))
-		toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'workingTooltip'))
-		toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'successfulTooltip'))
-		toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'failedTooltip'))
-		toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'timeoutTooltip'))
-		toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'skippedTooltip'))
-		toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'stoppedTooltip'))
-		toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'pausedTooltip'))
-		toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'workingTooltip'))
-		toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'disabledTooltip'))
+		private static var toolTipList:ArrayList;
 
 		public function ToolTipContainer() {}
 		
@@ -27,6 +15,21 @@ package com.likya.pinara.containers
 			
 			// Alert.show("Vparams : " + data.visualParams);
 			// Alert.show("statu:" + statu + " image:" + imageList.getItemAt(statu));
+			
+			if(toolTipList == null || toolTipList.length == 0) {
+				toolTipList = new ArrayList()
+				toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'readyTooltip'))
+				toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'waitingTooltip'))
+				toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'workingTooltip'))
+				toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'successfulTooltip'))
+				toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'failedTooltip'))
+				toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'timeoutTooltip'))
+				toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'skippedTooltip'))
+				toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'stoppedTooltip'))
+				toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'pausedTooltip'))
+				toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'workingTooltip'))
+				toolTipList.addItem(ResourceManager.getInstance().getString('messages', 'disabledTooltip'))
+			}
 			
 			return toolTipList.getItemAt(statu) as String;
 		}

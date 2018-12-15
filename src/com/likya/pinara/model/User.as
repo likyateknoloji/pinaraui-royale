@@ -14,9 +14,36 @@ package com.likya.pinara.model {
 		[Bindable]
 		public var username:String;
 		
-		public var password:String;
-		public var roleinfo:String;
-		public var statuinfo:String;
+		private var _password:String;
+		public function get password():String
+		{
+			return _password;
+		}
+		public function set password(password:String):void
+		{
+			_password = password;
+		}
+		
+		private var _roleinfo:String;
+		public function get roleinfo():String
+		{
+			return _roleinfo;
+		}
+		public function set roleinfo(_roleinfo:String):void
+		{
+			_roleinfo = _roleinfo;
+		}
+
+		
+		private var _statuinfo:String;
+		public function get statuinfo():String
+		{
+			return _statuinfo;
+		}
+		public function set statuinfo(statuinfo:String):void
+		{
+			_statuinfo = statuinfo;
+		}
 		
 		private var _roles:Array;
 		
