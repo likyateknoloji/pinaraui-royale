@@ -8,8 +8,8 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import com.likya.comps.crud.user.ChangePass;
-			import com.likya.comps.crud.user.UserListWindow;
+			import com.likya.pinara.comps.crud.user.ChangePass;
+			import com.likya.pinara.comps.crud.user.UserListWindow;
 			import com.likya.pinara.comps.configuration.MailConfigurationForm;
 			import com.likya.pinara.comps.jobcrud.JobEditWindow;
 			import com.likya.pinara.comps.jobdetail.JobAllDetailPanel;

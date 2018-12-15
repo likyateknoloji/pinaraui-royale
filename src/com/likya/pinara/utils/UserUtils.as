@@ -1,8 +1,8 @@
 package com.likya.pinara.utils
 {
-	import com.likya.comps.crud.user.ChangePass;
-	import com.likya.comps.crud.user.UserAddWindow;
-	import com.likya.comps.crud.user.UserEditWindow;
+	import com.likya.pinara.comps.crud.user.ChangePass;
+	import com.likya.pinara.comps.crud.user.UserAddWindow;
+	import com.likya.pinara.comps.crud.user.UserEditWindow;
 	
 	import mx.resources.IResourceManager;
 	import mx.resources.ResourceManager;
