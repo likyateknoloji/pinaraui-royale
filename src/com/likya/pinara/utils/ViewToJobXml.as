@@ -227,7 +227,7 @@ package com.likya.pinara.utils {
 					jobStatusListXML.myra_stateinfo::JobStatus[counter].appendChild(<myra-stateinfo:ReturnCodeList osType="MACOS" xmlns:myra-stateinfo="http://www.likyateknoloji.com/myra-stateinfo" />);
 					
 					var innercounter:int = 0;
-					for each (var innerItem:Object in item.retCodeList..toArray()) {
+					for each (var innerItem:Object in (item.retCodeList as XML)..toArray()) {
 						jobStatusListXML.myra_stateinfo::JobStatus[counter].myra_stateinfo::ReturnCodeList.appendChild(<myra-stateinfo:ReturnCode xmlns:myra-stateinfo="http://www.likyateknoloji.com/myra-stateinfo" />);
 						
 						var codeDescCuple:CodeDesc = new CodeDesc(String(innerItem));
