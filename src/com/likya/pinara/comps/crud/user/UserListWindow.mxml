@@ -5,7 +5,10 @@
 			   xmlns:s="library://ns.apache.org/royale/spark"
 			   width="520" height="450" 
 			   close="removeMe();" keyDown="titleWindow_keyDown(event);"
-			   creationComplete="titlewindow1_creationCompleteHandler(event)" xmlns:user="com.likya.comps.crud.user.*" xmlns:userops="com.likya.pinara.services.userops.*" xmlns:jobdetail="com.likya.pinara.comps.jobdetail.*">
+			   creationComplete="titlewindow1_creationCompleteHandler(event)" 
+			   xmlns:user="com.likya.pinara.comps.crud.user.*" 
+			   xmlns:userops="com.likya.pinara.services.userops.*" 
+			   xmlns:jobdetail="com.likya.pinara.comps.jobdetail.*">
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
