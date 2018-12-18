@@ -1,3 +1,7 @@
 
 
 *.swf
+
+target/classes/
+
+target/
