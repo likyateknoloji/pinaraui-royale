@@ -85,7 +85,7 @@ package com.likya.pinara.services.userops
 			
 			
 			preInitializeService();
-			model_internal::initialize();
+			//RO: model_internal::initialize();
 		}
 		
 		//init initialization routine here, child class to override

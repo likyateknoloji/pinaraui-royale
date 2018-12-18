@@ -8,19 +8,16 @@
 		<![CDATA[
 			import com.likya.pinara.comps.DummyForm;
 			import com.likya.pinara.event.ResourceEvent;
-			import com.likya.pinara.model.ModelLocator;
 			import com.likya.pinara.model.UserRole;
 			import com.likya.pinara.utils.BasicAuthenticationHandler;
 			import com.likya.pinara.utils.JobXmlToView;
 			import com.likya.pinara.utils.RoleFilters;
 			import com.likya.pinara.utils.Transformer;
-			import com.likya.pinara.utils.WindowUtils;
 			
 			import mx.collections.ArrayCollection;
 			import mx.collections.XMLListCollection;
 			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
-			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
@@ -30,8 +27,17 @@
 			[Bindable] 
 			private var jobs:ArrayCollection;
 			
-			public var selectedJobId:String;
-			
+			private var _selectedJobId:String;
+			public function get selectedJobId():String
+			{
+				return _selectedJobId;
+			}
+			public function set selectedJobId(selectedJobId:String):void
+			{
+				_selectedJobId = selectedJobId;
+			}	
+				
+				
 			[Bindable]
 			public var tlosMenuData:XMLListCollection = new XMLListCollection();
 			
@@ -53,7 +59,16 @@
 				]                
 			);
 			
-			public var role:String = UserRole.ADMIN;
+			private var _role:String = UserRole.ADMIN;
+			public function get role():String
+			{
+				 return _role;
+			}
+			public function set role(role:String):void
+			{
+				_role = role;
+			}
+			
 			// public var role:String = UserRole.OPERATION;
 			// public var role:String = UserRole.VIEW;
 			

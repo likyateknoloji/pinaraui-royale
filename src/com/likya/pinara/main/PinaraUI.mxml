@@ -671,9 +671,9 @@
 				<s:VerticalLayout clipAndEnableScrolling="true" paddingRight="0" paddingLeft="0" paddingTop="10" paddingBottom="10" />
 			</s:layout>
 			<comps:MenuBar id="menuBar"/>
-			<s:Panel id="messagePanel" title="" width="100%" height="55" visible="false" includeInLayout="false">
+			<!--RO:s:Panel id="messagePanel" title="" width="100%" height="55" visible="false" includeInLayout="false">
 				<mx:Text id="messageText" text="" textAlign="center" color="0xFF2D00" width="100%" />
-			</s:Panel>
+			</s:Panel-->
 			<!--RO:
 			<s:BitmapImage source="@Embed('/images/likya.jpg')" left="0" right="0" top="0" bottom="0" scaleMode="stretch" includeIn="anaSayfaState" />
 			-->			

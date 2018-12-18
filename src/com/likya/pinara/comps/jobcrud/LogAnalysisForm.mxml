@@ -162,7 +162,7 @@
 			<s:NavigatorContent id="basicParams1" label="{resourceManager.getString('messages', 'logAnalysSearchDefNavLbl')}">
 <!--				<jobcrud:JobManagementInfoForm_0 id="managementInfoForm_0"/>-->
 				
-				<s:BorderContainer id="findWhat" width="730" height="300" borderWeight="1" cornerRadius="3" dropShadowVisible="true" enabled="true" includeIn="defined"> 
+				<s:BorderContainer id="findWhat" width="730" height="300" borderWeight="1" cornerRadius="3" dropShadowVisible="true" enabled="true" > 
 					
 					<s:Label left="15" top="10" text="{resourceManager.getString('messages', 'logAnalysSearchPatternPrp')}" fontSize="14" fontWeight="bold"/>
 					
@@ -252,7 +252,7 @@
 			</s:NavigatorContent>
 			<s:NavigatorContent id="extendedParams1" label="{resourceManager.getString('messages', 'logAnalysElseActionNavLbl')}">
 				<!--<jobcrud:JobManagementInfoForm_1 id="managementInfoForm_1"/>-->
-				<s:BorderContainer id="actionDef" width="730" height="220" borderWeight="1" cornerRadius="3" dropShadowVisible="true" enabled="true" includeIn="defined">
+				<s:BorderContainer id="actionDef" width="730" height="220" borderWeight="1" cornerRadius="3" dropShadowVisible="true" enabled="true">
 					
 					<s:VGroup left="10" top="10">
 						

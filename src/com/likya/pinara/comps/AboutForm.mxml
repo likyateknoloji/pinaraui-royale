@@ -166,10 +166,10 @@
 			
 			]]>
 		</fx:String>
-		<fx:String id="satir1"><![CDATA[ Likya Bilgi Teknolojileri ve İletişim Hizmetleri Ltd. Şti. ]]></fx:String>
+		<!--RO: fx:String id="satir1"><![CDATA[ Likya Bilgi Teknolojileri ve İletişim Hizmetleri Ltd. Şti. ]]></fx:String>
 		<fx:String id="satir2"><![CDATA[ © 2008-{showYear()} Tüm Hakları Saklıdır. ]]></fx:String>
 		<fx:String id="satir3"><![CDATA[ Müşteri : Xxxxx Yyyyyy Zzzzzzz A.Ş. ]]></fx:String>
-		<fx:String id="satir4"><![CDATA[ Ürün Kimliği: {licenseId} ]]></fx:String>
+		<fx:String id="satir4"><![CDATA[ Ürün Kimliği: {licenseId} ]]></fx:String-->
 	</fx:Declarations>
 
 	<s:VGroup gap="-20" paddingLeft="10">
@@ -178,10 +178,10 @@
 
 		<s:TextArea borderVisible="false" width="450">
 			<s:span fontSize="11" fontFamily="Verdana,Arial" >
-				<s:br/><s:br/>{satir1}
+				<!--RO: s:br/><s:br/>{satir1}
 				<s:br/><s:br/>{satir2}
 				<s:br/><s:br/>{satir3}
-				<s:br/><s:br/>{satir4}
+				<s:br/><s:br/>{satir4}-->
 			</s:span>
 		</s:TextArea>
 		<s:TextArea id="myText" width="500" height="200" textAlign="justify" fontFamily="Arial" fontSize="12" editable="false"

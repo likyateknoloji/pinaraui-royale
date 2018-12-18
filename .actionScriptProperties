@@ -6,8 +6,6 @@
     </compilerSourcePath>
     <libraryPath defaultLinkType="3">
       <libraryPathEntry kind="3" linkType="1" path="${DCD_FIBER_LOCATION}/playerfds.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/as3corelib.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/serializers-lib.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="4" path="">
         <excludedEntries>
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/flex.swc" useDefaultLinkType="false"/>
@@ -22,6 +20,10 @@
       <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/github/royale-asjs/frameworks/projects/MXRoyale/target/MXRoyale-0.9.5-SNAPSHOT-swf.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/github/royale-asjs/frameworks/projects/SparkRoyale/target/SparkRoyale-0.9.5-SNAPSHOT-js.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/github/royale-asjs/frameworks/projects/SparkRoyale/target/SparkRoyale-0.9.5-SNAPSHOT-swf.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="D:/dev/royale-emulation-works/github/fiber-lib/fiber-lib.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="${DCD_FIBER_LOCATION}/fiber.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="1" linkType="1" path="libs"/>
+      <libraryPathEntry kind="3" linkType="1" path="/fiber-lib/bin/fiber-lib.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
