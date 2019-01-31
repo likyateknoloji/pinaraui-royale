@@ -1,6 +1,6 @@
 package com.likya.pinara.model {
 	
-	// import flash.events.EventDispatcher;
+	//RO: import flash.events.EventDispatcher;
 	import org.apache.royale.events.EventDispatcher;
 	
 	public class AppInfo extends EventDispatcher {
@@ -19,46 +19,35 @@ package com.likya.pinara.model {
 		private static const OS_SUNOS:String = "SunOS"; 
 		private static const MAC_OS_X:String = "Mac OS X"; 
 		
+		//Myra-engine states
+		public static const CORE_STATE_STARTING:String = "STATE_STARTING";
+		public static const CORE_STATE_STOP:String = "STATE_STOP";
+		public static const CORE_STATE_SUSPENDED:String = "STATE_SUSPENDED";
+		public static const CORE_STATE_JOBOVERFLOW:String = "STATE_JOBOVERFLOW"; 
+		public static const CORE_STATE_WORKING:String = "STATE_WORKING";
+		public static const CORE_STATE_RECOVER:String = "STATE_RECOVER";
+		
 		[Bindable]
 		public var version:String = "";
 		
-		private var _osname:String = "";
-		private var _ostype:String = "";
-
+		public var osname:String = "";
+		public var ostype:String = "";
+		public var loginstate:String = "";
+		
 		public function AppInfo()
 		{
-		}
-
-		public function get osname():String
-		{
-			return _osname;
-		}
-		
-		public function set osname(osname:String):void
-		{
-			_osname = osname;
-		}
-
-		public function get ostype():String
-		{
-			return _ostype;
-		}
-		
-		public function set ostype(osname:String):void
-		{
-			_ostype = ostype;
 		}
 		
 		public function getVersion():String
 		{
 			return version;
 		}
-	
+		
 		public function setVersion(version:String):void
 		{
 			this.version = version;
 		}
-
+		
 		public function setOsType(osname:String):void
 		{	
 			if(osname.indexOf("Windows") != -1) {
@@ -67,7 +56,7 @@ package com.likya.pinara.model {
 				this.ostype = OS_UNIX;
 			}
 		}
-
+		
 	}
 }
 

@@ -27,7 +27,7 @@
 			private var tlosFolderImg:Class;
 			
 			[Bindable]
-			private var serviceUrl:String = "/flex/restsrvc/nettreexml/";
+			private var serviceUrl:String = "/PInara/restsrvc/nettreexml/";
 
 			[Bindable] 
 			public static var liveTreeDP:XMLList; 
@@ -148,11 +148,11 @@
 			
 			public function changeView():void {
 				trace("Changing View");
-				if(BasicAuthenticationHandler.startsWith(treePanelService.url, "/flex/restsrvc/nettreexml/")) {
-					treePanelService.url = "/flex/restsrvc/grouptreexml/";
+				if(BasicAuthenticationHandler.startsWith(treePanelService.url, "/PInara/restsrvc/nettreexml/")) {
+					treePanelService.url = "/PInara/restsrvc/grouptreexml/";
 					depGrpButton.label = "D";
 				} else {
-					treePanelService.url = "/flex/restsrvc/nettreexml/";
+					treePanelService.url = "/PInara/restsrvc/nettreexml/";
 					depGrpButton.label = "G";
 				}
 				

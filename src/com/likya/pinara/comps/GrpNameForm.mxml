@@ -33,7 +33,7 @@
 			public var selectedNetTreeId:String;
 			
 			[Bindable]
-			private var serviceUrl:String = "/flex/restsrvc/grpNameChange/";
+			private var serviceUrl:String = "/PInara/restsrvc/grpNameChange/";
 			
 			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void {
 				var grpNameStr:String = "";

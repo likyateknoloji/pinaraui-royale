@@ -37,7 +37,7 @@
 			private var depGraphModuleInfo:IModuleInfo;
 			
 			[Bindable]
-			private var serviceUrl:String = "/flex/restsrvc/joblistxml/";
+			private var serviceUrl:String = "/PInara/restsrvc/joblistxml/";
 			
 			[Bindable]
 			public var selectedNetTreeId:String;

@@ -22,7 +22,7 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
-			private var serviceUrl:String = "/flex/restsrvc/jobdetailxml/";
+			private var serviceUrl:String = "/PInara/restsrvc/jobdetailxml/";
 			
 			[Bindable] 
 			private var jobs:ArrayCollection;

@@ -324,9 +324,9 @@
 			
 			public function updateData():void {
 				if(filterId != null && !isNaN(Number(filterId))) {
-					jobListDS.url = "/flex/restsrvc/jobsummarylistxml/" + filterId;
+					jobListDS.url = "/PInara/restsrvc/jobsummarylistxml/" + filterId;
 				} else {
-					jobListDS.url = "/flex/restsrvc/jobsummarylistxml";
+					jobListDS.url = "/PInara/restsrvc/jobsummarylistxml";
 				}
 				BasicAuthenticationHandler.authAndSend(jobListDS);
 			}

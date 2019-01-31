@@ -28,7 +28,7 @@ package com.likya.pinara.services.userops
 			var argsArray:Array;
 			
 			operation = new mx.rpc.http.Operation(null, "changepass");
-			operation.url = "/flex/restsrv/userops/changepass";
+			operation.url = "/PInara/restsrv/userops/changepass";
 			operation.method = "POST";
 			operation.serializationFilter = serializer0;
 			operation.contentType = "application/xml";
@@ -36,7 +36,7 @@ package com.likya.pinara.services.userops
 			operations.push(operation);
 			
 			operation = new mx.rpc.http.Operation(null, "useradd");
-			operation.url = "/flex/restsrv/userops/useradd";
+			operation.url = "/PInara/restsrv/userops/useradd";
 			operation.method = "POST";
 			operation.serializationFilter = serializer0;
 			operation.contentType = "application/xml";
@@ -44,7 +44,7 @@ package com.likya.pinara.services.userops
 			operations.push(operation);
 			
 			operation = new mx.rpc.http.Operation(null, "userlist");
-			operation.url = "/flex/restsrv/userops/userlist";
+			operation.url = "/PInara/restsrv/userops/userlist";
 			operation.method = "POST";
 			argsArray = new Array("strXml");
 			operation.argumentNames = argsArray;         
@@ -54,28 +54,28 @@ package com.likya.pinara.services.userops
 			operations.push(operation);
 			
 			operation = new mx.rpc.http.Operation(null, "userupdate");
-			operation.url = "/flex/restsrv/userops/userupdate";
+			operation.url = "/PInara/restsrv/userops/userupdate";
 			operation.method = "POST";
 			operation.contentType = "application/xml";
 			operation.resultType = Object;
 			operations.push(operation);
 			
 			operation = new mx.rpc.http.Operation(null, "changepassadm");
-			operation.url = "/flex/restsrv/userops/changepassadm";
+			operation.url = "/PInara/restsrv/userops/changepassadm";
 			operation.method = "POST";
 			operation.contentType = "application/xml";
 			operation.resultType = Object;
 			operations.push(operation);
 			
 			operation = new mx.rpc.http.Operation(null, "userdelete");
-			operation.url = "/flex/restsrv/userops/userdelete";
+			operation.url = "/PInara/restsrv/userops/userdelete";
 			operation.method = "POST";
 			operation.contentType = "application/xml";
 			operation.resultType = Object;
 			operations.push(operation);
 			
 			operation = new mx.rpc.http.Operation(null, "userread");
-			operation.url = "/flex/restsrv/userops/userread";
+			operation.url = "/PInara/restsrv/userops/userread";
 			operation.method = "POST";
 			operation.contentType = "application/xml";
 			operation.resultType = Object;
