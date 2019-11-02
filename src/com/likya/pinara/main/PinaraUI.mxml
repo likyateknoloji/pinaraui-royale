@@ -36,7 +36,8 @@
 			import org.apache.royale.events.Event;
 			import org.apache.royale.utils.Timer;
 			import org.apache.royale.net.URLRequestHeader;
-			import org.apache.royale.net.URLLoader;
+			// RO:import org.apache.royale.net.URLLoader;
+			import mx.net.URLLoader;
 			import org.apache.royale.net.URLRequest;
 			import org.apache.royale.net.HTTPConstants;
 			
@@ -65,8 +66,8 @@
 			import com.likya.pinara.utils.BasicAuthenticationHandler;
 			import com.likya.pinara.utils.TreeUtils;
 			
-			[Bindable]
-			// private static var modelLocator:ModelLocator = ModelLocator.getInstance();
+			/*RO: [Bindable]
+			private static var modelLocator:ModelLocator = ModelLocator.getInstance();*/
 			
 			[Bindable]
 			private var httpServiceUrl:String = "/PInara/restsrvc/joblistxml/";
@@ -136,7 +137,7 @@
 				
 				if(event.object == null) {
 					if(currentListNodeId != null) {
-						// jobListDetail.selectedNetTreeId = currentListNodeId;
+						jobListDetail.selectedNetTreeId = currentListNodeId;
 					} else {
 						Alert.show("Warning : Code : 3428");
 						currentState = "anaSayfaState";
@@ -148,7 +149,7 @@
 						selectedTreeNode = ""; // Bu alanı netTreeId için kullanmıştım artık temizlemek lazım.
 						
 						var netTreeId:String = XML(event.object).netTreeId;
-						// jobListDetail.selectedNetTreeId = netTreeId;
+						jobListDetail.selectedNetTreeId = netTreeId;
 						
 						var searchResult:XMLList = TreeUtils.findNode((jobTree.liveTree.dataProvider[0] as XML), netTreeId);
 						
@@ -160,14 +161,14 @@
 					// bazen id attribute olmadan direk olarak da gelebiliyor.
 					// Bu nedenle kontrol kondu Serkan...j
 					else if (!XML(event.object).hasOwnProperty("@id")) {
-						// jobListDetail.selectedNetTreeId = XML(event.object);
+						jobListDetail.selectedNetTreeId = XML(event.object);
 					} else {
-						// jobListDetail.selectedNetTreeId = XML(event.object).@id;
+						jobListDetail.selectedNetTreeId = XML(event.object).@id;
 					}
-					// currentListNodeId = jobListDetail.selectedNetTreeId;
+					currentListNodeId = jobListDetail.selectedNetTreeId;
 				}
 				
-				// jobListDetail.updateData();
+				jobListDetail.updateData();
 
 			}
 			private function jobNodeSelectedHandler(event:ResourceEvent):void {
@@ -175,18 +176,18 @@
 				currentState = "jobDetailState";
 				
 				if(XML(event.object).hasOwnProperty("jobId")) { // add ya da clone için buraya giriyor
-					// allJobDetail.selectedJobId = XML(event.object).jobId;
-					/*var searchResult:XMLList = TreeUtils.findNode((jobTree.liveTree.dataProvider[0] as XML), allJobDetail.selectedJobId);
+					allJobDetail.selectedJobId = XML(event.object).jobId;
+					var searchResult:XMLList = TreeUtils.findNode((jobTree.liveTree.dataProvider[0] as XML), allJobDetail.selectedJobId);
 					if (searchResult[0] != undefined) {
 						TreeUtils.expandNode(jobTree.liveTree, searchResult[0]);
 						// jobTree.liveTree.selectedItem = searchResult[0];
 						jobTree.refreshTree(searchResult[0]);
-					}*/
+					}
 				}
 				// Eğer job ile iligli işlem komutu detay sayfadan geliyorsa
 				// bu durumda id attribute olmadan direk skalar olarak geliyor
 				else if (!XML(event.object).hasOwnProperty("@id")) {
-					// allJobDetail.selectedJobId = "" + event.object;
+					allJobDetail.selectedJobId = "" + event.object;
 					// liveTree.expandItem(liveTreeDP..jobGroup.(@id == item.@id)[0], true);
 					var tmpItem:Object = (jobTree.liveTree.dataProvider[0] as XML)..jobGroup..jobProperty.(@id == allJobDetail.selectedJobId)[0];
 					var tmpPrnt:Object = jobTree.liveTree.getParentItem(tmpItem); 
@@ -194,11 +195,11 @@
 						currentListNodeId = tmpPrnt.@id; 
 					}
 				} else {
-					// allJobDetail.selectedJobId = XML(event.object).@id;
+					allJobDetail.selectedJobId = XML(event.object).@id;
 					currentListNodeId = jobTree.liveTree.getParentItem(event.object).@id; 
 				}
 				
-				// allJobDetail.updateData();
+				allJobDetail.updateData();
 				
 			}
 			private function anasayfaSelectedHandler(event:ResourceEvent):void {
@@ -211,7 +212,7 @@
 			}
 
 			private function refreshSelect(data:XML):void {
-				var xml:XML = <mydata id="" />
+				var xml:XML = <mydata id="" />; //RO:;
 				xml.@id = data;
 				jobTree.refreshTree(xml);
 			}
@@ -245,9 +246,9 @@
 				// Alert.show("Refresh Event cought !...");
 				trace("Refresh content");
 				if(currentState == "jobListState") {
-					// jobListDetail.updateData();
+					jobListDetail.updateData();
 				} else if(currentState == "jobDetailState") {
-					// allJobDetail.updateData();
+					allJobDetail.updateData();
 				}
 				
 				jobTree.refreshTree();
@@ -356,9 +357,9 @@
 					setAnaSayfaState(); 
 				}
 
-				/*if(menuBar != null) {
+				if(menuBar != null) {
 					menuBar.applyFilters();
-				}*/
+				}
 				
 			}
 			
@@ -377,7 +378,7 @@
 				if(event.status == 200) {
 					// currentState = "loggedInState";
 					// currentState = "anaSayfaState"
-					// Alert.show("Giri� ba�ar�l� :)");
+					// Alert.show("Giriş başarılı :)");
 				} else if (event.status == 400) {
 					Alert.show(resourceManager.getString("messages", "pinaraPassOrUserError"));
 					ModelLocator.getInstance().currentUser.username = "";
@@ -672,22 +673,19 @@
 			<s:layout>
 				<s:VerticalLayout clipAndEnableScrolling="true" paddingRight="0" paddingLeft="0" paddingTop="10" paddingBottom="10" />
 			</s:layout>
-			<!--comps:MenuBar id="menuBar"/-->
-			<s:Button id="button_0" width="64" label="{resourceManager.getString('messages', 'login')}"/>
-			<!--RO:s:Panel id="messagePanel" title="" width="100%" height="55" visible="false" includeInLayout="false">
+			<comps:MenuBar id="menuBar" />
+			<s:Panel id="messagePanel" title="" width="100%" height="55" visible="false" includeInLayout="false">
 				<mx:Text id="messageText" text="" textAlign="center" color="0xFF2D00" width="100%" />
-			</s:Panel-->
-			<!--RO:
-			<s:BitmapImage source="@Embed('/images/likya.jpg')" left="0" right="0" top="0" bottom="0" scaleMode="stretch" includeIn="anaSayfaState" />
-			-->			
+			</s:Panel>
+			<!--RO:s:BitmapImage source="@Embed('/images/likya.jpg')" left="0" right="0" top="0" bottom="0" scaleMode="stretch" includeIn="anaSayfaState" /-->
 			<!--mx:SWFLoader width="950" height="500" source="http://www.youtube.com/v/ojASzi1Kb8c" includeIn="loggedInState"/--> 
 			<!--comps:MainPanel includeIn="jobListState" height="100%"/-->
-			<!--jobdetail:JobListWithDetails height="100%" excludeFrom="anaSayfaState, jobDetailState" id="jobListDetail"/-->
-			<!--jobdetail:JobAllDetailPanel includeIn="jobDetailState" id="allJobDetail" height="100%"/-->
+			<jobdetail:JobListWithDetails height="100%" excludeFrom="anaSayfaState, jobDetailState, loggedOutState, dummyState" id="jobListDetail"/>
+			<jobdetail:JobAllDetailPanel includeIn="jobDetailState" id="allJobDetail" height="100%"/>
 		</s:Group>
 		
 	</s:Group>
 	
-	<comps:Footer excludeFrom="loggedOutState, dummyState" />	
+	<comps:Footer excludeFrom="loggedOutState, dummyState" id="footer" />
 	
 </s:Application>
