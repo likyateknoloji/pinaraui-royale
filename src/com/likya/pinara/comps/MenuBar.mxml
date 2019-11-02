@@ -275,7 +275,7 @@
 			}
 
 			private function showGenericPopup(fileTag:String):void {
-				var fileViewWindow:FileViewPopup = PopUpManager.createPopUp(parentApplication as mx.core.IUIComponent /*DisplayObject*/, FileViewPopup, true) as FileViewPopup;
+				var fileViewWindow:FileViewPopup = PopUpManager.createPopUp(parentApplication as mx.core.IUIComponent, FileViewPopup, true) as FileViewPopup;
 				fileViewWindow.isNativeXML = true;
 				fileViewWindow.fileTag = fileTag; //"joblog=" + jobDetailLocalXml.@Id;
 				PopUpManager.centerPopUp(fileViewWindow);
@@ -355,23 +355,6 @@
 			public function applyFilters():void {
 
 				var roleInfo:String = ModelLocator.getInstance().currentUser.roleinfo;
-
-				/*
-				if (roleInfo == UserRole.ADMIN) {
-					//permissionList = userRole.adminPermissions;
-					menuBarData.filterFunction = adminRoleFilter;
-					
-				} else if (roleInfo == UserRole.OPERATION) {
-					//permissionList = userRole.operationPermissions;
-					menuBarData.filterFunction = operationRoleFilter;
-					
-				} else if (roleInfo == UserRole.VIEW) {
-					//permissionList = userRole.viewPermissions;
-					menuBarData.filterFunction = viewRoleFilter;
-				} else {
-					menuBarData.filterFunction = noRoleFilter;
-				}
-				*/
 				
 				var tmpXmlList:XMLListCollection = new XMLListCollection();
 				tmpXmlList.source = menuDataXMLList;
@@ -385,32 +368,6 @@
 				// trace("Refreshing menubar...");
 				menuBarData.refresh();
 				
-			}
-			
-			private function adminRoleFilter(item:XML):Boolean {
-				return true;
-			}
-			
-			private function operationRoleFilter(item:XML):Boolean {
-				var operationStr:String = UserRole.OPERATION;
-				var viewStr:String = UserRole.VIEW;
-				var itemRole:String = item.@role;
-				
-				return itemRole == operationStr || itemRole == viewStr;
-			}
-			
-			private function viewRoleFilter(item:XML):Boolean {
-				var viewStr:String = UserRole.VIEW;
-				trace("item : " + item.@label);
-				trace("role : " + item.@role);
-				if(item.@role == viewStr) {
-					trace("keeping item ");
-				}
-				return item.@role == viewStr || !item.hasOwnProperty("@role");;
-			}
-			
-			private function noRoleFilter(item:XML):Boolean {
-				return false;
 			}
 			
 		]]>
